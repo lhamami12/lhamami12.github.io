@@ -26,9 +26,19 @@ grep -n -A40 "FATAL EXCEPTION\|Fatal signal\|AndroidRuntime" smoke/logcat.txt | 
 echo "== Flutter / ads log"
 grep -E " (flutter|Ads|chromium|UserMessagingPlatform)\b" smoke/logcat.txt | tail -60
 
-if adb shell pidof "$PKG" >/dev/null; then
-  echo "RESULT: app still running after 30 s"
-else
+if ! adb shell pidof "$PKG" >/dev/null; then
   echo "RESULT: app is NOT running (crashed or closed)"
+  exit 1
+fi
+echo "RESULT: app still running after 30 s"
+
+echo "== Back button on the home screen must open the quit dialog, not close the app"
+adb shell input keyevent KEYCODE_BACK
+sleep 3
+adb shell screencap -p /sdcard/back.png && adb pull /sdcard/back.png smoke/back.png >/dev/null
+if adb shell dumpsys activity activities | grep -E "ResumedActivity|topResumedActivity" | grep -q "$PKG"; then
+  echo "RESULT: app still in the foreground after BACK"
+else
+  echo "RESULT: BACK closed the app"
   exit 1
 fi

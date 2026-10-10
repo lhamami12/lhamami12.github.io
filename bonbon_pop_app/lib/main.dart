@@ -35,7 +35,9 @@ class BonbonPopApp extends StatelessWidget {
 ///
 /// The page sends `{"type": "interstitial" | "rewarded" | "privacy", "id": ...}`
 /// through the `AdBridge` JavaScript channel and receives the result through
-/// `window.__adResult(id, ok)`.
+/// `window.__adResult(id, ok)`. It sends "exit" through `AppBridge` to close
+/// the app. The Android back button calls `window.__onBack()`, and app
+/// lifecycle changes call `window.__onAppState(visible)`.
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
 
@@ -43,7 +45,7 @@ class GamePage extends StatefulWidget {
   State<GamePage> createState() => _GamePageState();
 }
 
-class _GamePageState extends State<GamePage> {
+class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   final _ads = AdsManager();
   late final WebViewController _web;
 
@@ -54,13 +56,34 @@ class _GamePageState extends State<GamePage> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(_background)
       ..addJavaScriptChannel('AdBridge', onMessageReceived: _onAdMessage)
+      ..addJavaScriptChannel('AppBridge', onMessageReceived: _onAppMessage)
       ..setNavigationDelegate(NavigationDelegate(onNavigationRequest: _onNavigation))
       ..loadFlutterAsset('assets/game/index.html');
     final platform = _web.platform;
     if (platform is AndroidWebViewController) {
       platform.setMediaPlaybackRequiresUserGesture(false);
     }
+    WidgetsBinding.instance.addObserver(this);
     _ads.init();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Pauses music and the game when the app goes to the background.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final visible = state == AppLifecycleState.resumed;
+    if (visible || state == AppLifecycleState.paused) {
+      _web.runJavaScript('window.__onAppState && window.__onAppState($visible)');
+    }
+  }
+
+  void _onAppMessage(JavaScriptMessage message) {
+    if (message.message == 'exit') SystemNavigator.pop();
   }
 
   /// Keeps the game inside the WebView and opens web links (e.g. the privacy
@@ -98,9 +121,17 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _background,
-      body: SafeArea(child: WebViewWidget(controller: _web)),
+    // The back button is handled by the game: it closes the open window,
+    // pauses the level, or asks before leaving.
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _web.runJavaScript('window.__onBack && window.__onBack()');
+      },
+      child: Scaffold(
+        backgroundColor: _background,
+        body: SafeArea(child: WebViewWidget(controller: _web)),
+      ),
     );
   }
 }
