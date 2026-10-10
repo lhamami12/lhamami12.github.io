@@ -9,9 +9,10 @@ mkdir -p smoke
 
 # Every adb call gets a time limit, so a dead emulator fails the job quickly
 # instead of leaving "adb" waiting for a device forever.
-adb() { timeout 90 command adb "$@"; }
+ADB=$(command -v adb)
+adb() { timeout 90 "$ADB" "$@"; }
 emulator_alive() {
-  if ! timeout 15 command adb get-state >/dev/null 2>&1; then
+  if ! timeout 15 "$ADB" get-state >/dev/null 2>&1; then
     echo "RESULT: the emulator stopped responding (emulator problem, not an app crash)"
     exit 1
   fi
