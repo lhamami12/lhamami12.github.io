@@ -72,7 +72,7 @@ button{font:inherit;cursor:pointer}
 #playBtn{font-size:22px;padding:14px 36px;animation:breathe 2.2s ease-in-out infinite}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 .map{position:relative;flex:1;min-height:0;width:100%;max-width:520px;overflow-y:auto;overflow-x:hidden;margin-top:16px;
-  padding:16px 0 calc(40px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:26px;
+  padding:16px 0 30px;display:flex;flex-direction:column;align-items:center;gap:26px;
   -webkit-mask-image:linear-gradient(transparent 0,#000 24px,#000 calc(100% - 30px),transparent 100%);mask-image:linear-gradient(transparent 0,#000 24px,#000 calc(100% - 30px),transparent 100%)}
 .node{width:64px;height:64px;flex:none;border-radius:50%;border:3px solid rgba(255,255,255,.85);font-size:26px;font-weight:700;color:#fff;position:relative;
   background:radial-gradient(circle at 35% 30%,#ffa8dc,#ff3d9a 55%,#b8166f);
@@ -226,6 +226,9 @@ button{font:inherit;cursor:pointer}
 .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:16px;background:#fbe3f4;font-weight:600;margin-bottom:14px}
 .toggle-row button{border:none;border-radius:999px;padding:6px 16px;font-weight:700;color:#fff;background:#1fb54a}
 .toggle-row button.off{background:#9a8ab8}
+.legal{flex:none;padding:6px 12px calc(8px + env(safe-area-inset-bottom));font-size:14px;font-weight:500;color:rgba(255,255,255,.75);text-decoration:underline;text-underline-offset:3px}
+.legal:active{color:#fff}
+.modal .legal{display:inline-block;margin-top:14px;padding:4px 8px;color:#8a4fa8}
 
 @media (min-height:760px){.chip{font-size:20px}.moves b{font-size:38px}}
 @media (prefers-reduced-motion:reduce){#playBtn,.node.current,.sp-bomb,.cb .shape,.moves.low{animation:none}}
@@ -254,6 +257,7 @@ button{font:inherit;cursor:pointer}
   <p class="tagline">Échange, aligne, savoure !</p>
   <button class="btn green" id="playBtn">Jouer</button>
   <div class="map" id="map"></div>
+  <a class="legal" href="privacy.html">Politique de confidentialité</a>
 </section>
 
 <!-- GAME -->
@@ -1113,7 +1117,8 @@ function openPause() {
     <div class="toggle-row"><span>Son</span><button data-act="sound" class="${save.sound ? '' : 'off'}">${save.sound ? 'Activé' : 'Coupé'}</button></div>
     <div class="btn-col"><button class="btn green" data-act="resume">Reprendre</button>
     <button class="btn" data-act="restart">Recommencer</button>
-    <button class="btn ghost" data-act="map">Carte des niveaux</button></div>`);
+    <button class="btn ghost" data-act="map">Carte des niveaux</button></div>
+    <a class="legal" href="privacy.html">Politique de confidentialité</a>`);
 }
 $('#pauseBtn').addEventListener('click', () => {
   sfx.click();
