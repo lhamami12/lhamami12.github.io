@@ -12,7 +12,7 @@ mkdir -p smoke
 ADB=$(command -v adb)
 adb() { timeout 90 "$ADB" "$@"; }
 emulator_alive() {
-  if ! timeout 15 "$ADB" get-state >/dev/null 2>&1; then
+  if [ "$(timeout 15 "$ADB" get-state 2>/dev/null)" != "device" ]; then
     echo "RESULT: the emulator stopped responding (emulator problem, not an app crash)"
     exit 1
   fi
@@ -49,7 +49,9 @@ adb shell input keyevent KEYCODE_BACK
 sleep 3
 emulator_alive
 adb shell screencap -p /sdcard/back.png && adb pull /sdcard/back.png smoke/back.png >/dev/null
-if adb shell dumpsys activity activities | grep -E "ResumedActivity|topResumedActivity" | grep -q "$PKG"; then
+ACTIVITIES=$(adb shell dumpsys activity activities)
+emulator_alive
+if echo "$ACTIVITIES" | grep -E "ResumedActivity|topResumedActivity" | grep -q "$PKG"; then
   echo "RESULT: app still in the foreground after BACK"
 else
   echo "RESULT: BACK closed the app"
