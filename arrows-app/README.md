@@ -21,19 +21,24 @@ npm run open     # يفتح المشروع في Android Studio
 
 في Android Studio انتظر حتى ينتهي **Gradle Sync**، ثم اختر هاتفك واضغط ▶️ **Run**.
 
-## 2) ضع أرقام AdMob الخاصة بك (قبل النشر)
+## 2) إعلانات AdMob: تجريبية أولًا، ثم حقيقية
 
-الأرقام الحالية هي **أرقام الاختبار من Google**: الإعلانات تظهر بعلامة "Test Ad" ولا تربح منها شيئًا.
+التطبيق يعرض حاليًا **إعلانات الاختبار من Google** (عليها علامة "Test Ad" ولا تربح منها شيئًا).
+اتركها كذلك طوال **الاختبار المغلق**: لا خطر على حسابك إذا ضغط المختبرون عليها، وكل مسارات الإعلانات تعمل كما في النسخة النهائية.
 
-1. في <https://admob.google.com>: **Apps ← Add app ← Android** (اختر "No" إذا لم يُنشر بعد).
+**عند الانتقال إلى النشر للجميع (Production):**
+
+1. في <https://admob.google.com>: **Apps ← Add app ← Android**، واربطه بالتطبيق في Google Play.
 2. أنشئ وحدتين إعلانيتين: **Rewarded** و **Interstitial**.
-3. ضع **App ID** (يحتوي على `~`) في:
+3. ضع **App ID** (يحتوي على `~`) في
    `android/app/src/main/res/values/strings.xml` ← `admob_app_id`
-4. ضع رقمي الوحدتين (يحتويان على `/`) في:
-   `../arrows/index.html` ← ابحث عن `AD_UNITS`
-5. نفّذ `npm run sync` من جديد.
+4. في `../arrows/index.html` ابحث عن `ADS_LIVE`:
+   - ضع رقمي الوحدتين (يحتويان على `/`) في `AD_LIVE`
+   - غيّر `const ADS_LIVE=false;` إلى `const ADS_LIVE=true;`
+5. نفّذ `npm run sync`، زِد `versionCode`، وابنِ ملف AAB جديدًا.
 
-> ⚠️ لا تضغط أبدًا على إعلاناتك الحقيقية بنفسك، فهذا يؤدي إلى إيقاف حساب AdMob. أثناء التجربة أضف هاتفك كـ **Test device** في إعدادات AdMob.
+> إذا نسيت تعبئة `AD_LIVE` يبقى التطبيق على إعلانات الاختبار بدل أن يتعطل.
+> ⚠️ لا تضغط أبدًا على إعلاناتك الحقيقية بنفسك، فهذا قد يوقف حساب AdMob. أضف هاتفك كـ **Test device** في إعدادات AdMob.
 
 ## 3) بناء ملف النشر (AAB)
 
@@ -45,7 +50,7 @@ npm run open     # يفتح المشروع في Android Studio
 
 ## 4) في Google Play Console
 
-- **اسم الحزمة** هو `com.atbirlahcen.arrowescape`. لا يمكن تغييره بعد أول رفع. إن أردت اسمًا آخر غيّره في `capacitor.config.json` و`android/app/build.gradle` قبل أول رفع.
+- **اسم الحزمة** هو `com.arrowescape.game`. لا يمكن تغييره بعد أول رفع. إن أردت اسمًا آخر غيّره في `capacitor.config.json` و`android/app/build.gradle` قبل أول رفع.
 - **سياسة الخصوصية**: `https://lhamami12.github.io/arrows/privacy.html`
 - **Ads**: نعم، التطبيق يحتوي على إعلانات.
 - **Target audience**: 13 سنة فما فوق (لا تختر الأطفال).

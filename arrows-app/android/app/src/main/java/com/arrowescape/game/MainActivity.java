@@ -1,4 +1,4 @@
-package com.atbirlahcen.arrowescape;
+package com.arrowescape.game;
 
 import com.getcapacitor.BridgeActivity;
 
