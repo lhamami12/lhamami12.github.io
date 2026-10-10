@@ -264,6 +264,9 @@ button{font:inherit;cursor:pointer}
 .shop-row .own{font-size:13px;color:#8a4fa8}
 .shop-row button{border:none;border-radius:999px;padding:8px 12px;font-weight:700;background:linear-gradient(#ffe066,#ffb300);color:#6a3b00;box-shadow:0 3px 0 #b37700;display:flex;align-items:center;gap:4px;white-space:nowrap}
 .shop-row button[disabled]{opacity:.5}
+.shop-row .btns{display:flex;flex-direction:column;gap:6px}
+.shop-row button.vid{background:linear-gradient(#ff8ad0,#e8288f);color:#fff;box-shadow:0 3px 0 #9c0f5c}
+.offer-ic{font-size:56px;line-height:1;margin:2px 0 4px}
 .balance{font-size:30px;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 12px}
 .win-coins{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:4px 14px;border-radius:999px;background:#fff3c4;color:#8a5a00;font-weight:700;font-size:18px}
 html[lang=ar] body{font-family:'Baloo Bhaijaan 2','Fredoka',system-ui,sans-serif}
@@ -452,6 +455,7 @@ const STR = {
     daily: 'Cadeau du jour', dayN: n => `Jour ${n}`, claim: 'Récupérer', claimDouble: '🎬 Doubler avec une vidéo',
     comeBack: 'Reviens demain pour le cadeau suivant !', streakInfo: 'Connecte-toi chaque jour pour de plus gros cadeaux.',
     coinsEarned: n => `+${n}`, buyMoves: '+3 coups', useOne: n => `(×${n})`,
+    free: 'Gratuit', freeWithVideo: '🎬 Gratuit avec une vidéo', buyFor: 'Acheter', adsLeftShared: n => `${n} vidéo(s) bonus restante(s) aujourd'hui`,
   },
   en: {
     name: 'English', tagline: 'Swap, match, enjoy!', play: 'Play', playLevel: n => `Play — Level ${n}`,
@@ -484,6 +488,7 @@ const STR = {
     daily: 'Daily gift', dayN: n => `Day ${n}`, claim: 'Claim', claimDouble: '🎬 Double it with a video',
     comeBack: 'Come back tomorrow for the next gift!', streakInfo: 'Log in every day for bigger gifts.',
     coinsEarned: n => `+${n}`, buyMoves: '+3 moves', useOne: n => `(×${n})`,
+    free: 'Free', freeWithVideo: '🎬 Free with a video', buyFor: 'Buy', adsLeftShared: n => `${n} bonus video(s) left today`,
   },
   ar: {
     name: 'العربية', tagline: 'بدّل، طابق، واستمتع!', play: 'العب', playLevel: n => `العب — المستوى ${n}`,
@@ -516,6 +521,7 @@ const STR = {
     daily: 'هدية اليوم', dayN: n => `اليوم ${n}`, claim: 'استلم', claimDouble: '🎬 ضاعفها بمشاهدة فيديو',
     comeBack: 'عُد غدًا للهدية التالية!', streakInfo: 'ادخل كل يوم لتحصل على هدايا أكبر.',
     coinsEarned: n => `+${n}`, buyMoves: '+3 حركات', useOne: n => `(×${n})`,
+    free: 'مجانًا', freeWithVideo: '🎬 مجانًا بمشاهدة فيديو', buyFor: 'اشترِ بـ', adsLeftShared: n => `بقي ${n} فيديو بمكافأة اليوم`,
   },
 };
 function detectLang() {
@@ -543,7 +549,7 @@ function setLang(l) {
 
 /* ================= save ================= */
 const save = { unlocked: 1, stars: {}, best: {}, sound: true, music: true, coins: 200,
-  boosters: { hammer: 2, shuffle: 1, moves: 1 }, daily: { last: '', streak: 0 }, adCoins: { day: '', n: 0 } };
+  boosters: { hammer: 2, shuffle: 1, moves: 1 }, daily: { last: '', streak: 0 }, adDaily: { day: '', n: 0 } };
 try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) {}
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 LANG = STR[save.lang] ? save.lang : detectLang();
@@ -1214,7 +1220,8 @@ async function watchForMoves(btn) {
 const PRICES = { hammer: 120, shuffle: 80, moves: 150 };
 const BOOSTER_ICON = { hammer: '🔨', shuffle: '🔀', moves: '➕' };
 const DAILY = [{ c: 50 }, { c: 75 }, { c: 100, b: 'hammer' }, { c: 125 }, { c: 150, b: 'shuffle' }, { c: 200 }, { c: 300, b: 'moves' }];
-const AD_COINS = 50, AD_COINS_PER_DAY = 5;
+// Rewarded videos that give coins or boosters share one daily limit.
+const AD_COINS = 50, AD_PER_DAY = 10;
 const coinHTML = '<span class="coin"></span>';
 let hammerMode = false;
 
@@ -1241,9 +1248,25 @@ function updateCoins(bump) {
   const bal = modal.querySelector('.balance span:last-child');
   if (bal) bal.textContent = fmt(save.coins);
 }
-function adCoinsLeft() {
-  if (save.adCoins.day !== dayKey(0)) return AD_COINS_PER_DAY;
-  return Math.max(0, AD_COINS_PER_DAY - save.adCoins.n);
+function rewardsLeft() {
+  if (save.adDaily.day !== dayKey(0)) return AD_PER_DAY;
+  return Math.max(0, AD_PER_DAY - save.adDaily.n);
+}
+// Shows a rewarded video for a coins/booster reward; true when it was earned.
+async function rewardedVideo(btn) {
+  if (!rewardsLeft()) return false;
+  const label = btn.innerHTML;
+  btn.disabled = true;
+  btn.textContent = t('loading');
+  if (await Ads.call('rewarded')) {
+    if (save.adDaily.day !== dayKey(0)) save.adDaily = { day: dayKey(0), n: 0 };
+    save.adDaily.n++;
+    persist();
+    return true;
+  }
+  btn.textContent = t('videoUnavailable');
+  setTimeout(() => { if (btn.isConnected) { btn.innerHTML = label; btn.disabled = false; } }, 2000);
+  return false;
 }
 
 /* ---------- daily gift ---------- */
@@ -1289,16 +1312,18 @@ function maybeDaily() {
 }
 
 /* ---------- shop ---------- */
+const boosterName = k => t(k === 'shuffle' ? 'shuffleB' : k === 'moves' ? 'movesB' : 'hammer');
 function showShop() {
-  const left = adCoinsLeft();
+  const left = rewardsLeft(), video = Ads.available() && left > 0;
   const rows = Object.keys(PRICES).map(k => `<div class="shop-row">
       <span class="ic">${BOOSTER_ICON[k]}</span>
-      <span class="txt"><b>${t(k === 'shuffle' ? 'shuffleB' : k === 'moves' ? 'movesB' : 'hammer')}</b>${t(k + 'Desc')}<br><span class="own">${t('owned', save.boosters[k])}</span></span>
-      <button data-act="buy" data-kind="${k}" ${save.coins < PRICES[k] ? 'disabled' : ''}>${coinHTML}${PRICES[k]}</button></div>`).join('');
+      <span class="txt"><b>${boosterName(k)}</b>${t(k + 'Desc')}<br><span class="own">${t('owned', save.boosters[k])}</span></span>
+      <span class="btns"><button data-act="buy" data-kind="${k}" ${save.coins < PRICES[k] ? 'disabled' : ''}>${coinHTML}${PRICES[k]}</button>
+      ${video ? `<button class="vid" data-act="adbooster" data-kind="${k}">🎬 ${t('free')}</button>` : ''}</span></div>`).join('');
   openModal(`<div class="ribbon">${t('shop')}</div>
     <div class="balance">${coinHTML}<span>${fmt(save.coins)}</span></div>
     ${rows}
-    ${Ads.available() ? `<div class="btn-col" style="margin-top:12px"><button class="btn ad" data-act="adcoins" ${left ? '' : 'disabled'}>${t('freeCoins', AD_COINS)}<small>${left ? t('adsLeft', left) : t('adLimit')}</small></button></div>` : ''}
+    ${Ads.available() ? `<div class="btn-col" style="margin-top:12px"><button class="btn ad" data-act="adcoins" ${left ? '' : 'disabled'}>${t('freeCoins', AD_COINS)}<small>${left ? t('adsLeftShared', left) : t('adLimit')}</small></button></div>` : ''}
     <div class="btn-col" style="margin-top:12px"><button class="btn ghost" data-act="${modalKind === 'pause' ? 'pauseback' : 'close'}">OK</button></div>`, 'shop');
 }
 function buyBooster(kind) {
@@ -1309,15 +1334,38 @@ function buyBooster(kind) {
   return true;
 }
 async function watchForCoins(btn) {
-  btn.disabled = true;
-  btn.textContent = t('loading');
-  if (await Ads.call('rewarded')) {
-    if (save.adCoins.day !== dayKey(0)) save.adCoins = { day: dayKey(0), n: 0 };
-    save.adCoins.n++;
+  if (await rewardedVideo(btn)) {
     addCoins(AD_COINS);
     sfx.win();
+    showShop();
   }
-  showShop();
+}
+// Rewarded video for one booster, from the shop or from the in-game offer.
+async function watchForBooster(btn) {
+  const kind = btn.dataset.kind;
+  if (!(await rewardedVideo(btn))) return;
+  save.boosters[kind]++;
+  persist();
+  sfx.create();
+  if (modalKind === 'offer') { closeModal(); playing = true; activateBooster(kind); }
+  else showShop();
+}
+
+/* In-game: a booster ran out. Offer it for coins or for a rewarded video. */
+function offerBooster(kind) {
+  playing = false;
+  clearHint();
+  const left = rewardsLeft(), enough = save.coins >= PRICES[kind];
+  openModal(`<div class="offer-ic">${BOOSTER_ICON[kind]}</div>
+    <div class="ribbon">${boosterName(kind)}</div>
+    <p class="sub">${t(kind + 'Desc')}</p>
+    <div class="balance">${coinHTML}<span>${fmt(save.coins)}</span></div>
+    ${enough || (Ads.available() && left) ? '' : `<p class="sub">${t('notEnough')}</p>`}
+    <div class="btn-col">
+      ${Ads.available() && left ? `<button class="btn ad" data-act="adbooster" data-kind="${kind}">${t('freeWithVideo')}<small>${t('adsLeftShared', left)}</small></button>` : ''}
+      <button class="btn green" data-act="buyuse" data-kind="${kind}" ${enough ? '' : 'disabled'}>${t('buyFor')} ${coinHTML}${PRICES[kind]}</button>
+      <button class="btn ghost" data-act="resume">${t('cancel')}</button>
+    </div>`, 'offer');
 }
 
 /* ---------- in-game boosters ---------- */
@@ -1341,10 +1389,10 @@ $('#boosters').addEventListener('click', async e => {
   sfx.click();
   if (kind === 'hammer' && hammerMode) { setHammerMode(false); return; }
   if (hammerMode) setHammerMode(false);
-  if (!save.boosters[kind] && !buyBooster(kind)) {
-    showPraise(t('notEnough'), true);
-    return;
-  }
+  if (!save.boosters[kind]) { offerBooster(kind); return; }
+  activateBooster(kind);
+});
+async function activateBooster(kind) {
   clearHint();
   if (kind === 'hammer') { setHammerMode(true); return; }
   save.boosters[kind]--;
@@ -1361,7 +1409,7 @@ $('#boosters').addEventListener('click', async e => {
     busy = false;
     resetHint();
   }
-});
+}
 async function useHammer(p) {
   setHammerMode(false);
   const tile = grid[p.r][p.c];
@@ -1553,6 +1601,8 @@ overlay.addEventListener('click', e => {
   else if (act === 'claim' || act === 'claim2') claimDaily(act === 'claim2', b);
   else if (act === 'buy') { buyBooster(b.dataset.kind); showShop(); }
   else if (act === 'adcoins') watchForCoins(b);
+  else if (act === 'adbooster') watchForBooster(b);
+  else if (act === 'buyuse') { if (buyBooster(b.dataset.kind)) { closeModal(); playing = true; activateBooster(b.dataset.kind); } }
   else if (act === 'buymoves') continueWithMoves(b);
   else if (act === 'help') showHelp();
   else if (act === 'pauseback') openPause();
@@ -1700,7 +1750,7 @@ $('#coinsBtn').addEventListener('click', () => { sfx.click(); showShop(); });
    pause the game, or ask before leaving the app. */
 window.__onBack = () => {
   if (overlay.classList.contains('show')) {
-    if (modalKind === 'pause') { closeModal(); playing = true; updateHUD(); resetHint(); }
+    if (modalKind === 'pause' || modalKind === 'offer') { closeModal(); playing = true; updateHUD(); resetHint(); }
     else if (modalKind === 'intro' || modalKind === 'win' || modalKind === 'lose') { closeModal(); showMap(); }
     else if (modalKind === 'shop' && $('#game').classList.contains('active')) openPause();
     else closeModal();
