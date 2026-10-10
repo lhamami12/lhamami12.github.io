@@ -9,6 +9,12 @@ Ce projet emballe le jeu web `../match3/index.html` dans une application Android
   (une fois par tentative) ;
 - **Consentement UMP** (RGPD) au démarrage, et bouton « Choix de confidentialité
   des publicités » dans le menu pause.
+- **Récompensé, autres usages** : +50 pièces dans la boutique (5 fois par jour) et
+  cadeau du jour doublé.
+
+Économie du jeu : pièces gagnées en finissant les niveaux et avec le cadeau du jour
+(série de 7 jours), dépensées en boosters (marteau 120, mélange 80, +3 coups 150)
+ou pour continuer un niveau perdu.
 
 Sur le site web, le pont `AdBridge` n'existe pas : aucune publicité n'est affichée.
 

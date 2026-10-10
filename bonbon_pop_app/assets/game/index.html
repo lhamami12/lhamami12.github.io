@@ -67,7 +67,14 @@ button{font:inherit;cursor:pointer}
 .pill{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:var(--glass);
   border:1.5px solid var(--glass-b);font-weight:700;font-size:18px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .pill .star{color:#ffd84a;text-shadow:0 2px 0 #c98a00}
-.home-top .right{display:flex;gap:8px}
+.home-top .right,.home-top .left{display:flex;gap:8px;align-items:center}
+.coin{display:inline-block;width:1em;height:1em;border-radius:50%;vertical-align:-.12em;flex:none;
+  background:radial-gradient(circle at 35% 30%,#fff6b0 0 18%,#ffd23f 40%,#e09b00 100%);box-shadow:inset 0 0 0 .09em #b87400,0 .06em 0 rgba(0,0,0,.25)}
+.pill.coins{cursor:pointer;border:none;color:#fff;font:inherit;font-weight:700;font-size:18px}
+.pill.bump{animation:bump .35s var(--bounce)}
+.icon-btn{position:relative}
+.icon-btn .dot{position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:#ff3b5c;border:2px solid #fff;display:none}
+.icon-btn.has-dot .dot{display:block;animation:lowPulse 1s ease-in-out infinite}
 .logo{margin:14px 0 2px;text-align:center;line-height:.9;font-weight:700;font-size:clamp(52px,16vw,84px);position:relative}
 .logo span{display:block;background:linear-gradient(180deg,#fffbd1 10%,#ffc928 60%,#ff9a00 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 4px 0 #c2185b) drop-shadow(0 10px 14px rgba(40,0,70,.45))}
@@ -116,7 +123,7 @@ button{font:inherit;cursor:pointer}
 .chip.bump b{animation:bump .3s var(--bounce)}
 @keyframes bump{50%{transform:scale(1.45)}}
 .jelly-ico{width:22px;height:22px;border-radius:7px;background:linear-gradient(145deg,#ff8ad8,#d21f97);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
-.board-wrap{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;padding:6px 10px calc(12px + env(safe-area-inset-bottom))}
+.board-wrap{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;padding:6px 10px 14px}
 .board{position:relative;width:calc(var(--cell) * 8);height:calc(var(--cell) * 8);padding:6px;box-sizing:content-box;border-radius:22px;
   background:rgba(35,6,85,.45);border:2px solid rgba(255,255,255,.25);touch-action:none;
   box-shadow:0 22px 44px rgba(20,0,50,.45),inset 0 0 30px rgba(255,255,255,.06);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
@@ -231,6 +238,36 @@ button{font:inherit;cursor:pointer}
 .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:16px;background:#fbe3f4;font-weight:600;margin-bottom:14px}
 .toggle-row button{border:none;border-radius:999px;padding:6px 16px;font-weight:700;color:#fff;background:#1fb54a}
 .toggle-row button.off{background:#9a8ab8}
+.boosters{display:flex;gap:16px;justify-content:center;padding:0 12px calc(12px + env(safe-area-inset-bottom))}
+.bst{position:relative;width:60px;height:60px;border-radius:20px;border:1.5px solid var(--glass-b);background:var(--glass);font-size:28px;
+  display:grid;place-items:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 14px rgba(30,0,60,.2);color:#fff}
+.bst:active{transform:scale(.92)}
+.bst.active{background:rgba(255,215,64,.45);border-color:#ffe27a;box-shadow:0 0 0 4px rgba(255,226,122,.4);animation:lowPulse .9s ease-in-out infinite}
+.bst .badge{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);padding:1px 8px;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap;
+  background:#1fb54a;color:#fff;box-shadow:0 2px 0 #0f7a2d;display:flex;align-items:center;gap:3px}
+.bst .badge.price{background:#ffcf2e;color:#6a3b00;box-shadow:0 2px 0 #c98a00}
+.board.targeting{box-shadow:0 0 0 4px #ffe27a,0 0 30px rgba(255,226,122,.7),0 22px 44px rgba(20,0,50,.45)}
+.tip{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:7;pointer-events:none;white-space:nowrap;
+  padding:6px 14px;border-radius:999px;background:rgba(30,0,60,.75);color:#fff;font-weight:600;font-size:15px;display:none}
+.board.targeting .tip{display:block}
+.hammer-fx{position:absolute;font-size:calc(var(--cell)*.9);z-index:6;pointer-events:none;transform-origin:80% 80%}
+.daily{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 16px}
+.day{position:relative;border-radius:16px;padding:8px 4px 6px;background:#f6e6fb;border:2px solid #ecd2f7;font-weight:700;font-size:13px;color:#8a4fa8;display:flex;flex-direction:column;align-items:center;gap:3px}
+.day:last-child{grid-column:span 2;background:linear-gradient(#fff3c4,#ffe08a);border-color:#ffd04d;color:#8a5a00}
+.day .amt{font-size:16px;color:var(--ink);display:flex;align-items:center;gap:3px}
+.day .gift{font-size:20px;line-height:1}
+.day.claimed{opacity:.55}
+.day.claimed::after{content:'✓';position:absolute;top:2px;right:6px;color:#1fb54a;font-size:18px}
+.day.today{border-color:#e8288f;background:#ffe0f1;box-shadow:0 0 0 3px rgba(232,40,143,.25);animation:breathe 1.6s ease-in-out infinite}
+.shop-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:16px;background:#fbe3f4;margin-bottom:8px;text-align:start}
+.shop-row .ic{font-size:28px;width:40px;text-align:center}
+.shop-row .txt{flex:1;font-size:14px;line-height:1.25;color:#8a4fa8}
+.shop-row .txt b{display:block;font-size:16px;color:var(--ink)}
+.shop-row .own{font-size:13px;color:#8a4fa8}
+.shop-row button{border:none;border-radius:999px;padding:8px 12px;font-weight:700;background:linear-gradient(#ffe066,#ffb300);color:#6a3b00;box-shadow:0 3px 0 #b37700;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.shop-row button[disabled]{opacity:.5}
+.balance{font-size:30px;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 12px}
+.win-coins{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:4px 14px;border-radius:999px;background:#fff3c4;color:#8a5a00;font-weight:700;font-size:18px}
 html[lang=ar] body{font-family:'Baloo Bhaijaan 2','Fredoka',system-ui,sans-serif}
 .board,.bar,.logo{direction:ltr}
 .seg{display:flex;gap:6px}
@@ -262,12 +299,13 @@ html[lang=ar] body{font-family:'Baloo Bhaijaan 2','Fredoka',system-ui,sans-serif
 <!-- HOME -->
 <section class="screen active" id="home">
   <div class="home-top">
-    <div class="pill"><span class="star">★</span><span id="totalStars">0</span></div>
+    <div class="left">
+      <div class="pill"><span class="star">★</span><span id="totalStars">0</span></div>
+      <button class="pill coins" id="coinsBtn"><span class="coin"></span><span id="coinsVal">0</span></button>
+    </div>
     <div class="right">
-      <button class="icon-btn" id="langBtn" aria-label="Language">FR</button>
-      <button class="icon-btn" id="helpBtn" aria-label="?">?</button>
-      <button class="icon-btn" id="musicBtn" aria-label="Music">🎵</button>
-      <button class="icon-btn" id="soundBtn" aria-label="Sound">🔊</button>
+      <button class="icon-btn" id="giftBtn" aria-label="Gift">🎁<span class="dot"></span></button>
+      <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
     </div>
   </div>
   <div class="logo">
@@ -297,8 +335,10 @@ html[lang=ar] body{font-family:'Baloo Bhaijaan 2','Fredoka',system-ui,sans-serif
       <div class="layer tiles" id="tiles"></div>
       <div class="layer fx" id="fx"></div>
       <div class="praise" id="praise"></div>
+      <div class="tip" id="tip"></div>
     </div>
   </div>
+  <div class="boosters" id="boosters"></div>
 </section>
 
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
@@ -408,6 +448,13 @@ const STR = {
     helpJelly: 'Fais fondre la <b>gelée</b> en faisant exploser les bonbons posés dessus.',
     helpTip: 'Astuce : échange deux bonbons spéciaux pour un combo dévastateur !', go: 'C\'est parti !',
     quitTitle: 'Quitter ?', quitText: 'Ta progression est sauvegardée.', quit: 'Quitter', cancel: 'Annuler',
+    settings: 'Réglages', shop: 'Boutique', notEnough: 'Pas assez de pièces',
+    freeCoins: n => `🎬 +${n} pièces gratuites`, adsLeft: n => `${n} vidéo(s) restante(s) aujourd'hui`, adLimit: 'Reviens demain pour plus de vidéos',
+    hammer: 'Marteau', hammerDesc: 'Casse un bonbon au choix', shuffleB: 'Mélange', shuffleDesc: 'Mélange le plateau sans perdre de coup',
+    movesB: '+3 coups', movesDesc: 'Ajoute 3 coups à la partie', owned: n => `Tu en as ${n}`, hammerHint: 'Touche le bonbon à casser',
+    daily: 'Cadeau du jour', dayN: n => `Jour ${n}`, claim: 'Récupérer', claimDouble: '🎬 Doubler avec une vidéo',
+    comeBack: 'Reviens demain pour le cadeau suivant !', streakInfo: 'Connecte-toi chaque jour pour de plus gros cadeaux.',
+    coinsEarned: n => `+${n}`, buyMoves: '+3 coups', useOne: n => `(×${n})`,
   },
   en: {
     name: 'English', tagline: 'Swap, match, enjoy!', play: 'Play', playLevel: n => `Play — Level ${n}`,
@@ -433,6 +480,13 @@ const STR = {
     helpJelly: 'Melt the <b>jelly</b> by blasting the candies sitting on it.',
     helpTip: 'Tip: swap two special candies for a devastating combo!', go: 'Let\'s go!',
     quitTitle: 'Quit?', quitText: 'Your progress is saved.', quit: 'Quit', cancel: 'Cancel',
+    settings: 'Settings', shop: 'Shop', notEnough: 'Not enough coins',
+    freeCoins: n => `🎬 +${n} free coins`, adsLeft: n => `${n} video(s) left today`, adLimit: 'Come back tomorrow for more videos',
+    hammer: 'Hammer', hammerDesc: 'Smash any candy you choose', shuffleB: 'Shuffle', shuffleDesc: 'Shuffle the board without using a move',
+    movesB: '+3 moves', movesDesc: 'Adds 3 moves to the level', owned: n => `You have ${n}`, hammerHint: 'Tap the candy to smash',
+    daily: 'Daily gift', dayN: n => `Day ${n}`, claim: 'Claim', claimDouble: '🎬 Double it with a video',
+    comeBack: 'Come back tomorrow for the next gift!', streakInfo: 'Log in every day for bigger gifts.',
+    coinsEarned: n => `+${n}`, buyMoves: '+3 moves', useOne: n => `(×${n})`,
   },
   ar: {
     name: 'العربية', tagline: 'بدّل، طابق، واستمتع!', play: 'العب', playLevel: n => `العب — المستوى ${n}`,
@@ -458,6 +512,13 @@ const STR = {
     helpJelly: 'أذِب <b>الهلام</b> بتفجير الحلوى الموجودة فوقه.',
     helpTip: 'نصيحة: بدّل قطعتين خاصتين معًا لتحصل على تركيبة مدمّرة!', go: 'هيا بنا!',
     quitTitle: 'الخروج؟', quitText: 'تقدّمك محفوظ.', quit: 'خروج', cancel: 'إلغاء',
+    settings: 'الإعدادات', shop: 'المتجر', notEnough: 'لا تملك عملات كافية',
+    freeCoins: n => `🎬 +${n} عملة مجانًا`, adsLeft: n => `بقي ${n} فيديو اليوم`, adLimit: 'عُد غدًا لمزيد من الفيديوهات',
+    hammer: 'المطرقة', hammerDesc: 'تكسر أي قطعة تختارها', shuffleB: 'الخلط', shuffleDesc: 'تخلط اللوحة دون أن تخسر حركة',
+    movesB: '+3 حركات', movesDesc: 'تضيف 3 حركات إلى المستوى', owned: n => `لديك ${n}`, hammerHint: 'المس القطعة التي تريد كسرها',
+    daily: 'هدية اليوم', dayN: n => `اليوم ${n}`, claim: 'استلم', claimDouble: '🎬 ضاعفها بمشاهدة فيديو',
+    comeBack: 'عُد غدًا للهدية التالية!', streakInfo: 'ادخل كل يوم لتحصل على هدايا أكبر.',
+    coinsEarned: n => `+${n}`, buyMoves: '+3 حركات', useOne: n => `(×${n})`,
   },
 };
 function detectLang() {
@@ -474,7 +535,6 @@ function applyLang() {
   root.lang = LANG;
   root.dir = LANG === 'ar' ? 'rtl' : 'ltr';
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-  $('#langBtn').textContent = LANG === 'ar' ? 'ع' : LANG.toUpperCase();
   try { if (LANG === 'ar' || LANG === 'en') localStorage.setItem('lang', LANG); } catch (e) {}
 }
 function setLang(l) {
@@ -485,7 +545,8 @@ function setLang(l) {
 }
 
 /* ================= save ================= */
-const save = { unlocked: 1, stars: {}, best: {}, sound: true, music: true };
+const save = { unlocked: 1, stars: {}, best: {}, sound: true, music: true, coins: 200,
+  boosters: { hammer: 2, shuffle: 1, moves: 1 }, daily: { last: '', streak: 0 }, adCoins: { day: '', n: 0 } };
 try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) {}
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 LANG = STR[save.lang] ? save.lang : detectLang();
@@ -1166,6 +1227,199 @@ async function watchForMoves(btn) {
   }
 }
 
+/* ================= coins, boosters, daily gift ================= */
+const PRICES = { hammer: 120, shuffle: 80, moves: 150 };
+const BOOSTER_ICON = { hammer: '🔨', shuffle: '🔀', moves: '➕' };
+const DAILY = [{ c: 50 }, { c: 75 }, { c: 100, b: 'hammer' }, { c: 125 }, { c: 150, b: 'shuffle' }, { c: 200 }, { c: 300, b: 'moves' }];
+const AD_COINS = 50, AD_COINS_PER_DAY = 5;
+const coinHTML = '<span class="coin"></span>';
+let hammerMode = false;
+
+function dayKey(offset = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+// Index (0-6) of the gift to claim today, or of the one claimed today.
+function dailyInfo() {
+  const d = save.daily, today = dayKey(0), yesterday = dayKey(-1);
+  if (d.last === today) return { available: false, index: (d.streak - 1) % 7 };
+  return { available: true, index: d.last === yesterday ? d.streak % 7 : 0 };
+}
+function addCoins(n) {
+  save.coins = Math.max(0, save.coins + n);
+  persist();
+  updateCoins(true);
+}
+function updateCoins(bump) {
+  $('#coinsVal').textContent = fmt(save.coins);
+  if (bump) retrigger($('#coinsBtn'), 'bump');
+  $('#giftBtn').classList.toggle('has-dot', dailyInfo().available);
+  const bal = modal.querySelector('.balance span:last-child');
+  if (bal) bal.textContent = fmt(save.coins);
+}
+function adCoinsLeft() {
+  if (save.adCoins.day !== dayKey(0)) return AD_COINS_PER_DAY;
+  return Math.max(0, AD_COINS_PER_DAY - save.adCoins.n);
+}
+
+/* ---------- daily gift ---------- */
+let dailyShown = false;
+function showDaily() {
+  dailyShown = true;
+  const info = dailyInfo();
+  const cards = DAILY.map((g, i) => {
+    const claimed = i < info.index || (!info.available && i === info.index);
+    const today = info.available && i === info.index;
+    return `<div class="day${claimed ? ' claimed' : ''}${today ? ' today' : ''}">
+      <span>${t('dayN', i + 1)}</span>
+      <span class="amt">${coinHTML}${g.c}</span>
+      ${g.b ? `<span class="gift">${BOOSTER_ICON[g.b]}</span>` : ''}</div>`;
+  }).join('');
+  openModal(`<div class="ribbon">${t('daily')}</div>
+    <p class="sub">${t('streakInfo')}</p>
+    <div class="daily">${cards}</div>
+    ${info.available
+      ? `<div class="btn-col">${Ads.available() ? `<button class="btn ad" data-act="claim2">${t('claimDouble')}</button>` : ''}
+         <button class="btn green" data-act="claim">${t('claim')}</button></div>`
+      : `<p class="sub">${t('comeBack')}</p><div class="btn-col"><button class="btn ghost" data-act="close">OK</button></div>`}`, 'daily');
+}
+async function claimDaily(double, btn) {
+  const info = dailyInfo();
+  if (!info.available) return;
+  let mult = 1;
+  if (double) {
+    btn.disabled = true;
+    btn.textContent = t('loading');
+    if (await Ads.call('rewarded')) mult = 2;
+    else { btn.textContent = t('videoUnavailable'); return; }
+  }
+  const g = DAILY[info.index];
+  save.daily = { last: dayKey(0), streak: save.daily.last === dayKey(-1) ? save.daily.streak + 1 : 1 };
+  if (g.b) save.boosters[g.b] += mult;
+  addCoins(g.c * mult);
+  sfx.win();
+  confetti();
+  showDaily();
+}
+function maybeDaily() {
+  if (!dailyShown && dailyInfo().available && $('#home').classList.contains('active') && !overlay.classList.contains('show')) showDaily();
+}
+
+/* ---------- shop ---------- */
+function showShop() {
+  const left = adCoinsLeft();
+  const rows = Object.keys(PRICES).map(k => `<div class="shop-row">
+      <span class="ic">${BOOSTER_ICON[k]}</span>
+      <span class="txt"><b>${t(k === 'shuffle' ? 'shuffleB' : k === 'moves' ? 'movesB' : 'hammer')}</b>${t(k + 'Desc')}<br><span class="own">${t('owned', save.boosters[k])}</span></span>
+      <button data-act="buy" data-kind="${k}" ${save.coins < PRICES[k] ? 'disabled' : ''}>${coinHTML}${PRICES[k]}</button></div>`).join('');
+  openModal(`<div class="ribbon">${t('shop')}</div>
+    <div class="balance">${coinHTML}<span>${fmt(save.coins)}</span></div>
+    ${rows}
+    ${Ads.available() ? `<div class="btn-col" style="margin-top:12px"><button class="btn ad" data-act="adcoins" ${left ? '' : 'disabled'}>${t('freeCoins', AD_COINS)}<small>${left ? t('adsLeft', left) : t('adLimit')}</small></button></div>` : ''}
+    <div class="btn-col" style="margin-top:12px"><button class="btn ghost" data-act="${modalKind === 'pause' ? 'pauseback' : 'close'}">OK</button></div>`, 'shop');
+}
+function buyBooster(kind) {
+  if (save.coins < PRICES[kind]) return false;
+  save.boosters[kind]++;
+  addCoins(-PRICES[kind]);
+  sfx.create();
+  return true;
+}
+async function watchForCoins(btn) {
+  btn.disabled = true;
+  btn.textContent = t('loading');
+  if (await Ads.call('rewarded')) {
+    if (save.adCoins.day !== dayKey(0)) save.adCoins = { day: dayKey(0), n: 0 };
+    save.adCoins.n++;
+    addCoins(AD_COINS);
+    sfx.win();
+  }
+  showShop();
+}
+
+/* ---------- in-game boosters ---------- */
+function renderBoosters() {
+  $('#boosters').innerHTML = Object.keys(PRICES).map(k => {
+    const n = save.boosters[k];
+    return `<button class="bst${hammerMode && k === 'hammer' ? ' active' : ''}" data-booster="${k}" aria-label="${k}">${BOOSTER_ICON[k]}
+      <span class="badge${n ? '' : ' price'}">${n ? n : coinHTML + PRICES[k]}</span></button>`;
+  }).join('');
+}
+function setHammerMode(on) {
+  hammerMode = on;
+  boardEl.classList.toggle('targeting', on);
+  $('#tip').textContent = t('hammerHint');
+  renderBoosters();
+}
+$('#boosters').addEventListener('click', async e => {
+  const b = e.target.closest('[data-booster]');
+  if (!b || busy || !playing) return;
+  const kind = b.dataset.booster;
+  sfx.click();
+  if (kind === 'hammer' && hammerMode) { setHammerMode(false); return; }
+  if (hammerMode) setHammerMode(false);
+  if (!save.boosters[kind] && !buyBooster(kind)) {
+    showPraise(t('notEnough'), true);
+    return;
+  }
+  clearHint();
+  if (kind === 'hammer') { setHammerMode(true); return; }
+  save.boosters[kind]--;
+  persist();
+  renderBoosters();
+  if (kind === 'moves') {
+    moves += 3;
+    updateHUD();
+    showPraise(t('plusMoves', 3), true);
+    resetHint();
+  } else if (kind === 'shuffle') {
+    busy = true;
+    await reshuffle();
+    busy = false;
+    resetHint();
+  }
+});
+async function useHammer(p) {
+  setHammerMode(false);
+  const tile = grid[p.r][p.c];
+  if (!tile) return;
+  save.boosters.hammer--;
+  persist();
+  renderBoosters();
+  busy = true;
+  clearHint();
+  const h = document.createElement('div');
+  h.className = 'hammer-fx';
+  h.textContent = '🔨';
+  h.style.left = (p.c + .1) * cell + 'px';
+  h.style.top = (p.r - .55) * cell + 'px';
+  fxEl.appendChild(h);
+  await h.animate([{ transform: 'rotate(-70deg) scale(.6)', opacity: 0 }, { transform: 'rotate(-70deg) scale(1)', opacity: 1, offset: .4 }, { transform: 'rotate(15deg) scale(1)', opacity: 1 }],
+    { duration: 380, easing: 'cubic-bezier(.5,0,.8,.6)' }).finished;
+  h.remove();
+  shake(5);
+  if (navigator.vibrate) try { navigator.vibrate(25); } catch (e) {}
+  await resolve(null, { keys: new Set([K(p.r, p.c)]), skip: new Set(), effects: [] });
+  await afterTurn();
+  busy = false;
+  if (playing) resetHint();
+}
+/* Continue after losing by spending a +3 moves booster or coins. */
+function continueWithMoves(btn) {
+  if (save.boosters.moves > 0) save.boosters.moves--;
+  else if (save.coins >= PRICES.moves) addCoins(-PRICES.moves);
+  else { btn.textContent = t('notEnough'); btn.disabled = true; return; }
+  persist();
+  closeModal();
+  moves += 3;
+  playing = true;
+  updateHUD();
+  renderBoosters();
+  resetHint();
+  showPraise(t('plusMoves', 3), true);
+}
+
 /* ================= input ================= */
 function cellFromPoint(x, y) {
   const rect = tilesEl.getBoundingClientRect();
@@ -1188,6 +1442,7 @@ boardEl.addEventListener('pointerdown', e => {
   if (busy || !playing) return;
   const p = cellFromPoint(e.clientX, e.clientY);
   if (!p) return;
+  if (hammerMode) { useHammer(p); return; }
   drag = { start: p, x: e.clientX, y: e.clientY, moved: false };
   try { boardEl.setPointerCapture(e.pointerId); } catch (err) {}
   resetHint();
@@ -1312,12 +1567,19 @@ overlay.addEventListener('click', e => {
   else if (act === 'rewarded') watchForMoves(b);
   else if (act === 'adprivacy') Ads.call('privacy').then(ok => { if (!ok) b.textContent = t('noSettings'); });
   else if (act === 'map') { closeModal(); showMap(); }
-  else if (act === 'close') closeModal();
+  else if (act === 'close') { const was = modalKind; closeModal(); if (was === 'help') maybeDaily(); }
+  else if (act === 'claim' || act === 'claim2') claimDaily(act === 'claim2', b);
+  else if (act === 'buy') { buyBooster(b.dataset.kind); showShop(); }
+  else if (act === 'adcoins') watchForCoins(b);
+  else if (act === 'buymoves') continueWithMoves(b);
+  else if (act === 'help') showHelp();
+  else if (act === 'pauseback') openPause();
   else if (act === 'sound') { toggleSound(); refreshToggles(); }
   else if (act === 'music') { toggleMusic(); refreshToggles(); }
   else if (act === 'lang') {
     setLang(b.dataset.lang);
     if (modalKind === 'pause') openPause();
+    else if (modalKind === 'settings') showSettings();
     else { closeModal(); showMap(); }
   }
   else if (act === 'quit') { if (window.AppBridge) window.AppBridge.postMessage('exit'); else closeModal(); }
@@ -1336,8 +1598,6 @@ function toggleMusic() {
   refreshToggles();
 }
 function refreshToggles() {
-  $('#soundBtn').textContent = save.sound ? '🔊' : '🔇';
-  $('#musicBtn').classList.toggle('off', !save.music);
   modal.querySelectorAll('[data-act=sound],[data-act=music]').forEach(b => {
     const on = b.dataset.act === 'sound' ? save.sound : save.music;
     b.textContent = on ? t('on') : t('off');
@@ -1389,6 +1649,8 @@ $('#pauseBtn').addEventListener('click', () => {
 
 function win() {
   const st = L.stars.filter(s => score >= s).length;
+  const earned = 10 + 10 * st + (save.stars[levelNum] ? 0 : 20);
+  save.coins += earned;
   save.stars[levelNum] = Math.max(save.stars[levelNum] || 0, st);
   save.best[levelNum] = Math.max(save.best[levelNum] || 0, score);
   if (levelNum >= save.unlocked) save.unlocked = Math.min(MAX_LEVEL, levelNum + 1);
@@ -1400,6 +1662,7 @@ function win() {
     <div class="big-stars"><span>★</span><span>★</span><span>★</span></div>
     <div class="final-score">${fmt(score)}</div>
     <p class="sub">${t('best', fmt(save.best[levelNum]))}</p>
+    <div class="win-coins">${coinHTML}${t('coinsEarned', earned)}</div>
     <div class="btn-row" style="margin-top:14px"><button class="btn ghost" data-act="map">${t('map')}</button><button class="btn ghost" data-act="again">${t('replay')}</button></div>
     ${levelNum < MAX_LEVEL ? `<div class="btn-col"><button class="btn green" data-act="next">${t('nextLevel')}</button></div>` : `<p class="sub">${t('allDone')}</p>`}`, 'win');
   modal.querySelectorAll('.big-stars span').forEach((s, i) => {
@@ -1412,6 +1675,7 @@ function lose() {
     <p class="sub">${t('soClose')}</p>
     <div class="goal-list">${goalRowsHTML(true)}</div>
     <div class="btn-col">${Ads.available() && !usedContinue ? `<button class="btn ad" data-act="rewarded">${t('extraMoves', EXTRA_MOVES)}<small>${t('watchVideo')}</small></button>` : ''}
+    <button class="btn" data-act="buymoves">➕ ${t('buyMoves')} ${save.boosters.moves ? t('useOne', save.boosters.moves) : '— ' + coinHTML + PRICES.moves}</button>
     <button class="btn pink" data-act="again">${t('retry')}</button>
     <button class="btn ghost" data-act="map">${t('levelMap')}</button></div>`, 'lose');
 }
@@ -1437,10 +1701,19 @@ function confirmQuit() {
     <p class="sub" style="margin:8px 0 18px">${t('quitText')}</p>
     <div class="btn-row"><button class="btn ghost" data-act="close">${t('cancel')}</button><button class="btn pink" data-act="quit">${t('quit')}</button></div>`, 'quit');
 }
-$('#helpBtn').addEventListener('click', () => { sfx.click(); showHelp(); });
-$('#soundBtn').addEventListener('click', () => { toggleSound(); sfx.click(); });
-$('#musicBtn').addEventListener('click', () => { toggleMusic(); sfx.click(); });
-$('#langBtn').addEventListener('click', () => { sfx.click(); showLangPicker(); });
+function showSettings() {
+  openModal(`<div class="ribbon blue">${t('settings')}</div>
+    ${toggleRow('sound', t('sound'), save.sound)}
+    ${toggleRow('music', t('music'), save.music)}
+    ${langSeg()}
+    <div class="btn-col"><button class="btn" data-act="help">${t('howTo')}</button>
+    <button class="btn ghost" data-act="close">OK</button></div>
+    ${Ads.available() ? `<button class="linkbtn" data-act="adprivacy">${t('adPrivacy')}</button><br>` : ''}
+    <a class="legal" href="https://lhamami12.github.io/match3/privacy.html">${t('privacy')}</a>`, 'settings');
+}
+$('#settingsBtn').addEventListener('click', () => { sfx.click(); showSettings(); });
+$('#giftBtn').addEventListener('click', () => { sfx.click(); showDaily(); });
+$('#coinsBtn').addEventListener('click', () => { sfx.click(); showShop(); });
 
 /* Android back button (called by the app wrapper): close the current window,
    pause the game, or ask before leaving the app. */
@@ -1448,7 +1721,8 @@ window.__onBack = () => {
   if (overlay.classList.contains('show')) {
     if (modalKind === 'pause') { closeModal(); playing = true; updateHUD(); resetHint(); }
     else if (modalKind === 'intro' || modalKind === 'win' || modalKind === 'lose') { closeModal(); showMap(); }
-    else if (modalKind === 'help' || modalKind === 'lang' || modalKind === 'quit') closeModal();
+    else if (modalKind === 'shop' && $('#game').classList.contains('active')) openPause();
+    else closeModal();
     return;
   }
   if ($('#game').classList.contains('active')) {
@@ -1494,7 +1768,9 @@ function showMap() {
   }
   $('#totalStars').textContent = total;
   $('#playBtn').textContent = t('playLevel', save.unlocked);
+  updateCoins();
   showScreen('home');
+  setTimeout(maybeDaily, 500);
   if (current) requestAnimationFrame(() => { map.scrollTop = current.offsetTop - map.clientHeight / 2 + 40; });
 }
 $('#playBtn').addEventListener('click', () => { sfx.click(); initAudio(); startLevel(save.unlocked); });
@@ -1508,6 +1784,8 @@ async function startLevel(n) {
   L = getLevel(n);
   score = 0; shownScore = 0; moves = L.moves;
   selected = null; playing = false; busy = true; pendingPause = false; usedContinue = false;
+  if (hammerMode) setHammerMode(false);
+  renderBoosters();
   goals = { collect: Object.assign({}, L.collect || {}) };
   jelly = parseJelly(L.jelly);
   $('#lvlNum').textContent = n;
@@ -1557,7 +1835,9 @@ showMap();
 requestAnimationFrame(scoreLoop);
 if (!save.seenHelp) {
   save.seenHelp = true; persist();
+  dailyShown = true;
   setTimeout(showHelp, 400);
+  setTimeout(() => { dailyShown = false; }, 450);
 }
 })();
 </script>
