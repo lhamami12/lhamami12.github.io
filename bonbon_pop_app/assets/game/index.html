@@ -198,8 +198,6 @@ button{font:inherit;cursor:pointer}
   background:linear-gradient(180deg,#fffbd1 15%,#ffc928 60%,#ff8a00 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 3px 0 #c2185b) drop-shadow(0 6px 10px rgba(40,0,70,.5))}
 .praise.pinkish{background-image:linear-gradient(180deg,#fff 10%,#ff9bdc 55%,#e8288f 100%);filter:drop-shadow(0 3px 0 #5a1596) drop-shadow(0 6px 10px rgba(40,0,70,.5))}
-#confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
-#confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px}
 
 /* ---------- modal ---------- */
 .overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:rgba(25,0,50,.55);
@@ -342,7 +340,6 @@ html[lang=ar] body{font-family:'Baloo Bhaijaan 2','Fredoka',system-ui,sans-serif
 </section>
 
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
-<div id="confetti"></div>
 
 <script>
 (() => {
@@ -914,20 +911,6 @@ function showPraise(text, pink) {
     { transform: 'translate(-50%,-70%) scale(.9)', opacity: 0 }
   ], { duration: 1300, easing: 'ease-out' });
 }
-function confetti() {
-  const box = $('#confetti');
-  for (let i = 0; i < 70; i++) {
-    const p = document.createElement('i');
-    p.style.left = Math.random() * 100 + 'vw';
-    p.style.background = COLORS[i % 6];
-    box.appendChild(p);
-    const dx = (Math.random() - .5) * 200, rot = Math.random() * 900;
-    p.animate([
-      { transform: 'translate(0,0) rotate(0)', opacity: 1 },
-      { transform: `translate(${dx}px,${innerHeight + 40}px) rotate(${rot}deg)`, opacity: .9 }
-    ], { duration: 1800 + Math.random() * 1500, delay: Math.random() * 500, easing: 'cubic-bezier(.3,.4,.6,1)', fill: 'backwards' }).onfinish = () => p.remove();
-  }
-}
 
 /* ================= core turn logic ================= */
 function addScore(pts, r, c, big) {
@@ -1299,7 +1282,6 @@ async function claimDaily(double, btn) {
   if (g.b) save.boosters[g.b] += mult;
   addCoins(g.c * mult);
   sfx.win();
-  confetti();
   showDaily();
 }
 function maybeDaily() {
@@ -1655,7 +1637,6 @@ function win() {
   save.best[levelNum] = Math.max(save.best[levelNum] || 0, score);
   if (levelNum >= save.unlocked) save.unlocked = Math.min(MAX_LEVEL, levelNum + 1);
   persist();
-  confetti();
   if (navigator.vibrate) try { navigator.vibrate([30, 60, 30]); } catch (e) {}
   openModal(`<div class="ribbon">${t('bravo')}</div>
     <p class="sub">${t('levelDone', levelNum)}</p>
