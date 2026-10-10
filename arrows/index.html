@@ -163,6 +163,15 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .ach .tiers{display:flex;gap:3px;margin-top:4px}.ach .tiers i{width:14px;height:4px;border-radius:2px;background:var(--line)}.ach .tiers i.on{background:var(--gold)}
 .ach .rw{display:flex;align-items:center;gap:3px;font-weight:600;font-size:13px;font-variant-numeric:tabular-nums}.ach .rw svg.coin{width:16px;height:16px}
 .ach .ok{color:var(--green)}
+.skins{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.skin{background:var(--bg);border-radius:16px;padding:8px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;border:2px solid transparent;position:relative}
+.skin canvas{width:120px;height:78px}
+.skin b{font-size:14px;font-weight:600}
+.skin small{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:var(--mut);font-variant-numeric:tabular-nums}
+.skin small svg.coin{width:15px;height:15px}
+.skin.on{border-color:var(--pri);background:var(--pri-t)}.skin.on small{color:var(--pri)}
+.skin.lock canvas{opacity:.55}
+.skin.cant small{color:var(--red)}
 .b.ghost{background:none;color:var(--mut)}
 .b:active{transform:scale(.98)}
 .set{display:flex;justify-content:space-between;align-items:center;padding:12px 2px;border-bottom:1px solid var(--line);text-align:start;gap:10px;font-size:15px}
@@ -219,6 +228,8 @@ a{color:var(--pri)}
     <button class="row" id="mZen"><span class="ico" style="background:rgba(22,163,74,.12);color:#16a34a" data-icon="leaf"></span><span class="tx"><b data-t="zen"></b><small data-t="zenSub"></small></span><span class="chev flip" data-icon="chev"></span></button>
     <button class="row" id="mLevels"><span class="ico" style="background:rgba(124,58,237,.12);color:#7c3aed" data-icon="grid4"></span><span class="tx"><b data-t="levels"></b><small id="lvSub"></small></span><span class="chev flip" data-icon="chev"></span></button>
     <button class="row" id="mAch"><span class="ico" style="background:rgba(245,176,0,.16);color:#c98a00" data-icon="trophy"></span><span class="tx"><b data-t="achievements"></b><small id="achSubH"></small></span><span class="chev flip" data-icon="chev"></span></button>
+    <button class="row" id="mShop"><span class="ico" style="background:rgba(236,72,153,.12);color:#db2777" data-icon="palette"></span><span class="tx"><b data-t="shop"></b><small id="shopSubH"></small></span><span class="chev flip" data-icon="chev"></span></button>
+    <button class="row" id="mNoAds" style="display:none"><span class="ico" style="background:rgba(22,163,74,.12);color:#16a34a" data-icon="noad"></span><span class="tx"><b data-t="noAdsT"></b><small id="noAdsSubH"></small></span><span class="chev flip" data-icon="chev"></span></button>
   </div>
   <div class="foot"><a href="privacy.html" data-t="privacy"></a></div>
 </div></section>
@@ -301,6 +312,22 @@ a{color:var(--pri)}
   <div class="btns"><button class="b ghost" id="achClose" data-t="close"></button></div>
 </div></div>
 
+<!-- ARROW STYLES -->
+<div class="ov" id="ovShop"><div class="box">
+  <h3 data-t="shop"></h3>
+  <p id="shopSub"></p>
+  <div class="skins" id="skinList"></div>
+  <div class="btns"><button class="b ghost" id="shopClose" data-t="close"></button></div>
+</div></div>
+
+<!-- ENJOYING? / FEEDBACK -->
+<div class="ov" id="ovEnjoy"><div class="box">
+  <div class="badgeIco" id="ejIco" style="background:rgba(239,68,68,.12);color:#ef4444"></div>
+  <h3 id="ejTitle"></h3>
+  <p id="ejSub"></p>
+  <div class="btns"><button class="b pri" id="ejYes"></button><button class="b ghost" id="ejNo"></button></div>
+</div></div>
+
 <!-- SETTINGS -->
 <div class="ov" id="ovSet"><div class="box">
   <h3 data-t="settings"></h3>
@@ -309,7 +336,7 @@ a{color:var(--pri)}
   <div class="set"><span data-t="theme"></span><div class="sws" id="sTheme">
     <button class="sw" data-v="light" style="background:#f5f7fb"></button><button class="sw" data-v="dark" style="background:#171c30"></button>
     <button class="sw" data-v="sand" style="background:#e8d3b4"></button><button class="sw" data-v="mint" style="background:#bfe6da"></button></div></div>
-  <div class="set"><span data-t="colors"></span><button class="tg" data-k="colors"></button></div>
+  <div class="set" id="notifRow" style="display:none"><span data-t="notifT"></span><button class="tg" data-k="notif"></button></div>
   <div class="set"><span data-t="sound"></span><button class="tg" data-k="sound"></button></div>
   <div class="set"><span data-t="vib"></span><button class="tg" data-k="vib"></button></div>
   </div>
@@ -353,6 +380,10 @@ flag:'<path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/>',
 fire:'<path d="M12 21c-3.9 0-7-2.8-7-6.5 0-3 2-5 3.5-6.5.3 2 1.3 3.2 2.5 3.5-.5-3 1-6.5 4-8.5.3 3 3 5 3.5 8 .3 1.8.5 3.5-.5 5.5C17 19.5 14.8 21 12 21z"/>',
 shapes:'<path d="M7 3.5l4 7H3z"/><circle cx="17" cy="7" r="3.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/><path d="M3.5 17a3.5 3.5 0 1 0 7 0 3.5 3.5 0 1 0-7 0"/>',
 check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+palette:'<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.9 1.2-1.8-.5-1-.1-2.2 1.1-2.2H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/>',
+noad:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4-2.5z" fill="currentColor"/><path d="M3.5 3.5l17 17"/>',
+heart:'<path d="M12 20.5s-7.6-4.5-9.5-9.3C1.1 7.7 3.4 4 7 4c2.1 0 3.9 1.2 5 2.9C13.1 5.2 14.9 4 17 4c3.6 0 5.9 3.7 4.5 7.2-1.9 4.8-9.5 9.3-9.5 9.3z"/>',
+mail:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>',
 star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'
 };
 const ico=n=>`<svg class="i" viewBox="0 0 24 24">${IC[n]}</svg>`;
@@ -369,6 +400,7 @@ settings:'الإعدادات',lang:'اللغة',theme:'المظهر',colors:'أ�
 time:'الوقت',mistakesL:'الأخطاء',coins:'العملات',perfect:'بدون أي خطأ!',good:'عمل رائع',ok:'أحسنت',zenWin:'اللوحة نظيفة',board:'اللوحة {0}',left:'{0} ث',
 chapter:'الفصل {0}',watchAd:'شاهد إعلانًا',free:'مجانًا',contAd:'شاهد إعلانًا وتابع',double:'ضاعف العملات',getHint:'احصل على تلميح',getBlast:'احصل على برق',adFail:'لا يتوفر إعلان الآن. حاول لاحقًا.',moreTime:'+15 ثانية',orCoins:'استخدم {0} عملة',
 adPrivacy:'خيارات خصوصية الإعلانات',dailyReward:'المكافأة اليومية',dayN:'اليوم {0}',claim:'استلم',claimX2:'استلم ×2',comeBack:'عُد غدًا لاستلام مكافأتك التالية',achievements:'الإنجازات',achUnlocked:'إنجاز جديد',achSub:'{0} من {1} مفتوحة',a_levels:'أكمل مستويات: {0}',a_perfect:'مستويات بدون أي خطأ: {0}',a_arrows:'حرّر أسهمًا: {0}',a_combo:'حقّق سلسلة ×{0}',a_shapes:'أكمل أشكالًا مختلفة: {0}',a_daily:'أكمل تحديات يومية: {0}',a_streak:'أيام متتالية من تحدي اليوم: {0}',a_login:'استلم المكافأة اليومية أيامًا متتالية: {0}',a_rush:'النتيجة في سباق الوقت: {0}',a_zen:'نظّف لوحات في وضع الهدوء: {0}',a_keys:'افتح أسهمًا مقفلة: {0}',a_gold:'اجمع أسهمًا ذهبية: {0}',
+noAdsT:'ساعة بدون إعلانات',noAdsSub:'شاهد فيديو واحدًا: لا إعلانات بين المستويات لمدة ساعة',noAdsOn:'مفعّل · المتبقي {0} د',notifT:'تذكير يومي',notif1:'مكافأتك اليومية جاهزة 🎁 ولغز جديد في انتظارك.',notif2:'الأسهم اشتاقت إليك! عُد للغز سريع.',enjoyQ:'هل تستمتع بلعبة هروب الأسهم؟',enjoySub:'رأيك يساعدنا كثيرًا.',enjoyYes:'نعم، أحببتها!',enjoyNo:'ليس كثيرًا',fbQ:'كيف نجعلها أفضل؟',fbSub:'أخبرنا بما يجب تحسينه، نقرأ كل رسالة.',fbSend:'أرسل رأيك',fbLater:'لاحقًا',shop:'أشكال الأسهم',shopSub:'{0} من {1} مفتوحة',equip:'استخدم',equipped:'مستخدم',sk_classic:'كلاسيكي',sk_rainbow:'قوس قزح',sk_neon:'نيون',sk_candy:'حلوى',sk_rope:'حبل',sk_beads:'خرز',sk_pixel:'بكسل',sk_royal:'ملكي',
 tut1:'اضغط على سهم ليخرج في اتجاه رأسه. إذا اعترضه سهم آخر تخسر قلبًا.',tut2:'اضغط مطوّلًا على أي سهم لمعاينة مساره قبل تحريكه.',tut3:'السهم المقفل لا يتحرك حتى يخرج سهم المفتاح الذي يحمل نفس اللون.',
 how:[['send','اضغط على سهم فيخرج من اللوحة في اتجاه رأسه.'],['x','إذا اعترضه سهم آخر يرتدّ وتخسر قلبًا.'],['eye','اضغط مطوّلًا لمعاينة المسار: أخضر = حر، أحمر = مسدود.'],['lock','السهم المقفل يُفتح عندما يخرج سهم المفتاح بنفس اللون.'],['spark','الأسهم الذهبية تمنح عملات، والإخراج السريع يصنع سلسلة.'],['bulb','التلميح يكشف سهمًا حرًّا، والبرق يزيل أي سهم.']]},
 fr:{title:'Arrow Escape',tagline:'Libérez les flèches dans le bon ordre',play:'Jouer',level:'Niveau {0}',modes:'Modes de jeu',daily:'Défi du jour',zen:'Mode Zen',zenSub:'Sans cœurs, sans pression',
@@ -380,6 +412,7 @@ settings:'Paramètres',lang:'Langue',theme:'Thème',colors:'Flèches colorées',
 time:'Temps',mistakesL:'Erreurs',coins:'Pièces',perfect:'Sans aucune erreur !',good:'Excellent travail',ok:'Bien joué',zenWin:'Plateau vidé',board:'Plateau {0}',left:'{0} s',
 chapter:'Chapitre {0}',watchAd:'Regarder une pub',free:'Gratuit',contAd:'Regarder une pub et continuer',double:'Doubler les pièces',getHint:'Obtenir un indice',getBlast:'Obtenir un éclair',adFail:'Aucune pub disponible pour le moment. Réessayez plus tard.',moreTime:'+15 secondes',orCoins:'Utiliser {0} pièces',
 adPrivacy:'Choix de confidentialité des pubs',dailyReward:'Récompense du jour',dayN:'Jour {0}',claim:'Récupérer',claimX2:'Récupérer ×2',comeBack:'Revenez demain pour la prochaine récompense',achievements:'Succès',achUnlocked:'Succès débloqué',achSub:'{0} sur {1} débloqués',a_levels:'Terminer {0} niveaux',a_perfect:'Finir {0} niveaux sans erreur',a_arrows:'Libérer {0} flèches',a_combo:'Atteindre un combo ×{0}',a_shapes:'Terminer {0} formes différentes',a_daily:'Réussir {0} défis du jour',a_streak:'Réussir le défi du jour {0} jours d’affilée',a_login:'Récupérer la récompense {0} jours d’affilée',a_rush:'Marquer {0} points en contre-la-montre',a_zen:'Vider {0} plateaux en mode Zen',a_keys:'Déverrouiller {0} flèches',a_gold:'Collecter {0} flèches dorées',
+noAdsT:'1 heure sans pub',noAdsSub:'Regardez une vidéo : aucune pub entre les niveaux pendant 1 heure',noAdsOn:'Actif · encore {0} min',notifT:'Rappel quotidien',notif1:'Votre récompense du jour est prête 🎁 et un nouveau puzzle vous attend.',notif2:'Les flèches vous attendent ! Revenez pour un petit puzzle.',enjoyQ:'Vous aimez Arrow Escape ?',enjoySub:'Votre avis nous aide beaucoup.',enjoyYes:'Oui, j’adore !',enjoyNo:'Pas vraiment',fbQ:'Comment faire mieux ?',fbSub:'Dites-nous quoi améliorer, nous lisons chaque message.',fbSend:'Envoyer un avis',fbLater:'Plus tard',shop:'Styles de flèches',shopSub:'{0} sur {1} débloqués',equip:'Utiliser',equipped:'Utilisé',sk_classic:'Classique',sk_rainbow:'Arc-en-ciel',sk_neon:'Néon',sk_candy:'Bonbon',sk_rope:'Corde',sk_beads:'Perles',sk_pixel:'Pixel',sk_royal:'Royal',
 tut1:'Touchez une flèche : elle sort dans la direction de sa pointe. Si une autre bloque, vous perdez un cœur.',tut2:'Appui long sur une flèche pour prévisualiser son trajet.',tut3:'Une flèche verrouillée ne bouge pas tant que la flèche clé de même couleur est présente.',
 how:[['send','Touchez une flèche : elle quitte le plateau dans la direction de sa pointe.'],['x','Si une autre flèche bloque le chemin, elle rebondit et vous perdez un cœur.'],['eye','Appui long pour voir le trajet : vert = libre, rouge = bloqué.'],['lock','Une flèche verrouillée s’ouvre quand la flèche clé de même couleur sort.'],['spark','Les flèches dorées rapportent des pièces ; enchaînez vite pour des combos.'],['bulb','L’indice révèle une flèche libre, l’éclair retire n’importe quelle flèche.']]},
 en:{title:'Arrow Escape',tagline:'Free the arrows in the right order',play:'Play',level:'Level {0}',modes:'Game modes',daily:'Daily Challenge',zen:'Zen Mode',zenSub:'No hearts, no pressure',
@@ -391,6 +424,7 @@ settings:'Settings',lang:'Language',theme:'Theme',colors:'Colorful arrows',sound
 time:'Time',mistakesL:'Mistakes',coins:'Coins',perfect:'Flawless!',good:'Great job',ok:'Well done',zenWin:'Board cleared',board:'Board {0}',left:'{0}s',
 chapter:'Chapter {0}',watchAd:'Watch an ad',free:'Free',contAd:'Watch an ad to continue',double:'Double coins',getHint:'Get a hint',getBlast:'Get a blast',adFail:'No ad available right now. Try again later.',moreTime:'+15 seconds',orCoins:'Use {0} coins',
 adPrivacy:'Ad privacy choices',dailyReward:'Daily reward',dayN:'Day {0}',claim:'Claim',claimX2:'Claim ×2',comeBack:'Come back tomorrow for your next reward',achievements:'Achievements',achUnlocked:'Achievement unlocked',achSub:'{0} of {1} unlocked',a_levels:'Complete {0} levels',a_perfect:'Finish {0} levels without a mistake',a_arrows:'Free {0} arrows',a_combo:'Reach a ×{0} combo',a_shapes:'Complete {0} different shapes',a_daily:'Complete {0} daily challenges',a_streak:'Reach a {0}-day daily-challenge streak',a_login:'Claim the daily reward {0} days in a row',a_rush:'Score {0} in Time Rush',a_zen:'Clear {0} Zen boards',a_keys:'Unlock {0} locked arrows',a_gold:'Collect {0} golden arrows',
+noAdsT:'1 hour without ads',noAdsSub:'Watch one video: no ads between levels for an hour',noAdsOn:'Active · {0} min left',notifT:'Daily reminder',notif1:'Your daily reward is ready 🎁 and a new puzzle is waiting.',notif2:'The arrows miss you! Come back for a quick puzzle.',enjoyQ:'Enjoying Arrow Escape?',enjoySub:'Your opinion helps us a lot.',enjoyYes:'Yes, I love it!',enjoyNo:'Not really',fbQ:'How can we do better?',fbSub:'Tell us what to improve — we read every message.',fbSend:'Send feedback',fbLater:'Maybe later',shop:'Arrow styles',shopSub:'{0} of {1} unlocked',equip:'Use',equipped:'In use',sk_classic:'Classic',sk_rainbow:'Rainbow',sk_neon:'Neon',sk_candy:'Candy',sk_rope:'Rope',sk_beads:'Beads',sk_pixel:'Pixel',sk_royal:'Royal',
 tut1:'Tap an arrow to slide it out the way it points. If another arrow is in the way, you lose a heart.',tut2:'Long-press any arrow to preview its path before moving it.',tut3:'A locked arrow can’t move until the key arrow of the same color is gone.',
 how:[['send','Tap an arrow and it leaves the board in the direction it points.'],['x','If another arrow blocks its path, it bounces back and you lose a heart.'],['eye','Long-press to preview the path: green = clear, red = blocked.'],['lock','A locked arrow opens when the key arrow of the same color leaves.'],['spark','Golden arrows give coins; clear arrows quickly to chain combos.'],['bulb','A hint reveals a free arrow; a blast removes any arrow.']]},
 es:{title:'Arrow Escape',tagline:'Libera las flechas en el orden correcto',play:'Jugar',level:'Nivel {0}',modes:'Modos de juego',daily:'Reto diario',zen:'Modo Zen',zenSub:'Sin corazones, sin presión',
@@ -402,6 +436,7 @@ settings:'Ajustes',lang:'Idioma',theme:'Tema',colors:'Flechas de colores',sound:
 time:'Tiempo',mistakesL:'Errores',coins:'Monedas',perfect:'¡Sin errores!',good:'¡Gran trabajo!',ok:'Bien hecho',zenWin:'Tablero despejado',board:'Tablero {0}',
 chapter:'Capítulo {0}',watchAd:'Ver anuncio',free:'Gratis',contAd:'Ver anuncio y continuar',double:'Duplicar monedas',getHint:'Obtener una pista',getBlast:'Obtener un rayo',adFail:'No hay anuncios disponibles ahora. Inténtalo más tarde.',moreTime:'+15 segundos',orCoins:'Usar {0} monedas',
 adPrivacy:'Privacidad de anuncios',dailyReward:'Recompensa diaria',dayN:'Día {0}',claim:'Recoger',claimX2:'Recoger ×2',comeBack:'Vuelve mañana por tu próxima recompensa',achievements:'Logros',achUnlocked:'Logro desbloqueado',achSub:'{0} de {1} desbloqueados',a_levels:'Completa {0} niveles',a_perfect:'Termina {0} niveles sin errores',a_arrows:'Libera {0} flechas',a_combo:'Consigue un combo ×{0}',a_shapes:'Completa {0} formas distintas',a_daily:'Supera {0} retos diarios',a_streak:'Supera el reto diario {0} días seguidos',a_login:'Recoge la recompensa diaria {0} días seguidos',a_rush:'Consigue {0} puntos en Contrarreloj',a_zen:'Despeja {0} tableros Zen',a_keys:'Desbloquea {0} flechas con candado',a_gold:'Recoge {0} flechas doradas',
+noAdsT:'1 hora sin anuncios',noAdsSub:'Mira un vídeo: sin anuncios entre niveles durante 1 hora',noAdsOn:'Activo · quedan {0} min',notifT:'Recordatorio diario',notif1:'Tu recompensa diaria está lista 🎁 y te espera un puzle nuevo.',notif2:'¡Las flechas te echan de menos! Vuelve para un puzle rápido.',enjoyQ:'¿Te gusta Arrow Escape?',enjoySub:'Tu opinión nos ayuda mucho.',enjoyYes:'¡Sí, me encanta!',enjoyNo:'No mucho',fbQ:'¿Cómo podemos mejorar?',fbSub:'Cuéntanos qué mejorar; leemos todos los mensajes.',fbSend:'Enviar opinión',fbLater:'Más tarde',shop:'Estilos de flecha',shopSub:'{0} de {1} desbloqueados',equip:'Usar',equipped:'En uso',sk_classic:'Clásico',sk_rainbow:'Arcoíris',sk_neon:'Neón',sk_candy:'Caramelo',sk_rope:'Cuerda',sk_beads:'Cuentas',sk_pixel:'Píxel',sk_royal:'Real',
 tut1:'Toca una flecha para que salga en la dirección a la que apunta. Si otra flecha se interpone, pierdes un corazón.',tut2:'Mantén pulsada una flecha para ver su recorrido antes de moverla.',tut3:'Una flecha con candado no se mueve hasta que salga la flecha llave del mismo color.',
 how:[['send','Toca una flecha y saldrá del tablero en la dirección a la que apunta.'],['x','Si otra flecha bloquea su camino, rebota y pierdes un corazón.'],['eye','Mantén pulsado para ver el recorrido: verde = libre, rojo = bloqueado.'],['lock','Una flecha con candado se abre cuando sale la flecha llave del mismo color.'],['spark','Las flechas doradas dan monedas; despeja rápido para encadenar combos.'],['bulb','La pista muestra una flecha libre; el rayo elimina cualquier flecha.']]},
 pt:{title:'Arrow Escape',tagline:'Liberte as setas na ordem certa',play:'Jogar',level:'Nível {0}',modes:'Modos de jogo',daily:'Desafio diário',zen:'Modo Zen',zenSub:'Sem corações, sem pressão',
@@ -413,6 +448,7 @@ settings:'Configurações',lang:'Idioma',theme:'Tema',colors:'Setas coloridas',s
 time:'Tempo',mistakesL:'Erros',coins:'Moedas',perfect:'Sem nenhum erro!',good:'Ótimo trabalho',ok:'Muito bem',zenWin:'Tabuleiro limpo',board:'Tabuleiro {0}',
 chapter:'Capítulo {0}',watchAd:'Assistir anúncio',free:'Grátis',contAd:'Assistir anúncio e continuar',double:'Dobrar moedas',getHint:'Ganhar uma dica',getBlast:'Ganhar um raio',adFail:'Nenhum anúncio disponível agora. Tente mais tarde.',moreTime:'+15 segundos',orCoins:'Usar {0} moedas',
 adPrivacy:'Privacidade dos anúncios',dailyReward:'Recompensa diária',dayN:'Dia {0}',claim:'Coletar',claimX2:'Coletar ×2',comeBack:'Volte amanhã para a próxima recompensa',achievements:'Conquistas',achUnlocked:'Conquista desbloqueada',achSub:'{0} de {1} desbloqueadas',a_levels:'Conclua {0} níveis',a_perfect:'Termine {0} níveis sem errar',a_arrows:'Liberte {0} setas',a_combo:'Faça um combo ×{0}',a_shapes:'Conclua {0} formas diferentes',a_daily:'Conclua {0} desafios diários',a_streak:'Conclua o desafio diário {0} dias seguidos',a_login:'Colete a recompensa diária {0} dias seguidos',a_rush:'Marque {0} pontos no Contra o tempo',a_zen:'Limpe {0} tabuleiros Zen',a_keys:'Destranque {0} setas',a_gold:'Colete {0} setas douradas',
+noAdsT:'1 hora sem anúncios',noAdsSub:'Assista a um vídeo: sem anúncios entre níveis por 1 hora',noAdsOn:'Ativo · faltam {0} min',notifT:'Lembrete diário',notif1:'Sua recompensa diária está pronta 🎁 e um novo quebra-cabeça espera por você.',notif2:'As setas sentem sua falta! Volte para um desafio rápido.',enjoyQ:'Está gostando do Arrow Escape?',enjoySub:'Sua opinião nos ajuda muito.',enjoyYes:'Sim, adorei!',enjoyNo:'Nem tanto',fbQ:'Como podemos melhorar?',fbSub:'Conte o que melhorar — lemos todas as mensagens.',fbSend:'Enviar opinião',fbLater:'Depois',shop:'Estilos de seta',shopSub:'{0} de {1} desbloqueados',equip:'Usar',equipped:'Em uso',sk_classic:'Clássico',sk_rainbow:'Arco-íris',sk_neon:'Neon',sk_candy:'Doce',sk_rope:'Corda',sk_beads:'Contas',sk_pixel:'Pixel',sk_royal:'Real',
 tut1:'Toque numa seta para ela sair na direção em que aponta. Se outra seta estiver no caminho, você perde um coração.',tut2:'Mantenha pressionada uma seta para ver o caminho antes de movê-la.',tut3:'Uma seta trancada só se move depois que a seta-chave da mesma cor sair.',
 how:[['send','Toque numa seta e ela sai do tabuleiro na direção em que aponta.'],['x','Se outra seta bloquear o caminho, ela volta e você perde um coração.'],['eye','Mantenha pressionado para ver o caminho: verde = livre, vermelho = bloqueado.'],['lock','Uma seta trancada abre quando a seta-chave da mesma cor sai.'],['spark','Setas douradas dão moedas; seja rápido para fazer combos.'],['bulb','A dica mostra uma seta livre; o raio remove qualquer seta.']]},
 de:{title:'Arrow Escape',tagline:'Befreie die Pfeile in der richtigen Reihenfolge',play:'Spielen',level:'Level {0}',modes:'Spielmodi',daily:'Tagesrätsel',zen:'Zen-Modus',zenSub:'Keine Herzen, kein Druck',
@@ -424,6 +460,7 @@ settings:'Einstellungen',lang:'Sprache',theme:'Design',colors:'Bunte Pfeile',sou
 time:'Zeit',mistakesL:'Fehler',coins:'Münzen',perfect:'Fehlerfrei!',good:'Super gemacht',ok:'Gut gemacht',zenWin:'Brett geleert',board:'Brett {0}',
 chapter:'Kapitel {0}',watchAd:'Werbung ansehen',free:'Gratis',contAd:'Werbung ansehen und weiterspielen',double:'Münzen verdoppeln',getHint:'Tipp holen',getBlast:'Blitz holen',adFail:'Gerade ist keine Werbung verfügbar. Versuche es später.',moreTime:'+15 Sekunden',orCoins:'{0} Münzen einsetzen',
 adPrivacy:'Werbe-Datenschutz',dailyReward:'Tagesbelohnung',dayN:'Tag {0}',claim:'Abholen',claimX2:'×2 abholen',comeBack:'Komm morgen für die nächste Belohnung wieder',achievements:'Erfolge',achUnlocked:'Erfolg freigeschaltet',achSub:'{0} von {1} freigeschaltet',a_levels:'Schaffe {0} Level',a_perfect:'Schaffe {0} Level ohne Fehler',a_arrows:'Befreie {0} Pfeile',a_combo:'Erreiche eine ×{0}-Kombo',a_shapes:'Schaffe {0} verschiedene Formen',a_daily:'Löse {0} Tagesrätsel',a_streak:'Löse {0} Tage in Folge das Tagesrätsel',a_login:'Hole die Tagesbelohnung {0} Tage in Folge ab',a_rush:'Erreiche {0} Punkte im Zeitrennen',a_zen:'Leere {0} Zen-Bretter',a_keys:'Entsperre {0} Pfeile',a_gold:'Sammle {0} goldene Pfeile',
+noAdsT:'1 Stunde ohne Werbung',noAdsSub:'Ein Video ansehen: 1 Stunde keine Werbung zwischen den Leveln',noAdsOn:'Aktiv · noch {0} Min.',notifT:'Tägliche Erinnerung',notif1:'Deine Tagesbelohnung wartet 🎁 und ein neues Rätsel auch.',notif2:'Die Pfeile vermissen dich! Komm zurück für ein schnelles Rätsel.',enjoyQ:'Gefällt dir Arrow Escape?',enjoySub:'Deine Meinung hilft uns sehr.',enjoyYes:'Ja, total!',enjoyNo:'Nicht wirklich',fbQ:'Was können wir besser machen?',fbSub:'Sag uns, was wir verbessern sollen – wir lesen jede Nachricht.',fbSend:'Feedback senden',fbLater:'Später',shop:'Pfeil-Stile',shopSub:'{0} von {1} freigeschaltet',equip:'Benutzen',equipped:'Aktiv',sk_classic:'Klassisch',sk_rainbow:'Regenbogen',sk_neon:'Neon',sk_candy:'Bonbon',sk_rope:'Seil',sk_beads:'Perlen',sk_pixel:'Pixel',sk_royal:'Royal',
 tut1:'Tippe auf einen Pfeil, damit er in seine Richtung hinausgleitet. Steht ein anderer Pfeil im Weg, verlierst du ein Herz.',tut2:'Halte einen Pfeil gedrückt, um seinen Weg vorab zu sehen.',tut3:'Ein gesperrter Pfeil bewegt sich erst, wenn der Schlüsselpfeil gleicher Farbe weg ist.',
 how:[['send','Tippe auf einen Pfeil und er verlässt das Brett in seine Richtung.'],['x','Blockiert ein anderer Pfeil den Weg, prallt er zurück und du verlierst ein Herz.'],['eye','Gedrückt halten zeigt den Weg: grün = frei, rot = blockiert.'],['lock','Ein gesperrter Pfeil öffnet sich, wenn der Schlüsselpfeil gleicher Farbe geht.'],['spark','Goldene Pfeile bringen Münzen; schnelles Spielen ergibt Kombos.'],['bulb','Ein Tipp zeigt einen freien Pfeil, ein Blitz entfernt jeden Pfeil.']]},
 it:{title:'Arrow Escape',tagline:'Libera le frecce nell’ordine giusto',play:'Gioca',level:'Livello {0}',modes:'Modalità di gioco',daily:'Sfida del giorno',zen:'Modalità Zen',zenSub:'Niente cuori, niente stress',
@@ -435,6 +472,7 @@ settings:'Impostazioni',lang:'Lingua',theme:'Tema',colors:'Frecce colorate',soun
 time:'Tempo',mistakesL:'Errori',coins:'Monete',perfect:'Nessun errore!',good:'Ottimo lavoro',ok:'Ben fatto',zenWin:'Griglia libera',board:'Griglia {0}',
 chapter:'Capitolo {0}',watchAd:'Guarda un video',free:'Gratis',contAd:'Guarda un video e continua',double:'Raddoppia le monete',getHint:'Ottieni un suggerimento',getBlast:'Ottieni un fulmine',adFail:'Nessun video disponibile ora. Riprova più tardi.',moreTime:'+15 secondi',orCoins:'Usa {0} monete',
 adPrivacy:'Privacy degli annunci',dailyReward:'Ricompensa giornaliera',dayN:'Giorno {0}',claim:'Riscatta',claimX2:'Riscatta ×2',comeBack:'Torna domani per la prossima ricompensa',achievements:'Obiettivi',achUnlocked:'Obiettivo sbloccato',achSub:'{0} su {1} sbloccati',a_levels:'Completa {0} livelli',a_perfect:'Completa {0} livelli senza errori',a_arrows:'Libera {0} frecce',a_combo:'Raggiungi una combo ×{0}',a_shapes:'Completa {0} forme diverse',a_daily:'Supera {0} sfide del giorno',a_streak:'Supera la sfida del giorno {0} giorni di fila',a_login:'Riscatta la ricompensa {0} giorni di fila',a_rush:'Fai {0} punti in Contro il tempo',a_zen:'Libera {0} griglie Zen',a_keys:'Sblocca {0} frecce bloccate',a_gold:'Raccogli {0} frecce dorate',
+noAdsT:'1 ora senza pubblicità',noAdsSub:'Guarda un video: niente pubblicità tra i livelli per 1 ora',noAdsOn:'Attivo · ancora {0} min',notifT:'Promemoria giornaliero',notif1:'La tua ricompensa giornaliera è pronta 🎁 e ti aspetta un nuovo puzzle.',notif2:'Le frecce sentono la tua mancanza! Torna per un puzzle veloce.',enjoyQ:'Ti piace Arrow Escape?',enjoySub:'La tua opinione ci aiuta molto.',enjoyYes:'Sì, lo adoro!',enjoyNo:'Non proprio',fbQ:'Come possiamo migliorare?',fbSub:'Dicci cosa migliorare: leggiamo ogni messaggio.',fbSend:'Invia un commento',fbLater:'Più tardi',shop:'Stili delle frecce',shopSub:'{0} su {1} sbloccati',equip:'Usa',equipped:'In uso',sk_classic:'Classico',sk_rainbow:'Arcobaleno',sk_neon:'Neon',sk_candy:'Caramella',sk_rope:'Corda',sk_beads:'Perline',sk_pixel:'Pixel',sk_royal:'Reale',
 tut1:'Tocca una freccia per farla uscire nella direzione in cui punta. Se un’altra freccia è sulla strada, perdi un cuore.',tut2:'Tieni premuta una freccia per vedere il suo percorso prima di muoverla.',tut3:'Una freccia bloccata non si muove finché non esce la freccia chiave dello stesso colore.',
 how:[['send','Tocca una freccia e uscirà dalla griglia nella direzione in cui punta.'],['x','Se un’altra freccia blocca il percorso, rimbalza e perdi un cuore.'],['eye','Tieni premuto per vedere il percorso: verde = libero, rosso = bloccato.'],['lock','Una freccia bloccata si apre quando esce la freccia chiave dello stesso colore.'],['spark','Le frecce dorate danno monete; sii veloce per fare combo.'],['bulb','Il suggerimento mostra una freccia libera, il fulmine rimuove qualsiasi freccia.']]},
 tr:{title:'Arrow Escape',tagline:'Okları doğru sırayla serbest bırak',play:'Oyna',level:'Seviye {0}',modes:'Oyun modları',daily:'Günlük bulmaca',zen:'Zen modu',zenSub:'Can yok, baskı yok',
@@ -446,6 +484,7 @@ settings:'Ayarlar',lang:'Dil',theme:'Tema',colors:'Renkli oklar',sound:'Sesler',
 time:'Süre',mistakesL:'Hatalar',coins:'Altın',perfect:'Hatasız!',good:'Harika iş',ok:'Aferin',zenWin:'Tahta temizlendi',board:'Tahta {0}',
 chapter:'Bölüm {0}',watchAd:'Reklam izle',free:'Ücretsiz',contAd:'Reklam izle ve devam et',double:'Altınları ikiye katla',getHint:'İpucu al',getBlast:'Yıldırım al',adFail:'Şu anda reklam yok. Daha sonra tekrar dene.',moreTime:'+15 saniye',orCoins:'{0} altın kullan',
 adPrivacy:'Reklam gizlilik seçenekleri',dailyReward:'Günlük ödül',dayN:'{0}. gün',claim:'Al',claimX2:'×2 al',comeBack:'Sonraki ödül için yarın tekrar gel',achievements:'Başarımlar',achUnlocked:'Başarım açıldı',achSub:'{0}/{1} açıldı',a_levels:'{0} seviye tamamla',a_perfect:'{0} seviyeyi hatasız bitir',a_arrows:'{0} ok serbest bırak',a_combo:'×{0} komboya ulaş',a_shapes:'{0} farklı şekil tamamla',a_daily:'{0} günlük bulmaca tamamla',a_streak:'Günlük bulmacayı {0} gün üst üste tamamla',a_login:'Günlük ödülü {0} gün üst üste al',a_rush:'Zamana karşı modunda {0} puan yap',a_zen:'{0} Zen tahtası temizle',a_keys:'{0} kilitli oku aç',a_gold:'{0} altın ok topla',
+noAdsT:'1 saat reklamsız',noAdsSub:'Bir video izle: 1 saat boyunca seviyeler arasında reklam yok',noAdsOn:'Etkin · {0} dk kaldı',notifT:'Günlük hatırlatma',notif1:'Günlük ödülün hazır 🎁 ve yeni bir bulmaca seni bekliyor.',notif2:'Oklar seni özledi! Kısa bir bulmaca için geri dön.',enjoyQ:'Arrow Escape’i beğendin mi?',enjoySub:'Görüşün bize çok yardımcı olur.',enjoyYes:'Evet, bayıldım!',enjoyNo:'Pek değil',fbQ:'Nasıl daha iyi yapabiliriz?',fbSub:'Neyi geliştirmemiz gerektiğini yaz; her mesajı okuyoruz.',fbSend:'Geri bildirim gönder',fbLater:'Sonra',shop:'Ok stilleri',shopSub:'{0}/{1} açıldı',equip:'Kullan',equipped:'Kullanılıyor',sk_classic:'Klasik',sk_rainbow:'Gökkuşağı',sk_neon:'Neon',sk_candy:'Şeker',sk_rope:'Halat',sk_beads:'Boncuk',sk_pixel:'Piksel',sk_royal:'Kraliyet',
 tut1:'Bir oka dokun, gösterdiği yöne doğru kayıp çıksın. Önünde başka bir ok varsa bir can kaybedersin.',tut2:'Bir oku hareket ettirmeden önce yolunu görmek için basılı tut.',tut3:'Kilitli bir ok, aynı renkteki anahtar ok çıkana kadar hareket etmez.',
 how:[['send','Bir oka dokun, gösterdiği yönde tahtadan çıksın.'],['x','Yolunu başka bir ok kapatıyorsa geri seker ve bir can kaybedersin.'],['eye','Yolu görmek için basılı tut: yeşil = açık, kırmızı = kapalı.'],['lock','Kilitli ok, aynı renkteki anahtar ok çıkınca açılır.'],['spark','Altın oklar altın kazandırır; hızlı oynayarak kombo yap.'],['bulb','İpucu serbest bir oku gösterir, yıldırım herhangi bir oku kaldırır.']]},
 ru:{title:'Arrow Escape',tagline:'Освободи стрелки в правильном порядке',play:'Играть',level:'Уровень {0}',modes:'Режимы игры',daily:'Задача дня',zen:'Дзен-режим',zenSub:'Без сердец и без спешки',
@@ -457,6 +496,7 @@ settings:'Настройки',lang:'Язык',theme:'Тема',colors:'Цвет�
 time:'Время',mistakesL:'Ошибки',coins:'Монеты',perfect:'Без единой ошибки!',good:'Отличная работа',ok:'Молодец',zenWin:'Поле очищено',board:'Поле {0}',
 chapter:'Глава {0}',watchAd:'Смотреть рекламу',free:'Бесплатно',contAd:'Посмотреть рекламу и продолжить',double:'Удвоить монеты',getHint:'Получить подсказку',getBlast:'Получить молнию',adFail:'Сейчас нет доступной рекламы. Попробуй позже.',moreTime:'+15 секунд',orCoins:'Потратить монеты: {0}',
 adPrivacy:'Настройки рекламы',dailyReward:'Ежедневная награда',dayN:'День {0}',claim:'Забрать',claimX2:'Забрать ×2',comeBack:'Возвращайся завтра за следующей наградой',achievements:'Достижения',achUnlocked:'Достижение открыто',achSub:'Открыто: {0} из {1}',a_levels:'Пройденные уровни: {0}',a_perfect:'Уровни без ошибок: {0}',a_arrows:'Освобождённые стрелки: {0}',a_combo:'Сделай комбо ×{0}',a_shapes:'Пройденные фигуры: {0}',a_daily:'Решённые задачи дня: {0}',a_streak:'Задача дня подряд, дней: {0}',a_login:'Награда дня подряд, дней: {0}',a_rush:'Очки в режиме «На время»: {0}',a_zen:'Очищенные поля в дзен-режиме: {0}',a_keys:'Открытые запертые стрелки: {0}',a_gold:'Собранные золотые стрелки: {0}',
+noAdsT:'1 час без рекламы',noAdsSub:'Посмотри одно видео — и час без рекламы между уровнями',noAdsOn:'Активно · осталось мин: {0}',notifT:'Ежедневное напоминание',notif1:'Ежедневная награда ждёт 🎁 и новая головоломка тоже.',notif2:'Стрелки скучают! Возвращайся на быструю головоломку.',enjoyQ:'Нравится Arrow Escape?',enjoySub:'Твоё мнение очень нам помогает.',enjoyYes:'Да, очень!',enjoyNo:'Не очень',fbQ:'Что нам улучшить?',fbSub:'Напиши, что улучшить, — мы читаем каждое сообщение.',fbSend:'Отправить отзыв',fbLater:'Позже',shop:'Стили стрелок',shopSub:'Открыто: {0} из {1}',equip:'Выбрать',equipped:'Выбрано',sk_classic:'Классика',sk_rainbow:'Радуга',sk_neon:'Неон',sk_candy:'Леденец',sk_rope:'Канат',sk_beads:'Бусины',sk_pixel:'Пиксели',sk_royal:'Королевский',
 tut1:'Нажми на стрелку — она уедет туда, куда указывает. Если путь закрыт другой стрелкой, ты теряешь сердце.',tut2:'Удерживай стрелку, чтобы увидеть её путь перед ходом.',tut3:'Запертая стрелка не двигается, пока не уйдёт стрелка-ключ того же цвета.',
 how:[['send','Нажми на стрелку, и она покинет поле в том направлении, куда указывает.'],['x','Если путь закрыт другой стрелкой, она отскочит, а ты потеряешь сердце.'],['eye','Удерживай, чтобы увидеть путь: зелёный — свободно, красный — закрыто.'],['lock','Запертая стрелка открывается, когда уходит стрелка-ключ того же цвета.'],['spark','Золотые стрелки дают монеты; убирай стрелки быстро для комбо.'],['bulb','Подсказка показывает свободную стрелку, молния убирает любую.']]},
 id:{title:'Arrow Escape',tagline:'Bebaskan panah dengan urutan yang benar',play:'Main',level:'Level {0}',modes:'Mode permainan',daily:'Tantangan harian',zen:'Mode Zen',zenSub:'Tanpa nyawa, tanpa tekanan',
@@ -468,16 +508,20 @@ settings:'Pengaturan',lang:'Bahasa',theme:'Tema',colors:'Panah berwarna',sound:'
 time:'Waktu',mistakesL:'Kesalahan',coins:'Koin',perfect:'Tanpa kesalahan!',good:'Kerja bagus',ok:'Bagus',zenWin:'Papan bersih',board:'Papan {0}',
 chapter:'Bab {0}',watchAd:'Tonton iklan',free:'Gratis',contAd:'Tonton iklan untuk lanjut',double:'Gandakan koin',getHint:'Dapatkan petunjuk',getBlast:'Dapatkan petir',adFail:'Iklan belum tersedia. Coba lagi nanti.',moreTime:'+15 detik',orCoins:'Pakai {0} koin',
 adPrivacy:'Privasi iklan',dailyReward:'Hadiah harian',dayN:'Hari {0}',claim:'Ambil',claimX2:'Ambil ×2',comeBack:'Kembali besok untuk hadiah berikutnya',achievements:'Pencapaian',achUnlocked:'Pencapaian terbuka',achSub:'{0} dari {1} terbuka',a_levels:'Selesaikan {0} level',a_perfect:'Selesaikan {0} level tanpa kesalahan',a_arrows:'Bebaskan {0} panah',a_combo:'Capai kombo ×{0}',a_shapes:'Selesaikan {0} bentuk berbeda',a_daily:'Selesaikan {0} tantangan harian',a_streak:'Selesaikan tantangan harian {0} hari berturut-turut',a_login:'Ambil hadiah harian {0} hari berturut-turut',a_rush:'Raih {0} poin di Lawan waktu',a_zen:'Bersihkan {0} papan Zen',a_keys:'Buka {0} panah terkunci',a_gold:'Kumpulkan {0} panah emas',
+noAdsT:'1 jam tanpa iklan',noAdsSub:'Tonton satu video: tanpa iklan antar-level selama 1 jam',noAdsOn:'Aktif · sisa {0} mnt',notifT:'Pengingat harian',notif1:'Hadiah harianmu sudah siap 🎁 dan teka-teki baru menunggu.',notif2:'Panah-panah merindukanmu! Kembali untuk teka-teki singkat.',enjoyQ:'Suka Arrow Escape?',enjoySub:'Pendapatmu sangat membantu kami.',enjoyYes:'Ya, suka sekali!',enjoyNo:'Kurang suka',fbQ:'Bagaimana kami bisa lebih baik?',fbSub:'Beri tahu kami apa yang perlu diperbaiki — kami membaca setiap pesan.',fbSend:'Kirim masukan',fbLater:'Nanti',shop:'Gaya panah',shopSub:'{0} dari {1} terbuka',equip:'Pakai',equipped:'Dipakai',sk_classic:'Klasik',sk_rainbow:'Pelangi',sk_neon:'Neon',sk_candy:'Permen',sk_rope:'Tali',sk_beads:'Manik-manik',sk_pixel:'Piksel',sk_royal:'Bangsawan',
 tut1:'Ketuk panah agar meluncur keluar ke arah yang ditunjuknya. Jika ada panah lain yang menghalangi, kamu kehilangan satu nyawa.',tut2:'Tekan lama sebuah panah untuk melihat jalurnya sebelum menggerakkannya.',tut3:'Panah terkunci tidak bisa bergerak sampai panah kunci dengan warna yang sama keluar.',
 how:[['send','Ketuk panah dan panah akan keluar dari papan ke arah yang ditunjuknya.'],['x','Jika jalurnya terhalang panah lain, panah memantul dan kamu kehilangan nyawa.'],['eye','Tekan lama untuk melihat jalur: hijau = bebas, merah = terhalang.'],['lock','Panah terkunci terbuka saat panah kunci dengan warna yang sama keluar.'],['spark','Panah emas memberi koin; bermain cepat menghasilkan kombo.'],['bulb','Petunjuk menunjukkan panah yang bebas, petir menghapus panah apa saja.']]}
 };
 /* ================= save ================= */
 const KEY='arrowEscape.v1';
 const DEF={lang:null,level:1,stars:{},coins:60,hints:3,bombs:1,sound:1,vib:1,colors:0,grid:0,theme:'light',tut:0,dailyDone:'',streak:0,rushBest:0,rushBoards:0,
-  rev:0,dr:{last:'',day:0,run:0},st:{},ach:{},asked:{}};
+  rev:0,dr:{last:'',day:0,run:0},st:{},ach:{},asked:{},skin:'classic',owned:['classic','rainbow'],noAds:0,notif:1};
+// Arrow styles bought with in-game coins only (no real money).
+const SKINS=[{id:'classic',p:0},{id:'rainbow',p:0},{id:'neon',p:300},{id:'candy',p:400},{id:'rope',p:500},{id:'beads',p:600},{id:'pixel',p:800},{id:'royal',p:1000}];
 const DEF_ST={levels:0,perfect:0,arrows:0,combo:0,shapes:[],daily:0,streak:0,login:0,rush:0,zen:0,keys:0,gold:0};
 function fromJSON(j){const o=Object.assign({},DEF,j||{});o.dr=Object.assign({},DEF.dr,o.dr);o.st=Object.assign({},DEF_ST,o.st);o.st.shapes=[...(o.st.shapes||[])];
-  o.ach=Object.assign({},o.ach);o.asked=Object.assign({},o.asked);return o}
+  o.ach=Object.assign({},o.ach);o.asked=Object.assign({},o.asked);o.owned=[...new Set(['classic','rainbow',...(o.owned||[])])];
+  if(o.colors&&o.skin==='classic'){o.skin='rainbow';delete o.colors}if(!SKINS.some(k=>k.id===o.skin))o.skin='classic';return o}
 let S;try{S=fromJSON(JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){S=fromJSON({})}
 const CAP=window.Capacitor,NATIVE=!!(CAP&&CAP.isNativePlatform&&CAP.isNativePlatform());
 const NP=n=>NATIVE&&CAP.Plugins?CAP.Plugins[n]:null;
@@ -511,7 +555,7 @@ const SHAPES={
   ring:fn((x,y)=>{const d=x*x+y*y;return d<=1.08&&d>=.16}),
   cross:fn((x,y)=>Math.abs(x)<.42||Math.abs(y)<.42),
   hourglass:fn((x,y)=>Math.abs(x)<=Math.abs(y)*1.05+.18),
-  star:poly(radial(5,1.12,.5,-Math.PI/2,.1)),
+  star:poly(radial(5,1.16,.62,-Math.PI/2,.12)),
   star8:fn((x,y)=>Math.max(Math.abs(x),Math.abs(y))<=.74||Math.abs(x)+Math.abs(y)<=1.05),
   hexagon:poly(radial(3,1.06,1.06,0).map(([x,y])=>[x,y*1.02])),
   house:poly([[0,-1.05],[1.06,-.12],[.78,-.12],[.78,1.04],[-.78,1.04],[-.78,-.12],[-1.06,-.12]]),
@@ -587,8 +631,8 @@ function levelCfg(n){
   const E=[[4,5,2,3],[5,6,2,3],[5,7,2,4],[6,8,2,4],[6,8,2,5]];
   if(n<=E.length){const [c,r,a,b]=E[n-1];return{cols:c,rows:r,minL:a,maxL:b,locks:n===5?1:0,gold:n>2?1:0,mask:'rect',straight:2.5}}
   let cols=Math.min(6+Math.floor((n-5)/5),13),rows=Math.round(cols*1.4),mask='rect';
-  if(n%5===0){mask=SHAPE_ORDER[(n/5-2)%SHAPE_ORDER.length];cols=Math.max(12,Math.min(cols+4,15));rows=Math.round(cols*(ASPECT[mask]||1.15))}
-  return{cols,rows,mask,minL:n>=40?3:2,maxL:Math.min(4+Math.floor((n-5)/4),12),locks:n<8?0:Math.min(1+Math.floor((n-8)/9),4),gold:1+n%2,straight:2+(n%3)*.8};
+  if(n%5===0){mask=SHAPE_ORDER[(n/5-2)%SHAPE_ORDER.length];cols=Math.max(12,Math.min(cols+4,13));rows=Math.round(cols*(ASPECT[mask]||1.15))}
+  return{cols,rows,mask,minL:n>=40?3:2,maxL:Math.min(4+Math.floor((n-5)/4),12),locks:n<8?0:Math.min(1+Math.floor((n-8)/15),3),gold:1+n%2,straight:2+(n%3)*.8};
 }
 function diffOf(n){return n<=5?'easy':n<20?'normal':n<45?'hard':'expert'}
 function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
@@ -621,18 +665,47 @@ function launch(V,a,now){const B=V.B;a.alive=0;for(const i of a.cells)B.occ[i]=-
 function ptAt(cs,pts,dir,s){const L=(pts.length-1)*cs;if(s>=L){const p=pts[pts.length-1];return[p[0]+DIRS[dir][0]*(s-L),p[1]+DIRS[dir][1]*(s-L)]}
   const k=Math.floor(s/cs),f=s/cs-k,a=pts[k],b=pts[k+1];return[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]}
 function slice(cs,pts,dir,s0,s1){const o=[ptAt(cs,pts,dir,s0)];for(let k=Math.floor(s0/cs)+1;k<pts.length&&k*cs<s1;k++)o.push(pts[k]);o.push(ptAt(cs,pts,dir,s1));return o}
-function arrowColor(a){if(a.gold)return COL.gold;
-  if(S.colors){const h=(a.id*137.508+200)%360;return`hsl(${h},${S.theme==='dark'?70:58}%,${S.theme==='dark'?66:46}%)`}return COL.ink}
-function drawArrow(c,p,dir,col,lw,cs){
-  c.strokeStyle=col;c.fillStyle=col;c.lineWidth=lw;c.lineCap='round';c.lineJoin='round';
-  c.beginPath();c.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)c.lineTo(p[i][0],p[i][1]);c.stroke();
-  const h=p[p.length-1],[dx,dy]=DIRS[dir],len=Math.max(7,cs*.36),wid=Math.max(4.5,cs*.22);
+const hueOf=id=>(id*137.508+200)%360,DARK=()=>S.theme==='dark';
+function skinColor(id,skin){skin=skin||S.skin;const h=hueOf(id),d=DARK();
+  switch(skin){
+    case'rainbow':case'candy':case'beads':return`hsl(${h},${d?70:58}%,${d?66:46}%)`;
+    case'neon':return`hsl(${h},95%,${d?62:50}%)`;
+    case'rope':return d?'#d9a066':'#8a5a2b';
+    case'royal':return d?'#c4a5ff':'#4c1d95';
+    default:return COL.ink}}
+function arrowColor(a){return a.gold?COL.gold:skinColor(a.id)}
+function strokePath(c,p){c.beginPath();c.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)c.lineTo(p[i][0],p[i][1]);c.stroke()}
+function headPath(c,h,dir,cs,k){const[dx,dy]=DIRS[dir],len=Math.max(7,cs*.36)*k,wid=Math.max(4.5,cs*.22)*k;
   const tx=h[0]+dx*len*.6,ty=h[1]+dy*len*.6,bx=h[0]-dx*len*.4,by=h[1]-dy*len*.4;
-  c.lineWidth=lw*.45;c.beginPath();c.moveTo(tx,ty);c.lineTo(bx-dy*wid,by+dx*wid);c.lineTo(bx+dy*wid,by-dx*wid);c.closePath();c.fill();c.stroke();
+  c.beginPath();c.moveTo(tx,ty);c.lineTo(bx-dy*wid,by+dx*wid);c.lineTo(bx+dy*wid,by-dx*wid);c.closePath()}
+function drawArrow(c,p,dir,col,lw,cs,skin){skin=skin||S.skin;const h=p[p.length-1];
+  c.strokeStyle=col;c.fillStyle=col;c.lineWidth=lw;c.lineCap='round';c.lineJoin='round';
+  switch(skin){
+    case'neon':{const a=c.globalAlpha;c.globalAlpha=a*.22;c.lineWidth=lw*2.8;strokePath(c,p);headPath(c,h,dir,cs,1.25);c.fill();
+      c.globalAlpha=a;c.lineWidth=lw*.95;strokePath(c,p);headPath(c,h,dir,cs,1);c.fill();
+      c.globalAlpha=a*.75;c.strokeStyle='#fff';c.lineWidth=lw*.3;strokePath(c,p);c.globalAlpha=a;return}
+    case'candy':c.lineWidth=lw*1.3;strokePath(c,p);c.save();c.setLineDash([lw*.8,lw*.9]);c.lineCap='butt';c.strokeStyle='rgba(255,255,255,.6)';strokePath(c,p);c.restore();break;
+    case'rope':c.lineWidth=lw*1.35;strokePath(c,p);c.save();c.setLineDash([lw*.45,lw*.55]);c.lineCap='butt';c.strokeStyle='rgba(0,0,0,.28)';strokePath(c,p);c.restore();break;
+    case'beads':{c.lineWidth=lw*.45;strokePath(c,p);const r=lw*.82,step=cs*.5;let carry=0;
+      for(let i=1;i<p.length;i++){const[x0,y0]=p[i-1],[x1,y1]=p[i],L=Math.hypot(x1-x0,y1-y0);let d=carry;
+        for(;d<L;d+=step){const f=d/L;c.beginPath();c.arc(x0+(x1-x0)*f,y0+(y1-y0)*f,r,0,7);c.fill()}carry=d-L}break}
+    case'pixel':{const q=lw*1.3,step=lw*1.55;let carry=0;   // a chain of square blocks
+      for(let i=1;i<p.length;i++){const[x0,y0]=p[i-1],[x1,y1]=p[i],L=Math.hypot(x1-x0,y1-y0);let d=carry;
+        for(;d<L;d+=step){const f=d/L;c.fillRect(x0+(x1-x0)*f-q/2,y0+(y1-y0)*f-q/2,q,q)}carry=d-L}
+      c.lineJoin='miter';c.lineWidth=lw*.45;headPath(c,h,dir,cs,1.12);c.fill();c.stroke();return}
+    case'royal':c.lineWidth=lw*1.2;strokePath(c,p);headPath(c,h,dir,cs,1.05);c.fill();c.strokeStyle='#f5b000';c.lineWidth=lw*.28;strokePath(c,p);c.lineJoin='round';c.lineWidth=lw*.35;headPath(c,h,dir,cs,1.05);c.stroke();return;
+    default:strokePath(c,p)}
+  c.lineWidth=lw*.45;c.strokeStyle=col;headPath(c,h,dir,cs,1);c.fill();c.stroke();
 }
-function badge(c,x,y,r,col,type){
-  c.fillStyle=COL.bg;c.beginPath();c.arc(x,y,r+2,0,7);c.fill();
-  c.fillStyle=col;c.beginPath();c.arc(x,y,r,0,7);c.fill();
+function badgePath(c,x,y,r,k){c.beginPath();
+  if(k===1){c.roundRect?c.roundRect(x-r*.9,y-r*.9,r*1.8,r*1.8,r*.35):c.rect(x-r*.9,y-r*.9,r*1.8,r*1.8)}
+  else if(k===2){const q=r*1.22;c.moveTo(x,y-q);c.lineTo(x+q,y);c.lineTo(x,y+q);c.lineTo(x-q,y);c.closePath()}
+  else if(k===3){for(let i=0;i<6;i++){const a=Math.PI/6+i*Math.PI/3;c.lineTo(x+Math.cos(a)*r*1.08,y+Math.sin(a)*r*1.08)}c.closePath()}
+  else c.arc(x,y,r,0,7)}
+// Each lock/key pair has its own colour AND badge shape (circle, square, diamond, hexagon) so pairs stay distinguishable without colour.
+function badge(c,x,y,r,col,type,k){
+  c.fillStyle=COL.bg;c.save();c.translate(x,y);c.scale((r+2)/r,(r+2)/r);badgePath(c,0,0,r,k);c.restore();c.fill();
+  c.fillStyle=col;badgePath(c,x,y,r,k);c.fill();
   c.strokeStyle='#fff';c.fillStyle='#fff';c.lineWidth=Math.max(1.3,r*.15);c.lineCap='round';
   if(type==='lock'){c.beginPath();c.roundRect?c.roundRect(x-r*.38,y-r*.06,r*.76,r*.56,r*.1):c.rect(x-r*.38,y-r*.06,r*.76,r*.56);c.fill();
     c.beginPath();c.arc(x,y-r*.1,r*.24,Math.PI,0);c.stroke()}
@@ -679,8 +752,8 @@ function drawBoard(V,now,o){
       if(a.gold){const m=ptAt(cs,pts,a.dir,Math.floor((n-1)/2)*cs+cs*.5*(n>2?0:1)),s=br*.5*(.85+.15*Math.sin(now/220+a.id));
         c.fillStyle='#fff';c.beginPath();c.moveTo(m[0],m[1]-s);c.quadraticCurveTo(m[0],m[1],m[0]+s,m[1]);c.quadraticCurveTo(m[0],m[1],m[0],m[1]+s);
         c.quadraticCurveTo(m[0],m[1],m[0]-s,m[1]);c.quadraticCurveTo(m[0],m[1],m[0],m[1]-s);c.fill()}
-      if(locked){c.globalAlpha=1;const m=ptAt(cs,pts,a.dir,Math.floor((n-1)/2)*cs);badge(c,m[0],m[1],br,PAIR[a.lock%4],'lock')}
-      if(a.key!=null){const m=ptAt(cs,pts,a.dir,Math.floor((n-1)/2)*cs);badge(c,m[0],m[1],br,PAIR[a.key%4],'key')}}
+      if(locked){c.globalAlpha=1;const m=ptAt(cs,pts,a.dir,Math.floor((n-1)/2)*cs);badge(c,m[0],m[1],br,PAIR[a.lock%4],'lock',a.lock%4)}
+      if(a.key!=null){const m=ptAt(cs,pts,a.dir,Math.floor((n-1)/2)*cs);badge(c,m[0],m[1],br,PAIR[a.key%4],'key',a.key%4)}}
     c.globalAlpha=1;
   }
   if(o.coach!=null){const a=B.arrows[o.coach];if(a&&a.alive){const m=V.xy(a.cells[Math.floor(a.cells.length/2)]);
@@ -700,7 +773,7 @@ function startGame(mode,level){
   else if(mode==='daily'){const k=todayKey(),w=new Date().getDay();seed=+k.replace(/-/g,'');
     cfg={cols:11,rows:w%2?14:12,mask:w%2?'rect':SHAPE_ORDER[w%SHAPE_ORDER.length],minL:2,maxL:9,locks:2,gold:3,straight:2.6};if(cfg.mask!=='rect')cfg.cols=13}
   else if(mode==='zen'){seed=Math.random()*1e9|0;const r=rngOf(seed),c=6+Math.floor(r()*6),sh=r()<.4;
-    cfg={cols:sh?c+3:c,rows:sh?c+4:Math.round(c*1.4),mask:sh?SHAPE_ORDER[Math.floor(r()*SHAPE_ORDER.length)]:'rect',minL:2,maxL:4+Math.floor(r()*6),locks:Math.floor(r()*3),gold:2,straight:2.5}}
+    cfg={cols:sh?Math.min(c+3,13):c,rows:sh?Math.min(c+4,15):Math.round(c*1.4),mask:sh?SHAPE_ORDER[Math.floor(r()*SHAPE_ORDER.length)]:'rect',minL:2,maxL:4+Math.floor(r()*6),locks:Math.floor(r()*3),gold:2,straight:2.5}}
   else{seed=Math.random()*1e9|0;const b=R.boards,c=Math.min(5+Math.floor(b/2),9);cfg={cols:c,rows:Math.round(c*1.35),mask:'rect',minL:2,maxL:Math.min(3+b,8),locks:b>2?1:0,gold:1,straight:2.5}}
   G=makeBoard(generate(rngOf(seed),cfg));G.shaped=cfg.mask!=='rect';G.cfg=cfg;
   Object.assign(G,{mode,level,hearts:mode==='levels'||mode==='daily'?3:0,mistakes:0,combo:0,lastT:0,hint:-1,bomb:false,over:false,coinsWon:0,start:performance.now()});
@@ -844,6 +917,8 @@ function renderHome(){
   $('#lvSub').textContent=t('lvSub',Object.values(S.stars).reduce((a,b)=>a+b,0));
   $('#achSubH').textContent=t('achSub',Object.keys(S.ach).length,ACH_TOTAL);
   $('#giftDot').hidden=!drCan();
+  $('#shopSubH').textContent=t('sk_'+S.skin)+' · '+t('shopSub',SKINS.filter(k=>S.owned.includes(k.id)).length,SKINS.length);
+  $('#mNoAds').style.display=Ads.ok()?'':'none';const na=noAdsLeft();$('#noAdsSubH').textContent=na?t('noAdsOn',Math.ceil(na/60000)):t('noAdsSub');
 }
 function applyLang(){
   const L=S.lang;document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
@@ -939,7 +1014,7 @@ const Ads={native:null,test:/[?&]ads=test/.test(location.search),busy:false,last
   load(k){const P=this.native;if(!P)return;(k==='i'?P.prepareInterstitial({adId:AD_UNITS.interstitial}):P.prepareRewardVideoAd({adId:AD_UNITS.rewarded})).catch(()=>{})},
   // Between levels only, never before level 7, at most once every 3 boards and 2.5 minutes.
   async interstitial(){this.boards++;
-    if(!this.ok()||this.busy||S.level<7||this.boards<3||Date.now()-this.last<150000)return;
+    if(!this.ok()||this.busy||noAdsLeft()||S.level<7||this.boards<3||Date.now()-this.last<150000)return;
     this.busy=true;audioPause();
     try{if(this.native){const P=this.native;await new Promise(async ok=>{let h1,h2;const end=()=>{h1&&h1.remove();h2&&h2.remove();ok()};
         h1=await P.addListener('interstitialAdDismissed',end);h2=await P.addListener('interstitialAdFailedToShow',end);setTimeout(end,90000);
@@ -979,7 +1054,7 @@ function openDaily(){const can=drCan(),cur=can?drIdx():(S.dr.day+6)%7;
 function claimDaily(mult){if(!drCan())return;const i=drIdx(),r=DR[i];
   S.coins+=(r.c||0)*mult;S.hints+=(r.h||0)*mult;S.bombs+=(r.b||0)*mult;
   S.dr.run=S.dr.last===yKey()?S.dr.run+1:1;S.dr.last=todayKey();S.dr.day=(i+1)%7;S.st.login=Math.max(S.st.login,S.dr.run);
-  save();hide('ovDaily');sfx('win');confetti();renderHome();setTimeout(checkAch,600)}
+  save();hide('ovDaily');sfx('win');confetti();renderHome();setTimeout(checkAch,600);setTimeout(askNotif,1500)}
 
 /* ================= achievements ================= */
 const ACH=[['levels','flag',[10,50,150,300]],['perfect','star',[5,25,100]],['arrows','send',[500,2500,10000]],['combo','spark',[5,10,20]],
@@ -1000,11 +1075,56 @@ function openAch(){
       ${all?`<span class="ok">${ico('check')}</span>`:`<div style="text-align:end"><span class="rw">${COIN}${ACH_PAY[done]}</span><small>${Math.min(v,g)}/${g}</small></div>`}</div>`}).join('');
   show('ovAch',true)}
 
+/* ================= arrow styles ================= */
+function skinPreview(cv,skin){const d=Math.min(window.devicePixelRatio||1,3),w=120,h=78;cv.width=w*d;cv.height=h*d;const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);
+  const cs=22,ox=(w-4*cs)/2,oy=(h-3*cs)/2,P=([x,y])=>[ox+(x+.5)*cs,oy+(y+.5)*cs];
+  drawArrow(c,[[0,2],[2,2],[2,0],[3,0]].map(P),1,skinColor(3,skin),Math.max(2,cs*.11),cs,skin);
+  drawArrow(c,[[0,0],[0,1]].map(P),2,skinColor(8,skin),Math.max(2,cs*.11),cs,skin)}
+function openShop(){const own=SKINS.filter(k=>S.owned.includes(k.id)).length;$('#shopSub').textContent=t('shopSub',own,SKINS.length);
+  const L=$('#skinList');L.innerHTML='';
+  for(const k of SKINS){const has=S.owned.includes(k.id),on=S.skin===k.id,b=document.createElement('button');
+    b.className='skin'+(on?' on':'')+(has?'':' lock')+(!has&&S.coins<k.p?' cant':'');
+    b.innerHTML=`<canvas></canvas><b></b><small>${on?t('equipped'):has?t('equip'):COIN+k.p}</small>`;b.querySelector('b').textContent=t('sk_'+k.id);
+    skinPreview(b.querySelector('canvas'),k.id);
+    b.onclick=()=>{if(!has){if(S.coins<k.p){toast(t('noCoins'));sfx('lock');return}S.coins-=k.p;S.owned.push(k.id);sfx('unlock');confetti()}else sfx('hint');
+      S.skin=k.id;save();openShop();renderHome()};L.appendChild(b)}
+  show('ovShop',true)}
+
+/* ================= one hour without ads ================= */
+const noAdsLeft=()=>Math.max(0,S.noAds-Date.now());
+async function buyNoAds(){if(noAdsLeft())return;if(await Ads.rewarded()){S.noAds=Date.now()+3600e3;save();renderHome();sfx('unlock');toast(t('noAdsOn',60),'noad')}else toast(t('adFail'))}
+
+/* ================= "enjoying the game?" before asking for a review ================= */
+function enjoyPrompt(level){return new Promise(done=>{
+  if(!NATIVE||S.asked[level]||S.asked.enjoy==='no'||![12,40,100].includes(level))return done(false);
+  S.asked[level]=1;save();
+  const step=(icon,bg,title,sub,yes,no,onYes,onNo)=>{$('#ejIco').innerHTML=ico(icon);$('#ejIco').style.background=bg;$('#ejTitle').textContent=t(title);$('#ejSub').textContent=t(sub);
+    $('#ejYes').innerHTML=yes;$('#ejNo').textContent=t(no);$('#ejYes').onclick=onYes;$('#ejNo').onclick=onNo;show('ovEnjoy',true)};
+  const end=()=>{hide('ovEnjoy');done(true)};
+  step('heart','rgba(239,68,68,.12)','enjoyQ','enjoySub',t('enjoyYes'),'enjoyNo',
+    ()=>{end();const P=NP('InAppReview');if(P)P.requestReview().catch(()=>{})},
+    ()=>{S.asked.enjoy='no';save();step('mail','var(--pri-t)','fbQ','fbSub',ico('mail')+`<span>${t('fbSend')}</span>`,'fbLater',
+      ()=>{end();location.href='mailto:ass.tazrzit@gmail.com?subject='+encodeURIComponent('Arrow Escape — feedback (v'+APP_VERSION+', '+S.lang+')')},end)});
+  $('#ejYes').style.display='flex';$('#ejYes').style.justifyContent='center';$('#ejYes').style.gap='8px'})}
+const APP_VERSION='1.0';
+
+/* ================= daily reminder notifications ================= */
+// One reminder for the next evening (today if the reward is still unclaimed) and a gentle one 3 days later.
+async function scheduleReminders(){const N=NP('LocalNotifications');if(!N)return;
+  try{await N.cancel({notifications:[{id:101},{id:102}]});if(!S.notif)return;
+    const perm=await N.checkPermissions();if(perm.display!=='granted')return;
+    const now=new Date(),at=new Date();at.setHours(19,0,0,0);if(!drCan()||at<=now)at.setDate(at.getDate()+1);
+    const at2=new Date(at);at2.setDate(at2.getDate()+3);
+    const n=(id,body,when)=>({id,title:t('title'),body:t(body),schedule:{at:when},isExactNotification:false,smallIcon:'ic_stat_arrow',iconColor:'#2F6BFF'});
+    await N.schedule({notifications:[n(101,'notif1',at),n(102,'notif2',at2)]})}catch(e){}}
+async function askNotif(){const N=NP('LocalNotifications');if(!N||S.asked.notif)return;S.asked.notif=1;save();
+  try{await N.requestPermissions()}catch(e){}scheduleReminders()}
+
 /* ================= app lifecycle (pause, back button, review) ================= */
 let pausedAt=0;
 function audioPause(){if(AC&&AC.state==='running')AC.suspend()}
 function audioResume(){if(AC&&AC.state==='suspended'&&!document.hidden)AC.resume()}
-function onPause(){if(pausedAt)return;pausedAt=performance.now();audioPause()}
+function onPause(){if(pausedAt)return;pausedAt=performance.now();audioPause();scheduleReminders()}
 function onResume(){if(!pausedAt)return;const d=performance.now()-pausedAt;pausedAt=0;if(R)R.end+=d;if(G)G.start+=d;if(!Ads.busy)audioResume()}
 function onBack(){
   if(Ads.busy||document.getElementById('adfake'))return;
@@ -1012,14 +1132,13 @@ function onBack(){
   if(open.length){const o=open[open.length-1].id,home={ovWin:'#wHome',ovLose:'#lHome',ovRush:'#rHome'}[o];if(home)$(home).click();else hide(o);return}
   if($('#game').classList.contains('active')){$('#gBack').click();return}
   const A=NP('App');if(A)A.exitApp()}
-function askReview(level){if(!NATIVE||S.asked[level]||![12,40,100].includes(level))return false;S.asked[level]=1;save();
-  const P=NP('InAppReview');if(P)P.requestReview().catch(()=>{});return true}
 function initNative(){if(!NATIVE)return;
   const A=NP('App');if(A){A.addListener('backButton',onBack);A.addListener('pause',onPause);A.addListener('resume',onResume)}
   const SB=NP('StatusBar');const syncBar=()=>{if(!SB)return;SB.setBackgroundColor({color:COL.bg}).catch(()=>{});SB.setStyle({style:S.theme==='dark'?'DARK':'LIGHT'}).catch(()=>{})};
   syncBar();document.addEventListener('themechange',syncBar);
   // Links such as the privacy policy open the hosted page in the system browser.
   document.querySelectorAll('a[href="privacy.html"]').forEach(a=>{a.href='https://lhamami12.github.io/arrows/privacy.html';a.target='_blank';a.rel='noopener'});
+  if(NP('LocalNotifications'))$('#notifRow').style.display='';
   const SS=NP('SplashScreen');if(SS)setTimeout(()=>SS.hide().catch(()=>{}),150)}
 
 /* ================= home demo ================= */
@@ -1074,14 +1193,14 @@ $('#lvClose').onclick=()=>hide('ovLevels');
 $('#gBack').onclick=()=>{G=null;R=null;show('home')};
 $('#tHint').onclick=useHint;$('#tBomb').onclick=useBomb;
 $('#tGrid').onclick=()=>{S.grid=S.grid?0:1;save();updHUD()};
-$('#wNext').onclick=async()=>{hide('ovWin');const m=G.mode,l=G.level;if(m!=='daily'&&!(m==='levels'&&askReview(l)))await Ads.interstitial();if(m==='levels')startGame('levels',l+1);else if(m==='zen')startGame('zen');else show('home')};
+$('#wNext').onclick=async()=>{hide('ovWin');const m=G.mode,l=G.level;if(m!=='daily'&&!(m==='levels'&&await enjoyPrompt(l)))await Ads.interstitial();if(m==='levels')startGame('levels',l+1);else if(m==='zen')startGame('zen');else show('home')};
 $('#wDouble').onclick=async()=>{if(await Ads.rewarded()){S.coins+=G.winCoins;save();$('#kCoins').innerHTML=COIN.replace('class="coin"','class="coin" style="width:16px;height:16px"')+'+'+G.winCoins*2;$('#wDouble').style.display='none';sfx('hint')}else toast(t('adFail'))};
 $('#lAd').onclick=async()=>{if(await Ads.rewarded()){G.adCont=1;G.hearts=1;G.over=false;hide('ovLose');updHUD(true)}else toast(t('adFail'))};
 $('#rMore').onclick=async()=>{if(await Ads.rewarded()){R.more=1;R.end=performance.now()+15000;G.over=false;hide('ovRush')}else toast(t('adFail'))};
 $('#gAd').onclick=async()=>{const k=getKind;if(await Ads.rewarded())grant(k);else toast(t('adFail'))};
 $('#gBuy').onclick=()=>{const p=PRICE[getKind];if(S.coins<p){toast(t('noCoins'));return}S.coins-=p;grant(getKind)};
 $('#gClose').onclick=()=>hide('ovGet');
-$('#hGift').onclick=openDaily;$('#mAch').onclick=openAch;$('#achClose').onclick=()=>hide('ovAch');$('#drClose').onclick=()=>hide('ovDaily');
+$('#hGift').onclick=openDaily;$('#mShop').onclick=openShop;$('#shopClose').onclick=()=>hide('ovShop');$('#mNoAds').onclick=buyNoAds;$('#mAch').onclick=openAch;$('#achClose').onclick=()=>hide('ovAch');$('#drClose').onclick=()=>hide('ovDaily');
 $('#drClaim').onclick=()=>claimDaily(1);
 $('#drX2').onclick=async()=>{if(await Ads.rewarded())claimDaily(2);else toast(t('adFail'))};
 $('#sAdPriv').onclick=()=>{try{Ads.native&&Ads.native.showPrivacyOptionsForm()}catch(e){}};
@@ -1096,16 +1215,16 @@ $('#hSet').onclick=$('#gSet').onclick=()=>show('ovSet',true);
 $('#sClose').onclick=()=>hide('ovSet');
 $('#sHow').onclick=()=>show('ovHow',true);
 $('#hwClose').onclick=()=>hide('ovHow');
-document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o&&['ovSet','ovHow','ovLevels','ovGet','ovAch','ovDaily'].includes(o.id))hide(o.id)}));
+document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o&&['ovSet','ovHow','ovLevels','ovGet','ovAch','ovDaily','ovShop'].includes(o.id))hide(o.id)}));
 $('#sLang').innerHTML=Object.entries(LANGS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
 $('#sLang').onchange=e=>{S.lang=e.target.value;save();applyLang()};
 document.querySelectorAll('#sTheme button').forEach(b=>b.onclick=()=>{S.theme=b.dataset.v;save();applyTheme()});
-document.querySelectorAll('.tg').forEach(b=>b.onclick=()=>{S[b.dataset.k]=S[b.dataset.k]?0:1;save();applyTheme()});
+document.querySelectorAll('.tg').forEach(b=>b.onclick=()=>{S[b.dataset.k]=S[b.dataset.k]?0:1;save();applyTheme();if(b.dataset.k==='notif')S.notif?askNotif().then(scheduleReminders):scheduleReminders()});
 addEventListener('resize',()=>{GV.size();DV.size();sizeFx()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)onPause();else onResume()});
 
 applyTheme();applyLang();sizeFx();demoNew();requestAnimationFrame(loop);initNative();
-loadNative().then(()=>{Ads.init();checkAch();if(drCan()&&S.level>=2)setTimeout(()=>{if($('#home').classList.contains('active')&&!document.querySelector('.ov.show'))openDaily()},600)});
+loadNative().then(()=>{Ads.init().then(renderHome);scheduleReminders();checkAch();if(drCan()&&S.level>=2)setTimeout(()=>{if($('#home').classList.contains('active')&&!document.querySelector('.ov.show'))openDaily()},600)});
 </script>
 </body>
 </html>
