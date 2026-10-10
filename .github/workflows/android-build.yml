@@ -93,6 +93,7 @@ jobs:
   smoke-test:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -114,6 +115,7 @@ jobs:
           target: google_apis
           arch: x86_64
           disable-animations: true
+          emulator-boot-timeout: 600
           script: ./bonbon_pop_app/tool/smoke_test.sh apk/app-release.apk
 
       - uses: actions/upload-artifact@v4
