@@ -84,5 +84,5 @@ flutter build appbundle --release
    et le site `lhamami12.github.io` doit être indiqué comme site web du développeur
    sur la fiche Play Store.
 
-L'ID d'application `io.github.lhamami12.bonbon_pop` est définitif après le premier
+L'ID d'application `com.bonbon.pop` est définitif après le premier
 envoi sur le Play Store : changez-le avant si vous en préférez un autre.

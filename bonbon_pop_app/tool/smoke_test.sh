@@ -4,7 +4,7 @@
 # saves logcat + a screenshot into smoke/ for the workflow artifacts.
 set -u
 APK="$1"
-PKG=io.github.lhamami12.bonbon_pop
+PKG=com.bonbon.pop
 mkdir -p smoke
 
 # Every adb call gets a time limit, so a dead emulator fails the job quickly
