@@ -3,7 +3,7 @@
 #   - arrow-escape-test-apk : debug APK to install directly on a phone for testing
 #   - arrow-escape-release  : signed AAB (upload to Google Play) + signed APK
 #     (only when the KEYSTORE_PASSWORD secret is set in the repository settings)
-name: Android build
+name: Arrow Escape build
 
 on:
   push:

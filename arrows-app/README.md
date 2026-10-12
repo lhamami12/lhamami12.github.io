@@ -9,7 +9,7 @@
 
 **تجربة التطبيق على هاتفك:**
 1. افتح <https://github.com/lhamami12/lhamami12.github.io/actions> (في المتصفح، مسجّل الدخول).
-2. افتح آخر تشغيل باسم **Android build** فيه علامة ✅.
+2. افتح آخر تشغيل باسم **Arrow Escape build** فيه علامة ✅.
 3. في الأسفل، قسم **Artifacts**، حمّل `arrow-escape-test-apk` (ملف zip).
 4. افتح الـzip واضغط على `app-debug.apk` لتثبيته (اسمح بـ«تثبيت تطبيقات من مصادر غير معروفة»).
 
@@ -17,7 +17,7 @@
 1. في المستودع: **Settings ← Secrets and variables ← Actions ← New repository secret**.
 2. الاسم: `KEYSTORE_PASSWORD`، والقيمة: كلمة سر قوية **من 16 حرفًا على الأقل** (أحرف وأرقام).
    **احفظها في مكان آمن** (مدير كلمات السر أو ورقة في مكان آمن): بدونها لا يمكن توقيع التحديثات.
-3. شغّل البناء من جديد: **Actions ← Android build ← Run workflow**.
+3. شغّل البناء من جديد: **Actions ← Arrow Escape build ← Run workflow**.
    في أول مرة يُنشأ مفتاح الرفع ويُحفظ في المستودع **مشفّرًا** (`arrows-app/signing/upload-keystore.jks.enc`).
 4. حمّل `arrow-escape-release`: فيه `app-release.aab` (ارفعه إلى Google Play) و`app-release.apk`.
 
