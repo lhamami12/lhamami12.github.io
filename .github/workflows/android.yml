@@ -1,0 +1,98 @@
+# Builds the Arrow Escape Android app in the cloud, so no computer is needed.
+# Every run produces:
+#   - arrow-escape-test-apk : debug APK to install directly on a phone for testing
+#   - arrow-escape-release  : signed AAB (upload to Google Play) + signed APK
+#     (only when the KEYSTORE_PASSWORD secret is set in the repository settings)
+name: Android build
+
+on:
+  push:
+    paths:
+      - 'arrows/**'
+      - 'arrows-app/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write   # first signed build commits the *encrypted* upload key
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      VERSION_NAME: '1.0'
+    defaults:
+      run:
+        working-directory: arrows-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: arrows-app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Install and copy the game into the app
+        run: |
+          npm ci
+          npm run sync
+
+      - name: Build test APK
+        working-directory: arrows-app/android
+        run: ./gradlew assembleDebug -PversionCode=${{ github.run_number }} -PversionName=$VERSION_NAME --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: arrow-escape-test-apk
+          path: arrows-app/android/app/build/outputs/apk/debug/app-debug.apk
+
+      # The upload key lives in the repo only in encrypted form (AES-256, PBKDF2).
+      # On the first signed build it is created and committed; later builds decrypt it.
+      - name: Prepare upload key
+        if: env.KEYSTORE_PASSWORD != ''
+        run: |
+          mkdir -p signing
+          if [ -f signing/upload-keystore.jks.enc ]; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 300000 -in signing/upload-keystore.jks.enc -out "$RUNNER_TEMP/upload.jks" -pass env:KEYSTORE_PASSWORD
+          else
+            keytool -genkeypair -keystore "$RUNNER_TEMP/upload.jks" -alias upload -keyalg RSA -keysize 4096 -validity 10000 \
+              -storepass "$KEYSTORE_PASSWORD" -keypass "$KEYSTORE_PASSWORD" -dname "CN=Arrow Escape, O=Atbir Lahcen, C=MA"
+            openssl enc -aes-256-cbc -pbkdf2 -iter 300000 -salt -in "$RUNNER_TEMP/upload.jks" -out signing/upload-keystore.jks.enc -pass env:KEYSTORE_PASSWORD
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add signing/upload-keystore.jks.enc
+            git commit -m "Add encrypted Android upload key"
+            git push
+          fi
+          keytool -list -v -keystore "$RUNNER_TEMP/upload.jks" -storepass "$KEYSTORE_PASSWORD" | grep -E "SHA1|SHA256" | head -2
+
+      - name: Build signed AAB and APK
+        if: env.KEYSTORE_PASSWORD != ''
+        working-directory: arrows-app/android
+        run: |
+          ./gradlew bundleRelease assembleRelease -PversionCode=${{ github.run_number }} -PversionName=$VERSION_NAME --no-daemon \
+            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/upload.jks" \
+            -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias=upload \
+            -Pandroid.injected.signing.key.password="$KEYSTORE_PASSWORD"
+          rm -f "$RUNNER_TEMP/upload.jks"
+
+      - uses: actions/upload-artifact@v4
+        if: env.KEYSTORE_PASSWORD != ''
+        with:
+          name: arrow-escape-release
+          path: |
+            arrows-app/android/app/build/outputs/bundle/release/app-release.aab
+            arrows-app/android/app/build/outputs/apk/release/app-release.apk
