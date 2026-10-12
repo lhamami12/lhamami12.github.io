@@ -3,7 +3,28 @@
 هذا المجلد يحوّل لعبة `../arrows` إلى تطبيق أندرويد باستخدام **Capacitor 8**، مع إعلانات **AdMob** وتقييم داخل التطبيق.
 اللعبة نفسها توجد في `../arrows/index.html`؛ أي تعديل تفعله هناك يظهر في الويب وفي التطبيق بعد `npm run sync`.
 
-## ما الذي تحتاجه على حاسوبك
+## 📱 بدون حاسوب: البناء على GitHub (مُستحسن)
+
+كل تعديل يُرفع إلى المستودع يبني التطبيق تلقائيًا على GitHub Actions (مجانًا).
+
+**تجربة التطبيق على هاتفك:**
+1. افتح <https://github.com/lhamami12/lhamami12.github.io/actions> (في المتصفح، مسجّل الدخول).
+2. افتح آخر تشغيل باسم **Android build** فيه علامة ✅.
+3. في الأسفل، قسم **Artifacts**، حمّل `arrow-escape-test-apk` (ملف zip).
+4. افتح الـzip واضغط على `app-debug.apk` لتثبيته (اسمح بـ«تثبيت تطبيقات من مصادر غير معروفة»).
+
+**ملف النشر الموقّع (AAB) لـ Google Play، مرة واحدة فقط:**
+1. في المستودع: **Settings ← Secrets and variables ← Actions ← New repository secret**.
+2. الاسم: `KEYSTORE_PASSWORD`، والقيمة: كلمة سر قوية **من 16 حرفًا على الأقل** (أحرف وأرقام).
+   **احفظها في مكان آمن** (مدير كلمات السر أو ورقة في مكان آمن): بدونها لا يمكن توقيع التحديثات.
+3. شغّل البناء من جديد: **Actions ← Android build ← Run workflow**.
+   في أول مرة يُنشأ مفتاح الرفع ويُحفظ في المستودع **مشفّرًا** (`arrows-app/signing/upload-keystore.jks.enc`).
+4. حمّل `arrow-escape-release`: فيه `app-release.aab` (ارفعه إلى Google Play) و`app-release.apk`.
+
+> عند رفع أول AAB في Play Console فعّل **Play App Signing** (يكون مفعّلًا افتراضيًا). بهذا تحتفظ Google بمفتاح التوقيع الحقيقي، وإذا ضاعت كلمة السر يمكنك طلب إعادة تعيين مفتاح الرفع من Play Console.
+> رقم النسخة (`versionCode`) يزيد تلقائيًا مع كل بناء، فلا تحتاج لتعديله.
+
+## ما الذي تحتاجه على حاسوبك (اختياري)
 
 - **Node.js** الإصدار 20 أو أحدث: <https://nodejs.org>
 - **Android Studio** (أحدث إصدار): <https://developer.android.com/studio>
