@@ -71,7 +71,7 @@ npm run open     # يفتح المشروع في Android Studio
 
 ## 4) في Google Play Console
 
-- **اسم الحزمة** هو `com.arrowescape.game`. لا يمكن تغييره بعد أول رفع. إن أردت اسمًا آخر غيّره في `capacitor.config.json` و`android/app/build.gradle` قبل أول رفع.
+- **اسم الحزمة** هو `com.arrowescape.jeux`. لا يمكن تغييره بعد أول رفع. إن أردت اسمًا آخر غيّره في `capacitor.config.json` و`android/app/build.gradle` قبل أول رفع.
 - **سياسة الخصوصية**: `https://lhamami12.github.io/arrows/privacy.html`
 - **Ads**: نعم، التطبيق يحتوي على إعلانات.
 - **Target audience**: 13 سنة فما فوق (لا تختر الأطفال).
