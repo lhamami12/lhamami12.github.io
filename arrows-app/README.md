@@ -13,16 +13,18 @@
 3. في الأسفل، قسم **Artifacts**، حمّل `arrow-escape-test-apk` (ملف zip).
 4. افتح الـzip واضغط على `app-debug.apk` لتثبيته (اسمح بـ«تثبيت تطبيقات من مصادر غير معروفة»).
 
-**ملف النشر الموقّع (AAB) لـ Google Play، مرة واحدة فقط:**
-1. في المستودع: **Settings ← Secrets and variables ← Actions ← New repository secret**.
-2. الاسم: `KEYSTORE_PASSWORD`، والقيمة: كلمة سر قوية **من 16 حرفًا على الأقل** (أحرف وأرقام).
-   **احفظها في مكان آمن** (مدير كلمات السر أو ورقة في مكان آمن): بدونها لا يمكن توقيع التحديثات.
-3. شغّل البناء من جديد: **Actions ← Arrow Escape build ← Run workflow**.
-   في أول مرة يُنشأ مفتاح الرفع ويُحفظ في المستودع **مشفّرًا** (`arrows-app/signing/upload-keystore.jks.enc`).
-4. حمّل `arrow-escape-release`: فيه `app-release.aab` (ارفعه إلى Google Play) و`app-release.apk`.
+**ملف النشر الموقّع (AAB) لـ Google Play:**
 
-> عند رفع أول AAB في Play Console فعّل **Play App Signing** (يكون مفعّلًا افتراضيًا). بهذا تحتفظ Google بمفتاح التوقيع الحقيقي، وإذا ضاعت كلمة السر يمكنك طلب إعادة تعيين مفتاح الرفع من Play Console.
-> رقم النسخة (`versionCode`) يزيد تلقائيًا مع كل بناء، فلا تحتاج لتعديله.
+التوقيع يستعمل **نفس مفتاح الرفع ونفس الأسرار الأربعة** ديال Bonbon Pop، اللي كاينين من قبل فـ **Settings ← Secrets and variables ← Actions**:
+`ANDROID_KEYSTORE_BASE64` و`ANDROID_KEYSTORE_PASSWORD` و`ANDROID_KEY_ALIAS` و`ANDROID_KEY_PASSWORD`
+(والنسخة ديالهم محفوظة فـ Google Drive). Google Play كيسمح باستعمال نفس مفتاح الرفع لأكثر من تطبيق.
+
+1. كل بناء كيعطي `arrow-escape-release`: فيه `app-release.aab` (ارفعه لـ Google Play) و`app-release.apk`.
+2. باش تبني يدويًا: **Actions ← Arrow Escape build ← Run workflow**.
+
+> إلا بغيتي فالمستقبل مفتاح خاص بـ Arrow Escape: زيد نفس الأسرار الأربعة بـ `ARROW_` فالبلاصة ديال `ANDROID_` (مثلًا `ARROW_KEYSTORE_BASE64`)، والبناء غادي يستعملهم أوتوماتيكيًا.
+> خلي **Play App Signing** مفعّل فـ Play Console: Google كيحتفظ بمفتاح التوقيع الحقيقي، وإلا ضاع مفتاح الرفع تقدر تطلب تبديلو.
+> رقم النسخة (`versionCode`) كيطلع أوتوماتيكيًا مع كل بناء.
 
 ## ما الذي تحتاجه على حاسوبك (اختياري)
 
