@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Arrow Escape</string>
+    <string name="title_activity_main">Arrow Escape</string>
+    <string name="package_name">com.arrowescape.jeux</string>
+    <string name="custom_url_scheme">com.arrowescape.jeux</string>
+    <!-- Google's TEST AdMob app ID. Replace it with your own AdMob app ID (ca-app-pub-XXXX~YYYY) before publishing. -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+</resources>

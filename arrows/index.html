@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fb">
+<meta name="description" content="Arrow Escape — a minimalist logic puzzle: tap the arrows in the right order to clear the board. Locks & keys, daily challenge, zen and time-rush modes.">
+<title>Arrow Escape</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232f6bff'/%3E%3Cpath d='M14 20h22v24M14 44h12' stroke='%23fff' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M36 32h10' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M44 24l9 8-9 8z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:Rubik;font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/rubik-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:Rubik;font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/rubik-cyrillic.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:Rubik;font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/rubik-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:Rubik;font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/rubik-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+:root{--bg:#f5f7fb;--surface:#fff;--ink:#101a3e;--text:#101a3e;--mut:#6b7390;--line:#e7eaf2;--pri:#2f6bff;--pri-d:#1f50d6;--pri-t:rgba(47,107,255,.1);
+  --dot:#c5cbda;--red:#ef4444;--green:#16a34a;--gold:#f5b000;--shadow:0 1px 2px rgba(16,24,40,.05),0 6px 18px rgba(16,24,40,.06);--r:18px}
+body.dark{--bg:#0d1120;--surface:#171c30;--ink:#e8ecfb;--text:#e8ecfb;--mut:#8b93b0;--line:#252b44;--pri:#5b8cff;--pri-d:#3e6fe6;--pri-t:rgba(91,140,255,.14);--dot:#363d5c;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px rgba(0,0,0,.25)}
+body.sand{--bg:#f6efe3;--surface:#fffaf2;--ink:#4a2a14;--text:#3b2413;--mut:#8f7458;--line:#eadcc4;--pri:#c8642a;--pri-d:#a14c1b;--pri-t:rgba(200,100,42,.12);--dot:#d8c3a2}
+body.mint{--bg:#eef7f4;--surface:#fff;--ink:#0f3b35;--text:#0f2e2a;--mut:#5f7d77;--line:#d9ebe5;--pri:#0f9d82;--pri-d:#0a7a65;--pri-t:rgba(15,157,130,.12);--dot:#b9d4cc}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:Rubik,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic",sans-serif;
+  user-select:none;-webkit-user-select:none;touch-action:manipulation;transition:background-color .3s;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;color:inherit;border:none;background:none;padding:0}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.screen.active{opacity:1;visibility:visible}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;height:36px;padding:0 14px;font-weight:600;font-size:15px;
+  display:inline-flex;align-items:center;gap:7px;font-variant-numeric:tabular-nums}
+.chip svg.i{width:18px;height:18px}
+.coin{width:18px;height:18px;flex:none}
+.ibtn{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;color:var(--text);transition:background .15s}
+.ibtn:active{background:var(--line)}
+[dir=rtl] .flip{transform:scaleX(-1)}
+
+/* ---------- home ---------- */
+#home{padding:max(12px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));overflow-y:auto;align-items:center}
+.wrap{width:100%;max-width:420px;display:flex;flex-direction:column}
+.hbar{display:flex;justify-content:space-between;align-items:center}
+.hero{display:flex;flex-direction:column;align-items:center;margin:6px 0 18px}
+#demo{width:188px;height:188px;margin:4px 0 10px}
+.title{margin:0;font-size:30px;font-weight:700;letter-spacing:-.4px}
+.tag{margin:4px 0 0;color:var(--mut);font-size:15px}
+.play{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:var(--pri);color:#fff;border-radius:var(--r);
+  padding:16px 18px;box-shadow:0 8px 20px -6px var(--pri);transition:transform .12s,background .15s;text-align:start}
+.play:active{transform:scale(.98);background:var(--pri-d)}
+.play b{display:block;font-size:20px;font-weight:600}
+.play span{font-size:14px;opacity:.85}
+.play .go{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.prog{height:4px;background:rgba(255,255,255,.22);border-radius:4px;margin-top:8px;overflow:hidden;width:150px}
+.prog i{display:block;height:100%;background:#fff;border-radius:4px}
+.sec{font-size:13px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;margin:22px 4px 8px}
+.list{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.row{display:flex;align-items:center;gap:14px;width:100%;padding:13px 14px;text-align:start;transition:background .15s}
+.row+.row{border-top:1px solid var(--line)}
+.row:active{background:var(--bg)}
+.ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none}
+.row .tx{flex:1;min-width:0}
+.row b{display:block;font-weight:600;font-size:16px}
+.row small{display:block;color:var(--mut);font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#noAdsSubH{white-space:normal;line-height:1.35}
+.row .chev{color:var(--dot)}
+.tagn{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--pri-t);color:var(--pri)}
+.tagn.ok{background:rgba(22,163,74,.12);color:var(--green)}
+.foot{text-align:center;margin-top:22px}
+.foot a{color:var(--mut);font-size:13px;text-decoration:none}
+
+/* ---------- game ---------- */
+#game{padding-top:env(safe-area-inset-top)}
+.top{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;padding:6px 8px 0}
+.ttl{text-align:center;line-height:1.2}
+.ttl b{font-size:18px;font-weight:600;display:block}
+.ttl small{font-size:12.5px;color:var(--mut)}
+.stats{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 0}
+.hearts{display:flex;gap:6px}
+.hearts svg{width:26px;height:26px;transition:transform .3s}
+.hearts .on{fill:var(--red);stroke:none}
+.hearts .off{fill:none;stroke:var(--dot);stroke-width:2}
+.hearts .hit{animation:hhit .5s}
+@keyframes hhit{0%{transform:scale(1)}30%{transform:scale(1.35) rotate(-8deg)}60%{transform:translateX(-3px)}100%{transform:none}}
+#boardWrap{flex:1;position:relative;min-height:0}
+#cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.tools{display:flex;justify-content:center;gap:18px;padding:8px 0 max(18px,env(safe-area-inset-bottom))}
+.tool{position:relative;width:60px;height:60px;border-radius:50%;background:var(--surface);color:var(--text);box-shadow:var(--shadow);border:1px solid var(--line);
+  display:grid;place-items:center;transition:transform .12s,background .15s,color .15s}
+.tool:active{transform:scale(.92)}
+.tool svg.i{width:26px;height:26px}
+.tool.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.badge{position:absolute;top:-3px;inset-inline-end:-5px;background:var(--pri);color:#fff;border-radius:999px;min-width:22px;height:22px;
+  font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:3px;padding:0 6px;border:2px solid var(--bg)}
+.badge.buy{background:var(--gold);color:#3b2a00}
+#toast{position:fixed;top:calc(env(safe-area-inset-top) + 118px);left:50%;transform:translate(-50%,-8px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:12px;
+  font-weight:500;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap;z-index:45;display:flex;gap:8px;align-items:center}
+#toast.show{opacity:.95;transform:translate(-50%,0)}
+#toast svg.i{width:18px;height:18px}
+#coach{position:absolute;inset-inline:16px;bottom:6px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);
+  font-size:14.5px;line-height:1.45;display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:2}
+#coach.show{opacity:1;transform:none}
+#coach .ico{width:34px;height:34px;border-radius:10px;background:var(--pri-t);color:var(--pri)}
+#coach .ico svg{width:20px;height:20px}
+
+/* ---------- sheets ---------- */
+.ov{position:fixed;inset:0;background:rgba(10,14,30,.45);display:flex;align-items:center;justify-content:center;z-index:10;padding:16px;
+  opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+.ov.show{opacity:1;visibility:visible}
+.box{background:var(--surface);border-radius:24px;padding:24px 20px 18px;width:100%;max-width:360px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.2);
+  transform:translateY(16px) scale(.97);transition:transform .3s cubic-bezier(.2,.9,.3,1.2);max-height:92vh;overflow-y:auto}
+.ov.show .box{transform:none}
+.box h3{margin:4px 0 4px;font-size:22px;font-weight:700}
+.box p{color:var(--mut);margin:4px 0;font-size:15px}
+.badgeIco{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center}
+.badgeIco svg.i{width:32px;height:32px}
+.stars{display:flex;justify-content:center;gap:10px;margin:10px 0 4px}
+.stars svg{width:40px;height:40px;fill:var(--line);transition:fill .2s}
+.stars svg.on{fill:var(--gold);animation:star .5s cubic-bezier(.3,1.6,.5,1) backwards}
+.stars svg:nth-child(2){transform:translateY(-8px)}
+.stars svg:nth-child(2).on{animation-name:star2}
+@keyframes star{from{transform:scale(0) rotate(-40deg)}}
+@keyframes star2{from{transform:translateY(-8px) scale(0) rotate(-40deg)}}
+#thumb{width:150px;height:150px;border-radius:16px;margin:10px auto 6px;display:block;background:var(--bg)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:14px;margin:12px 0 4px}
+.kpis div{padding:9px 4px}.kpis div+div{border-inline-start:1px solid var(--line)}
+.kpis small{display:block;color:var(--mut);font-size:12px}
+.kpis b{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;gap:5px}
+.btns{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.b{border-radius:14px;padding:14px;font-weight:600;font-size:16px;background:var(--bg);color:var(--text);transition:transform .1s,background .15s}
+.b.pri{background:var(--pri);color:#fff}
+.b.pri:active{background:var(--pri-d)}
+.b.gold{background:var(--gold);color:#3b2a00;display:flex;justify-content:center;align-items:center;gap:8px}
+.price{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.7);border-radius:999px;padding:2px 9px 2px 4px;font-size:14px}
+.b.ad{background:var(--pri-t);color:var(--pri);display:flex;align-items:center;justify-content:center;gap:8px}
+.b.ad svg.i{width:18px;height:18px}
+.b.gold svg.coin{width:18px;height:18px}
+.b:disabled{opacity:.45}
+.sel{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:7px 10px;font:inherit;font-size:14px;max-width:170px}
+.lvnav{display:grid;grid-template-columns:42px 1fr 42px;align-items:center}
+.lvnav b{display:block;font-size:20px;font-weight:700}.lvnav small{color:var(--mut);font-size:13px}
+.ibtn:disabled{opacity:.25}
+.lv{position:relative}.lv .shp{position:absolute;top:4px;inset-inline-end:4px;width:16px;height:16px}.lv:disabled .shp{position:static;width:26px;height:26px}.lv:disabled:has(.shp)::after{display:none}
+#adfake{position:fixed;inset:0;background:#0b0b10;color:#fff;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-size:17px}
+#adfake button{background:#fff;color:#000;border-radius:999px;padding:10px 22px;font-weight:600}
+.hr{display:flex;align-items:center;gap:4px}
+.dot{position:absolute;top:8px;inset-inline-end:8px;width:9px;height:9px;border-radius:50%;background:var(--red);border:2px solid var(--bg)}
+.ibtn{position:relative}
+.days{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px}
+.day{background:var(--bg);border-radius:14px;padding:9px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--mut);position:relative;border:2px solid transparent}
+.day b{font-size:15px;color:var(--text);font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.day .di{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface);color:var(--pri)}
+.day .di svg.i{width:18px;height:18px}.day .di svg.coin{width:22px;height:22px}
+.day.wide{grid-column:span 2;flex-direction:row;justify-content:center;gap:10px}
+.day.now{border-color:var(--pri);background:var(--pri-t)}
+.day.now .di{animation:bob 1.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+.day.got{opacity:.5}.day.got::after{content:"";position:absolute;top:5px;inset-inline-end:5px;width:16px;height:16px;border-radius:50%;background:var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center/11px no-repeat}
+.achs{text-align:start;margin-top:10px;max-height:56vh;overflow-y:auto;margin-inline:-6px;padding-inline:6px}
+.ach{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.ach:last-child{border-bottom:none}
+.ach .ico{width:42px;height:42px;border-radius:12px;background:var(--pri-t);color:var(--pri)}
+.ach.done .ico{background:rgba(245,176,0,.16);color:#c98a00}
+.ach .tx{flex:1;min-width:0}.ach .tx b{display:block;font-size:14.5px;font-weight:500;line-height:1.3}
+.ach .bar{height:5px;background:var(--line);border-radius:5px;margin-top:6px;overflow:hidden}.ach .bar i{display:block;height:100%;background:var(--pri);border-radius:5px}
+.ach.done .bar i{background:var(--gold)}
+.ach small{color:var(--mut);font-size:12px;font-variant-numeric:tabular-nums}
+.ach .tiers{display:flex;gap:3px;margin-top:4px}.ach .tiers i{width:14px;height:4px;border-radius:2px;background:var(--line)}.ach .tiers i.on{background:var(--gold)}
+.ach .rw{display:flex;align-items:center;gap:3px;font-weight:600;font-size:13px;font-variant-numeric:tabular-nums}.ach .rw svg.coin{width:16px;height:16px}
+.ach .ok{color:var(--green)}
+.skins{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.skin{background:var(--bg);border-radius:16px;padding:8px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;border:2px solid transparent;position:relative}
+.skin canvas{width:120px;height:78px}
+.skin b{font-size:14px;font-weight:600}
+.skin small{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:var(--mut);font-variant-numeric:tabular-nums}
+.skin small svg.coin{width:15px;height:15px}
+.skin.on{border-color:var(--pri);background:var(--pri-t)}.skin.on small{color:var(--pri)}
+.skin.lock canvas{opacity:.55}
+.skin.cant small{color:var(--red)}
+.b.ghost{background:none;color:var(--mut)}
+.b:active{transform:scale(.98)}
+.set{display:flex;justify-content:space-between;align-items:center;padding:12px 2px;border-bottom:1px solid var(--line);text-align:start;gap:10px;font-size:15px}
+.set:last-of-type{border-bottom:none}
+.seg{display:flex;background:var(--bg);border-radius:10px;padding:3px}
+.seg button{border-radius:8px;padding:6px 10px;font-weight:500;font-size:13px;color:var(--mut)}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.sws{display:flex;gap:8px}
+.sw{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);position:relative}
+.sw.on{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--pri)}
+.tg{width:46px;height:28px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.tg::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:inset-inline-start .2s}
+.tg.on{background:var(--pri)}.tg.on::after{inset-inline-start:21px}
+.lvgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
+.lv{background:var(--bg);border-radius:12px;aspect-ratio:1;font-weight:600;font-size:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.lv .ss{display:flex;gap:1px}.lv .ss svg{width:9px;height:9px;fill:var(--line)}.lv .ss svg.on{fill:var(--gold)}
+.lv.cur{background:var(--pri);color:#fff}.lv.cur .ss svg{fill:rgba(255,255,255,.35)}
+.lv:disabled{opacity:.4}
+.lv:disabled::after{content:"";width:10px;height:10px;border:2px solid var(--mut);border-radius:3px;opacity:.6}
+.big{font-size:52px;font-weight:700;color:var(--pri);margin:2px 0;font-variant-numeric:tabular-nums}
+.how{text-align:start;margin-top:10px}
+.how div{display:flex;gap:12px;align-items:flex-start;padding:8px 0;font-size:14.5px;line-height:1.45}
+.how .ico{width:34px;height:34px;border-radius:10px;background:var(--pri-t);color:var(--pri)}
+.how .ico svg{width:19px;height:19px}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:11;width:100%;height:100%}
+a{color:var(--pri)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.6-4.5-9.5-9.3C1.1 7.7 3.4 4 7 4c2.1 0 3.9 1.2 5 2.9C13.1 5.2 14.9 4 17 4c3.6 0 5.9 3.7 4.5 7.2-1.9 4.8-9.5 9.3-9.5 9.3z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4-4.7-4.6 6.5-.9z" stroke-linejoin="round"/></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#f5b000"/><circle cx="12" cy="12" r="6.6" fill="none" stroke="#c98a00" stroke-width="1.8"/><path d="M12 8.6v6.8" stroke="#c98a00" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- HOME -->
+<section id="home" class="screen active"><div class="wrap">
+  <div class="hbar">
+    <span class="chip"><svg class="coin"><use href="#i-coin"/></svg><span id="hCoins">0</span></span>
+    <div class="hr"><button class="ibtn" id="hGift" aria-label="daily reward"><span data-icon="gift"></span><span class="dot" id="giftDot" hidden></span></button><button class="ibtn" id="hSet" aria-label="settings" data-icon="gear"></button></div>
+  </div>
+  <div class="hero">
+    <canvas id="demo"></canvas>
+    <h1 class="title" data-t="title"></h1>
+    <p class="tag" data-t="tagline"></p>
+  </div>
+  <button class="play" id="hPlay"><div><b data-t="play"></b><span id="hLvl"></span><div class="prog"><i id="hProg"></i></div></div><span class="go" data-icon="play"></span></button>
+  <div class="sec" data-t="modes"></div>
+  <div class="list">
+    <button class="row" id="mDaily"><span class="ico" style="background:rgba(47,107,255,.12);color:#2f6bff" data-icon="cal"></span><span class="tx"><b data-t="daily"></b><small id="dailySub"></small></span><span id="dailyTag"></span><span class="chev flip" data-icon="chev"></span></button>
+    <button class="row" id="mRush"><span class="ico" style="background:rgba(249,115,22,.12);color:#f97316" data-icon="watch"></span><span class="tx"><b data-t="rush"></b><small id="rushSub"></small></span><span class="chev flip" data-icon="chev"></span></button>
+    <button class="row" id="mZen"><span class="ico" style="background:rgba(22,163,74,.12);color:#16a34a" data-icon="leaf"></span><span class="tx"><b data-t="zen"></b><small data-t="zenSub"></small></span><span class="chev flip" data-icon="chev"></span></button>
+    <button class="row" id="mLevels"><span class="ico" style="background:rgba(124,58,237,.12);color:#7c3aed" data-icon="grid4"></span><span class="tx"><b data-t="levels"></b><small id="lvSub"></small></span><span class="chev flip" data-icon="chev"></span></button>
+    <button class="row" id="mAch"><span class="ico" style="background:rgba(245,176,0,.16);color:#c98a00" data-icon="trophy"></span><span class="tx"><b data-t="achievements"></b><small id="achSubH"></small></span><span class="chev flip" data-icon="chev"></span></button>
+    <button class="row" id="mShop"><span class="ico" style="background:rgba(236,72,153,.12);color:#db2777" data-icon="palette"></span><span class="tx"><b data-t="shop"></b><small id="shopSubH"></small></span><span class="chev flip" data-icon="chev"></span></button>
+    <button class="row" id="mNoAds" style="display:none"><span class="ico" style="background:rgba(22,163,74,.12);color:#16a34a" data-icon="noad"></span><span class="tx"><b data-t="noAdsT"></b><small id="noAdsSubH"></small></span><span class="chev flip" data-icon="chev"></span></button>
+  </div>
+  <div class="foot"><a href="privacy.html" data-t="privacy"></a></div>
+</div></section>
+
+<!-- GAME -->
+<section id="game" class="screen">
+  <div class="top">
+    <button class="ibtn" id="gBack" aria-label="back"><span class="flip" data-icon="back"></span></button>
+    <div class="ttl"><b id="gTitle"></b><small id="gSub"></small></div>
+    <button class="ibtn" id="gSet" aria-label="settings" data-icon="gear"></button>
+  </div>
+  <div class="stats">
+    <span class="chip"><span data-icon="send"></span><span id="gLeft">0</span></span>
+    <div class="hearts" id="gHearts"></div>
+    <span class="chip" id="gRight"></span>
+  </div>
+  <div id="boardWrap"><canvas id="cv"></canvas><div id="toast"></div><div id="coach"><span class="ico" data-icon="hand"></span><span id="coachTx"></span></div></div>
+  <div class="tools">
+    <button class="tool" id="tHint" aria-label="hint"><span data-icon="bulb"></span><span class="badge" id="bHint"></span></button>
+    <button class="tool" id="tBomb" aria-label="bomb"><span data-icon="bomb"></span><span class="badge" id="bBomb"></span></button>
+    <button class="tool" id="tGrid" aria-label="grid"><span data-icon="hash"></span></button>
+  </div>
+</section>
+
+<!-- WIN -->
+<div class="ov" id="ovWin"><div class="box">
+  <h3 id="wTitle"></h3>
+  <p id="wSub"></p>
+  <div class="stars" id="wStars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></div>
+  <canvas id="thumb" width="300" height="300"></canvas>
+  <div class="kpis"><div><small data-t="time"></small><b id="kTime"></b></div><div><small data-t="mistakesL"></small><b id="kMis"></b></div><div><small data-t="coins"></small><b id="kCoins"></b></div></div>
+  <div class="btns"><button class="b ad" id="wDouble"></button><button class="b pri" id="wNext"></button><button class="b ghost" id="wHome" data-t="home"></button></div>
+</div></div>
+
+<!-- LOSE -->
+<div class="ov" id="ovLose"><div class="box">
+  <div class="badgeIco" style="background:rgba(239,68,68,.12);color:#ef4444" data-icon="heartx"></div>
+  <h3 data-t="lose"></h3>
+  <p data-t="loseSub"></p>
+  <div class="btns"><button class="b ad" id="lAd"></button><button class="b gold" id="lCont"></button><button class="b pri" id="lRetry" data-t="retry"></button><button class="b ghost" id="lHome" data-t="home"></button></div>
+</div></div>
+
+<!-- RUSH END -->
+<div class="ov" id="ovRush"><div class="box">
+  <div class="badgeIco" style="background:rgba(249,115,22,.12);color:#f97316" data-icon="watch"></div>
+  <h3 data-t="timeUp"></h3>
+  <div class="big" id="rScore">0</div>
+  <p id="rInfo"></p>
+  <div class="btns"><button class="b ad" id="rMore"></button><button class="b pri" id="rAgain" data-t="again"></button><button class="b ghost" id="rHome" data-t="home"></button></div>
+</div></div>
+
+<!-- LEVELS -->
+<div class="ov" id="ovLevels"><div class="box">
+  <div class="lvnav"><button class="ibtn" id="lvPrev" aria-label="previous"><span class="flip" data-icon="back"></span></button><div><b id="lvTitle"></b><small id="lvRange"></small></div><button class="ibtn" id="lvNext" aria-label="next"><span class="flip" data-icon="chev"></span></button></div>
+  <div class="lvgrid" id="lvGrid"></div>
+  <div class="btns"><button class="b ghost" id="lvClose" data-t="close"></button></div>
+</div></div>
+
+<!-- GET MORE (hint / blast) -->
+<div class="ov" id="ovGet"><div class="box">
+  <div class="badgeIco" id="gIco" style="background:var(--pri-t);color:var(--pri)"></div>
+  <h3 id="gHead"></h3>
+  <div class="btns"><button class="b ad" id="gAd"></button><button class="b gold" id="gBuy"></button><button class="b ghost" id="gClose" data-t="close"></button></div>
+</div></div>
+
+<!-- DAILY REWARD -->
+<div class="ov" id="ovDaily"><div class="box">
+  <div class="badgeIco" style="background:var(--pri-t);color:var(--pri)" data-icon="gift"></div>
+  <h3 data-t="dailyReward"></h3>
+  <p id="drSub"></p>
+  <div class="days" id="drDays"></div>
+  <div class="btns"><button class="b ad" id="drX2"></button><button class="b pri" id="drClaim" data-t="claim"></button><button class="b ghost" id="drClose" data-t="close"></button></div>
+</div></div>
+
+<!-- ACHIEVEMENTS -->
+<div class="ov" id="ovAch"><div class="box">
+  <h3 data-t="achievements"></h3>
+  <p id="achSub"></p>
+  <div class="achs" id="achList"></div>
+  <div class="btns"><button class="b ghost" id="achClose" data-t="close"></button></div>
+</div></div>
+
+<!-- ARROW STYLES -->
+<div class="ov" id="ovShop"><div class="box">
+  <h3 data-t="shop"></h3>
+  <p id="shopSub"></p>
+  <div class="skins" id="skinList"></div>
+  <div class="btns"><button class="b ghost" id="shopClose" data-t="close"></button></div>
+</div></div>
+
+<!-- ENJOYING? / FEEDBACK -->
+<div class="ov" id="ovEnjoy"><div class="box">
+  <div class="badgeIco" id="ejIco" style="background:rgba(239,68,68,.12);color:#ef4444"></div>
+  <h3 id="ejTitle"></h3>
+  <p id="ejSub"></p>
+  <div class="btns"><button class="b pri" id="ejYes"></button><button class="b ghost" id="ejNo"></button></div>
+</div></div>
+
+<!-- SETTINGS -->
+<div class="ov" id="ovSet"><div class="box">
+  <h3 data-t="settings"></h3>
+  <div style="margin-top:8px">
+  <div class="set"><span data-t="lang"></span><select class="sel" id="sLang"></select></div>
+  <div class="set"><span data-t="theme"></span><div class="sws" id="sTheme">
+    <button class="sw" data-v="light" style="background:#f5f7fb"></button><button class="sw" data-v="dark" style="background:#171c30"></button>
+    <button class="sw" data-v="sand" style="background:#e8d3b4"></button><button class="sw" data-v="mint" style="background:#bfe6da"></button></div></div>
+  <div class="set" id="notifRow" style="display:none"><span data-t="notifT"></span><button class="tg" data-k="notif"></button></div>
+  <div class="set"><span data-t="sound"></span><button class="tg" data-k="sound"></button></div>
+  <div class="set"><span data-t="vib"></span><button class="tg" data-k="vib"></button></div>
+  </div>
+  <div class="btns"><button class="b" id="sHow" data-t="howto"></button><button class="b" id="sAdPriv" data-t="adPrivacy" style="display:none"></button><button class="b pri" id="sClose" data-t="done"></button></div>
+  <p style="margin-top:12px"><a href="privacy.html" data-t="privacy" style="font-size:13px;color:var(--mut)"></a></p>
+</div></div>
+
+<!-- HOW TO -->
+<div class="ov" id="ovHow"><div class="box">
+  <h3 data-t="howto"></h3>
+  <div class="how" id="howList"></div>
+  <div class="btns"><button class="b pri" id="hwClose" data-t="gotIt"></button></div>
+</div></div>
+
+<canvas id="fx"></canvas>
+
+<script>
+'use strict';
+/* ================= icons ================= */
+const IC={
+gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+back:'<path d="M15 5l-7 7 7 7"/>',chev:'<path d="M9 6l6 6-6 6"/>',play:'<path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/>',
+cal:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><circle cx="12" cy="15" r="1.2" fill="currentColor"/>',
+watch:'<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M9.5 2.5h5M12 2.5V6M18.5 6.5 20 5"/>',
+leaf:'<path d="M5 20c0-9 5.5-15 15-15 0 9.5-6 15-14 15"/><path d="M5 20c2.5-4 6-7.5 10-10"/>',
+grid4:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/>',
+send:'<path d="M20.5 3.5 3.5 10.5l7 3 3 7z" fill="currentColor" stroke-width="1.5"/>',
+bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>',
+bomb:'<path d="M13.5 2.5 5 13.5h6.5l-1 8 8.5-11h-6.5z"/>',
+hash:'<path d="M9.5 3.5 8 20.5M16 3.5l-1.5 17M4.5 8.5h16M3.5 15.5h16"/>',
+hand:'<path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.6a6 6 0 0 1-4.6-2.2L4.3 15.6a1.5 1.5 0 0 1 2.3-1.9L9 16"/>',
+lock:'<rect x="5" y="11" width="14" height="9.5" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2.5 2.5M14 9l1.5 1.5"/>',
+eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/>',
+heartx:'<path d="M12 20.5s-7.6-4.5-9.5-9.3C1.1 7.7 3.4 4 7 4c2.1 0 3.9 1.2 5 2.9C13.1 5.2 14.9 4 17 4c3.6 0 5.9 3.7 4.5 7.2-1.9 4.8-9.5 9.3-9.5 9.3z"/><path d="M12 7l-1.5 4 3 2-1.5 4"/>',
+x:'<path d="M6 6l12 12M18 6 6 18"/>',
+gift:'<rect x="3.5" y="8" width="17" height="4.5" rx="1"/><path d="M5 12.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7.5M12 8v13M12 8S10.5 3.5 8 3.5a2.2 2.2 0 0 0 0 4.5h4zm0 0s1.5-4.5 4-4.5a2.2 2.2 0 0 1 0 4.5h-4z"/>',
+trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5.5h3V7a3 3 0 0 1-3 3M7 5.5H4V7a3 3 0 0 0 3 3"/>',
+flag:'<path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/>',
+fire:'<path d="M12 21c-3.9 0-7-2.8-7-6.5 0-3 2-5 3.5-6.5.3 2 1.3 3.2 2.5 3.5-.5-3 1-6.5 4-8.5.3 3 3 5 3.5 8 .3 1.8.5 3.5-.5 5.5C17 19.5 14.8 21 12 21z"/>',
+shapes:'<path d="M7 3.5l4 7H3z"/><circle cx="17" cy="7" r="3.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/><path d="M3.5 17a3.5 3.5 0 1 0 7 0 3.5 3.5 0 1 0-7 0"/>',
+check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+palette:'<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.9 1.2-1.8-.5-1-.1-2.2 1.1-2.2H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/>',
+noad:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4-2.5z" fill="currentColor"/><path d="M3.5 3.5l17 17"/>',
+heart:'<path d="M12 20.5s-7.6-4.5-9.5-9.3C1.1 7.7 3.4 4 7 4c2.1 0 3.9 1.2 5 2.9C13.1 5.2 14.9 4 17 4c3.6 0 5.9 3.7 4.5 7.2-1.9 4.8-9.5 9.3-9.5 9.3z"/>',
+mail:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>',
+star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'
+};
+const ico=n=>`<svg class="i" viewBox="0 0 24 24">${IC[n]}</svg>`;
+document.querySelectorAll('[data-icon]').forEach(e=>e.innerHTML=ico(e.dataset.icon));
+
+/* ================= i18n ================= */
+const TX={
+ar:{title:'هروب الأسهم',tagline:'حرّر الأسهم بالترتيب الصحيح',play:'العب',level:'المستوى {0}',modes:'أوضاع اللعب',daily:'تحدي اليوم',zen:'وضع الهدوء',zenSub:'بلا قلوب ولا ضغط',
+rush:'سباق الوقت',rushSub:'أفضل نتيجة {0}',levels:'كل المستويات',lvSub:'{0} نجمة مجموعة',streak:'سلسلة {0} أيام',dailyNew:'لغز جديد كل يوم',new:'جديد',doneTag:'تم',
+easy:'سهل',normal:'عادي',hard:'صعب',expert:'خبير',levelDone:'اكتمل المستوى {0}',dailyWin:'أكملت تحدي اليوم',next:'المستوى التالي',newBoard:'لوحة جديدة',home:'الرئيسية',
+retry:'أعد المحاولة',lose:'نفدت القلوب',loseSub:'أنت قريب جدًا، لا تستسلم.',cont:'متابعة بقلب إضافي',timeUp:'انتهى الوقت',again:'العب مجددًا',best:'الأفضل {0} · لوحات {1}',newBest:'رقم قياسي جديد!',
+locked:'مقفل — أخرج سهم المفتاح أولًا',bombPick:'اختر سهمًا لإزالته',noCoins:'العملات غير كافية',combo:'سلسلة ×{0}',
+settings:'الإعدادات',lang:'اللغة',theme:'المظهر',colors:'أسهم ملوّنة',sound:'الأصوات',vib:'الاهتزاز',howto:'طريقة اللعب',close:'إغلاق',done:'تم',gotIt:'فهمت',privacy:'سياسة الخصوصية',
+time:'الوقت',mistakesL:'الأخطاء',coins:'العملات',perfect:'بدون أي خطأ!',good:'عمل رائع',ok:'أحسنت',zenWin:'اللوحة نظيفة',board:'اللوحة {0}',left:'{0} ث',
+chapter:'الفصل {0}',watchAd:'شاهد إعلانًا',free:'مجانًا',contAd:'شاهد إعلانًا وتابع',double:'ضاعف العملات',getHint:'احصل على تلميح',getBlast:'احصل على برق',adFail:'لا يتوفر إعلان الآن. حاول لاحقًا.',moreTime:'+15 ثانية',orCoins:'استخدم {0} عملة',
+adPrivacy:'خيارات خصوصية الإعلانات',dailyReward:'المكافأة اليومية',dayN:'اليوم {0}',claim:'استلم',claimX2:'استلم ×2',comeBack:'عُد غدًا لاستلام مكافأتك التالية',achievements:'الإنجازات',achUnlocked:'إنجاز جديد',achSub:'{0} من {1} مفتوحة',a_levels:'أكمل مستويات: {0}',a_perfect:'مستويات بدون أي خطأ: {0}',a_arrows:'حرّر أسهمًا: {0}',a_combo:'حقّق سلسلة ×{0}',a_shapes:'أكمل أشكالًا مختلفة: {0}',a_daily:'أكمل تحديات يومية: {0}',a_streak:'أيام متتالية من تحدي اليوم: {0}',a_login:'استلم المكافأة اليومية أيامًا متتالية: {0}',a_rush:'النتيجة في سباق الوقت: {0}',a_zen:'نظّف لوحات في وضع الهدوء: {0}',a_keys:'افتح أسهمًا مقفلة: {0}',a_gold:'اجمع أسهمًا ذهبية: {0}',
+noAdsT:'ساعة بدون إعلانات',noAdsSub:'شاهد فيديو واحدًا: لا إعلانات بين المستويات لمدة ساعة',noAdsOn:'مفعّل · المتبقي {0} د',notifT:'تذكير يومي',notif1:'مكافأتك اليومية جاهزة 🎁 ولغز جديد في انتظارك.',notif2:'الأسهم اشتاقت إليك! عُد للغز سريع.',enjoyQ:'هل تستمتع بلعبة هروب الأسهم؟',enjoySub:'رأيك يساعدنا كثيرًا.',enjoyYes:'نعم، أحببتها!',enjoyNo:'ليس كثيرًا',fbQ:'كيف نجعلها أفضل؟',fbSub:'أخبرنا بما يجب تحسينه، نقرأ كل رسالة.',fbSend:'أرسل رأيك',fbLater:'لاحقًا',shop:'أشكال الأسهم',shopSub:'{0} من {1} مفتوحة',equip:'استخدم',equipped:'مستخدم',sk_classic:'كلاسيكي',sk_rainbow:'قوس قزح',sk_neon:'نيون',sk_candy:'حلوى',sk_rope:'حبل',sk_beads:'خرز',sk_pixel:'بكسل',sk_royal:'ملكي',
+tut1:'اضغط على سهم ليخرج في اتجاه رأسه. إذا اعترضه سهم آخر تخسر قلبًا.',tut2:'اضغط مطوّلًا على أي سهم لمعاينة مساره قبل تحريكه.',tut3:'السهم المقفل لا يتحرك حتى يخرج سهم المفتاح الذي يحمل نفس اللون.',
+how:[['send','اضغط على سهم فيخرج من اللوحة في اتجاه رأسه.'],['x','إذا اعترضه سهم آخر يرتدّ وتخسر قلبًا.'],['eye','اضغط مطوّلًا لمعاينة المسار: أخضر = حر، أحمر = مسدود.'],['lock','السهم المقفل يُفتح عندما يخرج سهم المفتاح بنفس اللون.'],['spark','الأسهم الذهبية تمنح عملات، والإخراج السريع يصنع سلسلة.'],['bulb','التلميح يكشف سهمًا حرًّا، والبرق يزيل أي سهم.']]},
+fr:{title:'Arrow Escape',tagline:'Libérez les flèches dans le bon ordre',play:'Jouer',level:'Niveau {0}',modes:'Modes de jeu',daily:'Défi du jour',zen:'Mode Zen',zenSub:'Sans cœurs, sans pression',
+rush:'Contre-la-montre',rushSub:'Record {0}',levels:'Tous les niveaux',lvSub:'{0} étoiles obtenues',streak:'Série de {0} jours',dailyNew:'Un nouveau puzzle chaque jour',new:'Nouveau',doneTag:'Fait',
+easy:'Facile',normal:'Normal',hard:'Difficile',expert:'Expert',levelDone:'Niveau {0} terminé',dailyWin:'Défi du jour réussi',next:'Niveau suivant',newBoard:'Nouveau plateau',home:'Accueil',
+retry:'Réessayer',lose:'Plus de cœurs',loseSub:'Vous y êtes presque, n’abandonnez pas.',cont:'Continuer avec 1 cœur',timeUp:'Temps écoulé',again:'Rejouer',best:'Record {0} · plateaux {1}',newBest:'Nouveau record !',
+locked:'Verrouillée — sortez d’abord la flèche clé',bombPick:'Choisissez une flèche à retirer',noCoins:'Pas assez de pièces',combo:'Combo ×{0}',
+settings:'Paramètres',lang:'Langue',theme:'Thème',colors:'Flèches colorées',sound:'Sons',vib:'Vibrations',howto:'Comment jouer',close:'Fermer',done:'Terminé',gotIt:'Compris',privacy:'Politique de confidentialité',
+time:'Temps',mistakesL:'Erreurs',coins:'Pièces',perfect:'Sans aucune erreur !',good:'Excellent travail',ok:'Bien joué',zenWin:'Plateau vidé',board:'Plateau {0}',left:'{0} s',
+chapter:'Chapitre {0}',watchAd:'Regarder une pub',free:'Gratuit',contAd:'Regarder une pub et continuer',double:'Doubler les pièces',getHint:'Obtenir un indice',getBlast:'Obtenir un éclair',adFail:'Aucune pub disponible pour le moment. Réessayez plus tard.',moreTime:'+15 secondes',orCoins:'Utiliser {0} pièces',
+adPrivacy:'Choix de confidentialité des pubs',dailyReward:'Récompense du jour',dayN:'Jour {0}',claim:'Récupérer',claimX2:'Récupérer ×2',comeBack:'Revenez demain pour la prochaine récompense',achievements:'Succès',achUnlocked:'Succès débloqué',achSub:'{0} sur {1} débloqués',a_levels:'Terminer {0} niveaux',a_perfect:'Finir {0} niveaux sans erreur',a_arrows:'Libérer {0} flèches',a_combo:'Atteindre un combo ×{0}',a_shapes:'Terminer {0} formes différentes',a_daily:'Réussir {0} défis du jour',a_streak:'Réussir le défi du jour {0} jours d’affilée',a_login:'Récupérer la récompense {0} jours d’affilée',a_rush:'Marquer {0} points en contre-la-montre',a_zen:'Vider {0} plateaux en mode Zen',a_keys:'Déverrouiller {0} flèches',a_gold:'Collecter {0} flèches dorées',
+noAdsT:'1 heure sans pub',noAdsSub:'Regardez une vidéo : aucune pub entre les niveaux pendant 1 heure',noAdsOn:'Actif · encore {0} min',notifT:'Rappel quotidien',notif1:'Votre récompense du jour est prête 🎁 et un nouveau puzzle vous attend.',notif2:'Les flèches vous attendent ! Revenez pour un petit puzzle.',enjoyQ:'Vous aimez Arrow Escape ?',enjoySub:'Votre avis nous aide beaucoup.',enjoyYes:'Oui, j’adore !',enjoyNo:'Pas vraiment',fbQ:'Comment faire mieux ?',fbSub:'Dites-nous quoi améliorer, nous lisons chaque message.',fbSend:'Envoyer un avis',fbLater:'Plus tard',shop:'Styles de flèches',shopSub:'{0} sur {1} débloqués',equip:'Utiliser',equipped:'Utilisé',sk_classic:'Classique',sk_rainbow:'Arc-en-ciel',sk_neon:'Néon',sk_candy:'Bonbon',sk_rope:'Corde',sk_beads:'Perles',sk_pixel:'Pixel',sk_royal:'Royal',
+tut1:'Touchez une flèche : elle sort dans la direction de sa pointe. Si une autre bloque, vous perdez un cœur.',tut2:'Appui long sur une flèche pour prévisualiser son trajet.',tut3:'Une flèche verrouillée ne bouge pas tant que la flèche clé de même couleur est présente.',
+how:[['send','Touchez une flèche : elle quitte le plateau dans la direction de sa pointe.'],['x','Si une autre flèche bloque le chemin, elle rebondit et vous perdez un cœur.'],['eye','Appui long pour voir le trajet : vert = libre, rouge = bloqué.'],['lock','Une flèche verrouillée s’ouvre quand la flèche clé de même couleur sort.'],['spark','Les flèches dorées rapportent des pièces ; enchaînez vite pour des combos.'],['bulb','L’indice révèle une flèche libre, l’éclair retire n’importe quelle flèche.']]},
+en:{title:'Arrow Escape',tagline:'Free the arrows in the right order',play:'Play',level:'Level {0}',modes:'Game modes',daily:'Daily Challenge',zen:'Zen Mode',zenSub:'No hearts, no pressure',
+rush:'Time Rush',rushSub:'Best {0}',levels:'All levels',lvSub:'{0} stars earned',streak:'{0}-day streak',dailyNew:'A new puzzle every day',new:'New',doneTag:'Done',
+easy:'Easy',normal:'Normal',hard:'Hard',expert:'Expert',levelDone:'Level {0} complete',dailyWin:'Daily challenge cleared',next:'Next level',newBoard:'New board',home:'Home',
+retry:'Retry',lose:'Out of hearts',loseSub:'You’re so close — don’t give up.',cont:'Continue with 1 heart',timeUp:'Time’s up',again:'Play again',best:'Best {0} · boards {1}',newBest:'New best!',
+locked:'Locked — free the key arrow first',bombPick:'Pick an arrow to remove',noCoins:'Not enough coins',combo:'Combo ×{0}',
+settings:'Settings',lang:'Language',theme:'Theme',colors:'Colorful arrows',sound:'Sounds',vib:'Vibration',howto:'How to play',close:'Close',done:'Done',gotIt:'Got it',privacy:'Privacy Policy',
+time:'Time',mistakesL:'Mistakes',coins:'Coins',perfect:'Flawless!',good:'Great job',ok:'Well done',zenWin:'Board cleared',board:'Board {0}',left:'{0}s',
+chapter:'Chapter {0}',watchAd:'Watch an ad',free:'Free',contAd:'Watch an ad to continue',double:'Double coins',getHint:'Get a hint',getBlast:'Get a blast',adFail:'No ad available right now. Try again later.',moreTime:'+15 seconds',orCoins:'Use {0} coins',
+adPrivacy:'Ad privacy choices',dailyReward:'Daily reward',dayN:'Day {0}',claim:'Claim',claimX2:'Claim ×2',comeBack:'Come back tomorrow for your next reward',achievements:'Achievements',achUnlocked:'Achievement unlocked',achSub:'{0} of {1} unlocked',a_levels:'Complete {0} levels',a_perfect:'Finish {0} levels without a mistake',a_arrows:'Free {0} arrows',a_combo:'Reach a ×{0} combo',a_shapes:'Complete {0} different shapes',a_daily:'Complete {0} daily challenges',a_streak:'Reach a {0}-day daily-challenge streak',a_login:'Claim the daily reward {0} days in a row',a_rush:'Score {0} in Time Rush',a_zen:'Clear {0} Zen boards',a_keys:'Unlock {0} locked arrows',a_gold:'Collect {0} golden arrows',
+noAdsT:'1 hour without ads',noAdsSub:'Watch one video: no ads between levels for an hour',noAdsOn:'Active · {0} min left',notifT:'Daily reminder',notif1:'Your daily reward is ready 🎁 and a new puzzle is waiting.',notif2:'The arrows miss you! Come back for a quick puzzle.',enjoyQ:'Enjoying Arrow Escape?',enjoySub:'Your opinion helps us a lot.',enjoyYes:'Yes, I love it!',enjoyNo:'Not really',fbQ:'How can we do better?',fbSub:'Tell us what to improve — we read every message.',fbSend:'Send feedback',fbLater:'Maybe later',shop:'Arrow styles',shopSub:'{0} of {1} unlocked',equip:'Use',equipped:'In use',sk_classic:'Classic',sk_rainbow:'Rainbow',sk_neon:'Neon',sk_candy:'Candy',sk_rope:'Rope',sk_beads:'Beads',sk_pixel:'Pixel',sk_royal:'Royal',
+tut1:'Tap an arrow to slide it out the way it points. If another arrow is in the way, you lose a heart.',tut2:'Long-press any arrow to preview its path before moving it.',tut3:'A locked arrow can’t move until the key arrow of the same color is gone.',
+how:[['send','Tap an arrow and it leaves the board in the direction it points.'],['x','If another arrow blocks its path, it bounces back and you lose a heart.'],['eye','Long-press to preview the path: green = clear, red = blocked.'],['lock','A locked arrow opens when the key arrow of the same color leaves.'],['spark','Golden arrows give coins; clear arrows quickly to chain combos.'],['bulb','A hint reveals a free arrow; a blast removes any arrow.']]},
+es:{title:'Arrow Escape',tagline:'Libera las flechas en el orden correcto',play:'Jugar',level:'Nivel {0}',modes:'Modos de juego',daily:'Reto diario',zen:'Modo Zen',zenSub:'Sin corazones, sin presión',
+rush:'Contrarreloj',rushSub:'Récord {0}',levels:'Todos los niveles',lvSub:'{0} estrellas conseguidas',streak:'Racha de {0} días',dailyNew:'Un puzle nuevo cada día',new:'Nuevo',doneTag:'Hecho',
+easy:'Fácil',normal:'Normal',hard:'Difícil',expert:'Experto',levelDone:'Nivel {0} completado',dailyWin:'Reto diario superado',next:'Siguiente nivel',newBoard:'Nuevo tablero',home:'Inicio',
+retry:'Reintentar',lose:'Sin corazones',loseSub:'Estás muy cerca, no te rindas.',cont:'Continuar con 1 corazón',timeUp:'Se acabó el tiempo',again:'Jugar otra vez',best:'Récord {0} · tableros {1}',newBest:'¡Nuevo récord!',
+locked:'Bloqueada: libera primero la flecha llave',bombPick:'Elige una flecha para eliminarla',noCoins:'No tienes suficientes monedas',combo:'Combo ×{0}',
+settings:'Ajustes',lang:'Idioma',theme:'Tema',colors:'Flechas de colores',sound:'Sonidos',vib:'Vibración',howto:'Cómo jugar',close:'Cerrar',done:'Listo',gotIt:'Entendido',privacy:'Política de privacidad',
+time:'Tiempo',mistakesL:'Errores',coins:'Monedas',perfect:'¡Sin errores!',good:'¡Gran trabajo!',ok:'Bien hecho',zenWin:'Tablero despejado',board:'Tablero {0}',
+chapter:'Capítulo {0}',watchAd:'Ver anuncio',free:'Gratis',contAd:'Ver anuncio y continuar',double:'Duplicar monedas',getHint:'Obtener una pista',getBlast:'Obtener un rayo',adFail:'No hay anuncios disponibles ahora. Inténtalo más tarde.',moreTime:'+15 segundos',orCoins:'Usar {0} monedas',
+adPrivacy:'Privacidad de anuncios',dailyReward:'Recompensa diaria',dayN:'Día {0}',claim:'Recoger',claimX2:'Recoger ×2',comeBack:'Vuelve mañana por tu próxima recompensa',achievements:'Logros',achUnlocked:'Logro desbloqueado',achSub:'{0} de {1} desbloqueados',a_levels:'Completa {0} niveles',a_perfect:'Termina {0} niveles sin errores',a_arrows:'Libera {0} flechas',a_combo:'Consigue un combo ×{0}',a_shapes:'Completa {0} formas distintas',a_daily:'Supera {0} retos diarios',a_streak:'Supera el reto diario {0} días seguidos',a_login:'Recoge la recompensa diaria {0} días seguidos',a_rush:'Consigue {0} puntos en Contrarreloj',a_zen:'Despeja {0} tableros Zen',a_keys:'Desbloquea {0} flechas con candado',a_gold:'Recoge {0} flechas doradas',
+noAdsT:'1 hora sin anuncios',noAdsSub:'Mira un vídeo: sin anuncios entre niveles durante 1 hora',noAdsOn:'Activo · quedan {0} min',notifT:'Recordatorio diario',notif1:'Tu recompensa diaria está lista 🎁 y te espera un puzle nuevo.',notif2:'¡Las flechas te echan de menos! Vuelve para un puzle rápido.',enjoyQ:'¿Te gusta Arrow Escape?',enjoySub:'Tu opinión nos ayuda mucho.',enjoyYes:'¡Sí, me encanta!',enjoyNo:'No mucho',fbQ:'¿Cómo podemos mejorar?',fbSub:'Cuéntanos qué mejorar; leemos todos los mensajes.',fbSend:'Enviar opinión',fbLater:'Más tarde',shop:'Estilos de flecha',shopSub:'{0} de {1} desbloqueados',equip:'Usar',equipped:'En uso',sk_classic:'Clásico',sk_rainbow:'Arcoíris',sk_neon:'Neón',sk_candy:'Caramelo',sk_rope:'Cuerda',sk_beads:'Cuentas',sk_pixel:'Píxel',sk_royal:'Real',
+tut1:'Toca una flecha para que salga en la dirección a la que apunta. Si otra flecha se interpone, pierdes un corazón.',tut2:'Mantén pulsada una flecha para ver su recorrido antes de moverla.',tut3:'Una flecha con candado no se mueve hasta que salga la flecha llave del mismo color.',
+how:[['send','Toca una flecha y saldrá del tablero en la dirección a la que apunta.'],['x','Si otra flecha bloquea su camino, rebota y pierdes un corazón.'],['eye','Mantén pulsado para ver el recorrido: verde = libre, rojo = bloqueado.'],['lock','Una flecha con candado se abre cuando sale la flecha llave del mismo color.'],['spark','Las flechas doradas dan monedas; despeja rápido para encadenar combos.'],['bulb','La pista muestra una flecha libre; el rayo elimina cualquier flecha.']]},
+pt:{title:'Arrow Escape',tagline:'Liberte as setas na ordem certa',play:'Jogar',level:'Nível {0}',modes:'Modos de jogo',daily:'Desafio diário',zen:'Modo Zen',zenSub:'Sem corações, sem pressão',
+rush:'Contra o tempo',rushSub:'Recorde {0}',levels:'Todos os níveis',lvSub:'{0} estrelas conquistadas',streak:'Sequência de {0} dias',dailyNew:'Um novo quebra-cabeça todo dia',new:'Novo',doneTag:'Feito',
+easy:'Fácil',normal:'Normal',hard:'Difícil',expert:'Especialista',levelDone:'Nível {0} concluído',dailyWin:'Desafio diário concluído',next:'Próximo nível',newBoard:'Novo tabuleiro',home:'Início',
+retry:'Tentar de novo',lose:'Sem corações',loseSub:'Você está quase lá, não desista.',cont:'Continuar com 1 coração',timeUp:'Tempo esgotado',again:'Jogar de novo',best:'Recorde {0} · tabuleiros {1}',newBest:'Novo recorde!',
+locked:'Trancada: libere primeiro a seta-chave',bombPick:'Escolha uma seta para remover',noCoins:'Moedas insuficientes',combo:'Combo ×{0}',
+settings:'Configurações',lang:'Idioma',theme:'Tema',colors:'Setas coloridas',sound:'Sons',vib:'Vibração',howto:'Como jogar',close:'Fechar',done:'Pronto',gotIt:'Entendi',privacy:'Política de privacidade',
+time:'Tempo',mistakesL:'Erros',coins:'Moedas',perfect:'Sem nenhum erro!',good:'Ótimo trabalho',ok:'Muito bem',zenWin:'Tabuleiro limpo',board:'Tabuleiro {0}',
+chapter:'Capítulo {0}',watchAd:'Assistir anúncio',free:'Grátis',contAd:'Assistir anúncio e continuar',double:'Dobrar moedas',getHint:'Ganhar uma dica',getBlast:'Ganhar um raio',adFail:'Nenhum anúncio disponível agora. Tente mais tarde.',moreTime:'+15 segundos',orCoins:'Usar {0} moedas',
+adPrivacy:'Privacidade dos anúncios',dailyReward:'Recompensa diária',dayN:'Dia {0}',claim:'Coletar',claimX2:'Coletar ×2',comeBack:'Volte amanhã para a próxima recompensa',achievements:'Conquistas',achUnlocked:'Conquista desbloqueada',achSub:'{0} de {1} desbloqueadas',a_levels:'Conclua {0} níveis',a_perfect:'Termine {0} níveis sem errar',a_arrows:'Liberte {0} setas',a_combo:'Faça um combo ×{0}',a_shapes:'Conclua {0} formas diferentes',a_daily:'Conclua {0} desafios diários',a_streak:'Conclua o desafio diário {0} dias seguidos',a_login:'Colete a recompensa diária {0} dias seguidos',a_rush:'Marque {0} pontos no Contra o tempo',a_zen:'Limpe {0} tabuleiros Zen',a_keys:'Destranque {0} setas',a_gold:'Colete {0} setas douradas',
+noAdsT:'1 hora sem anúncios',noAdsSub:'Assista a um vídeo: sem anúncios entre níveis por 1 hora',noAdsOn:'Ativo · faltam {0} min',notifT:'Lembrete diário',notif1:'Sua recompensa diária está pronta 🎁 e um novo quebra-cabeça espera por você.',notif2:'As setas sentem sua falta! Volte para um desafio rápido.',enjoyQ:'Está gostando do Arrow Escape?',enjoySub:'Sua opinião nos ajuda muito.',enjoyYes:'Sim, adorei!',enjoyNo:'Nem tanto',fbQ:'Como podemos melhorar?',fbSub:'Conte o que melhorar — lemos todas as mensagens.',fbSend:'Enviar opinião',fbLater:'Depois',shop:'Estilos de seta',shopSub:'{0} de {1} desbloqueados',equip:'Usar',equipped:'Em uso',sk_classic:'Clássico',sk_rainbow:'Arco-íris',sk_neon:'Neon',sk_candy:'Doce',sk_rope:'Corda',sk_beads:'Contas',sk_pixel:'Pixel',sk_royal:'Real',
+tut1:'Toque numa seta para ela sair na direção em que aponta. Se outra seta estiver no caminho, você perde um coração.',tut2:'Mantenha pressionada uma seta para ver o caminho antes de movê-la.',tut3:'Uma seta trancada só se move depois que a seta-chave da mesma cor sair.',
+how:[['send','Toque numa seta e ela sai do tabuleiro na direção em que aponta.'],['x','Se outra seta bloquear o caminho, ela volta e você perde um coração.'],['eye','Mantenha pressionado para ver o caminho: verde = livre, vermelho = bloqueado.'],['lock','Uma seta trancada abre quando a seta-chave da mesma cor sai.'],['spark','Setas douradas dão moedas; seja rápido para fazer combos.'],['bulb','A dica mostra uma seta livre; o raio remove qualquer seta.']]},
+de:{title:'Arrow Escape',tagline:'Befreie die Pfeile in der richtigen Reihenfolge',play:'Spielen',level:'Level {0}',modes:'Spielmodi',daily:'Tagesrätsel',zen:'Zen-Modus',zenSub:'Keine Herzen, kein Druck',
+rush:'Zeitrennen',rushSub:'Rekord {0}',levels:'Alle Level',lvSub:'{0} Sterne gesammelt',streak:'{0} Tage in Folge',dailyNew:'Jeden Tag ein neues Rätsel',new:'Neu',doneTag:'Erledigt',
+easy:'Leicht',normal:'Normal',hard:'Schwer',expert:'Experte',levelDone:'Level {0} geschafft',dailyWin:'Tagesrätsel gelöst',next:'Nächstes Level',newBoard:'Neues Brett',home:'Start',
+retry:'Nochmal',lose:'Keine Herzen mehr',loseSub:'Du bist ganz nah dran – gib nicht auf.',cont:'Weiter mit 1 Herz',timeUp:'Zeit abgelaufen',again:'Nochmal spielen',best:'Rekord {0} · Bretter {1}',newBest:'Neuer Rekord!',
+locked:'Gesperrt – befreie zuerst den Schlüsselpfeil',bombPick:'Wähle einen Pfeil zum Entfernen',noCoins:'Nicht genug Münzen',combo:'Kombo ×{0}',
+settings:'Einstellungen',lang:'Sprache',theme:'Design',colors:'Bunte Pfeile',sound:'Töne',vib:'Vibration',howto:'Spielanleitung',close:'Schließen',done:'Fertig',gotIt:'Verstanden',privacy:'Datenschutzerklärung',
+time:'Zeit',mistakesL:'Fehler',coins:'Münzen',perfect:'Fehlerfrei!',good:'Super gemacht',ok:'Gut gemacht',zenWin:'Brett geleert',board:'Brett {0}',
+chapter:'Kapitel {0}',watchAd:'Werbung ansehen',free:'Gratis',contAd:'Werbung ansehen und weiterspielen',double:'Münzen verdoppeln',getHint:'Tipp holen',getBlast:'Blitz holen',adFail:'Gerade ist keine Werbung verfügbar. Versuche es später.',moreTime:'+15 Sekunden',orCoins:'{0} Münzen einsetzen',
+adPrivacy:'Werbe-Datenschutz',dailyReward:'Tagesbelohnung',dayN:'Tag {0}',claim:'Abholen',claimX2:'×2 abholen',comeBack:'Komm morgen für die nächste Belohnung wieder',achievements:'Erfolge',achUnlocked:'Erfolg freigeschaltet',achSub:'{0} von {1} freigeschaltet',a_levels:'Schaffe {0} Level',a_perfect:'Schaffe {0} Level ohne Fehler',a_arrows:'Befreie {0} Pfeile',a_combo:'Erreiche eine ×{0}-Kombo',a_shapes:'Schaffe {0} verschiedene Formen',a_daily:'Löse {0} Tagesrätsel',a_streak:'Löse {0} Tage in Folge das Tagesrätsel',a_login:'Hole die Tagesbelohnung {0} Tage in Folge ab',a_rush:'Erreiche {0} Punkte im Zeitrennen',a_zen:'Leere {0} Zen-Bretter',a_keys:'Entsperre {0} Pfeile',a_gold:'Sammle {0} goldene Pfeile',
+noAdsT:'1 Stunde ohne Werbung',noAdsSub:'Ein Video ansehen: 1 Stunde keine Werbung zwischen den Leveln',noAdsOn:'Aktiv · noch {0} Min.',notifT:'Tägliche Erinnerung',notif1:'Deine Tagesbelohnung wartet 🎁 und ein neues Rätsel auch.',notif2:'Die Pfeile vermissen dich! Komm zurück für ein schnelles Rätsel.',enjoyQ:'Gefällt dir Arrow Escape?',enjoySub:'Deine Meinung hilft uns sehr.',enjoyYes:'Ja, total!',enjoyNo:'Nicht wirklich',fbQ:'Was können wir besser machen?',fbSub:'Sag uns, was wir verbessern sollen – wir lesen jede Nachricht.',fbSend:'Feedback senden',fbLater:'Später',shop:'Pfeil-Stile',shopSub:'{0} von {1} freigeschaltet',equip:'Benutzen',equipped:'Aktiv',sk_classic:'Klassisch',sk_rainbow:'Regenbogen',sk_neon:'Neon',sk_candy:'Bonbon',sk_rope:'Seil',sk_beads:'Perlen',sk_pixel:'Pixel',sk_royal:'Royal',
+tut1:'Tippe auf einen Pfeil, damit er in seine Richtung hinausgleitet. Steht ein anderer Pfeil im Weg, verlierst du ein Herz.',tut2:'Halte einen Pfeil gedrückt, um seinen Weg vorab zu sehen.',tut3:'Ein gesperrter Pfeil bewegt sich erst, wenn der Schlüsselpfeil gleicher Farbe weg ist.',
+how:[['send','Tippe auf einen Pfeil und er verlässt das Brett in seine Richtung.'],['x','Blockiert ein anderer Pfeil den Weg, prallt er zurück und du verlierst ein Herz.'],['eye','Gedrückt halten zeigt den Weg: grün = frei, rot = blockiert.'],['lock','Ein gesperrter Pfeil öffnet sich, wenn der Schlüsselpfeil gleicher Farbe geht.'],['spark','Goldene Pfeile bringen Münzen; schnelles Spielen ergibt Kombos.'],['bulb','Ein Tipp zeigt einen freien Pfeil, ein Blitz entfernt jeden Pfeil.']]},
+it:{title:'Arrow Escape',tagline:'Libera le frecce nell’ordine giusto',play:'Gioca',level:'Livello {0}',modes:'Modalità di gioco',daily:'Sfida del giorno',zen:'Modalità Zen',zenSub:'Niente cuori, niente stress',
+rush:'Contro il tempo',rushSub:'Record {0}',levels:'Tutti i livelli',lvSub:'{0} stelle ottenute',streak:'Serie di {0} giorni',dailyNew:'Un nuovo puzzle ogni giorno',new:'Nuovo',doneTag:'Fatto',
+easy:'Facile',normal:'Normale',hard:'Difficile',expert:'Esperto',levelDone:'Livello {0} completato',dailyWin:'Sfida del giorno superata',next:'Livello successivo',newBoard:'Nuova griglia',home:'Home',
+retry:'Riprova',lose:'Cuori esauriti',loseSub:'Ci sei quasi, non mollare.',cont:'Continua con 1 cuore',timeUp:'Tempo scaduto',again:'Gioca ancora',best:'Record {0} · griglie {1}',newBest:'Nuovo record!',
+locked:'Bloccata: libera prima la freccia chiave',bombPick:'Scegli una freccia da rimuovere',noCoins:'Monete insufficienti',combo:'Combo ×{0}',
+settings:'Impostazioni',lang:'Lingua',theme:'Tema',colors:'Frecce colorate',sound:'Suoni',vib:'Vibrazione',howto:'Come si gioca',close:'Chiudi',done:'Fatto',gotIt:'Ho capito',privacy:'Informativa sulla privacy',
+time:'Tempo',mistakesL:'Errori',coins:'Monete',perfect:'Nessun errore!',good:'Ottimo lavoro',ok:'Ben fatto',zenWin:'Griglia libera',board:'Griglia {0}',
+chapter:'Capitolo {0}',watchAd:'Guarda un video',free:'Gratis',contAd:'Guarda un video e continua',double:'Raddoppia le monete',getHint:'Ottieni un suggerimento',getBlast:'Ottieni un fulmine',adFail:'Nessun video disponibile ora. Riprova più tardi.',moreTime:'+15 secondi',orCoins:'Usa {0} monete',
+adPrivacy:'Privacy degli annunci',dailyReward:'Ricompensa giornaliera',dayN:'Giorno {0}',claim:'Riscatta',claimX2:'Riscatta ×2',comeBack:'Torna domani per la prossima ricompensa',achievements:'Obiettivi',achUnlocked:'Obiettivo sbloccato',achSub:'{0} su {1} sbloccati',a_levels:'Completa {0} livelli',a_perfect:'Completa {0} livelli senza errori',a_arrows:'Libera {0} frecce',a_combo:'Raggiungi una combo ×{0}',a_shapes:'Completa {0} forme diverse',a_daily:'Supera {0} sfide del giorno',a_streak:'Supera la sfida del giorno {0} giorni di fila',a_login:'Riscatta la ricompensa {0} giorni di fila',a_rush:'Fai {0} punti in Contro il tempo',a_zen:'Libera {0} griglie Zen',a_keys:'Sblocca {0} frecce bloccate',a_gold:'Raccogli {0} frecce dorate',
+noAdsT:'1 ora senza pubblicità',noAdsSub:'Guarda un video: niente pubblicità tra i livelli per 1 ora',noAdsOn:'Attivo · ancora {0} min',notifT:'Promemoria giornaliero',notif1:'La tua ricompensa giornaliera è pronta 🎁 e ti aspetta un nuovo puzzle.',notif2:'Le frecce sentono la tua mancanza! Torna per un puzzle veloce.',enjoyQ:'Ti piace Arrow Escape?',enjoySub:'La tua opinione ci aiuta molto.',enjoyYes:'Sì, lo adoro!',enjoyNo:'Non proprio',fbQ:'Come possiamo migliorare?',fbSub:'Dicci cosa migliorare: leggiamo ogni messaggio.',fbSend:'Invia un commento',fbLater:'Più tardi',shop:'Stili delle frecce',shopSub:'{0} su {1} sbloccati',equip:'Usa',equipped:'In uso',sk_classic:'Classico',sk_rainbow:'Arcobaleno',sk_neon:'Neon',sk_candy:'Caramella',sk_rope:'Corda',sk_beads:'Perline',sk_pixel:'Pixel',sk_royal:'Reale',
+tut1:'Tocca una freccia per farla uscire nella direzione in cui punta. Se un’altra freccia è sulla strada, perdi un cuore.',tut2:'Tieni premuta una freccia per vedere il suo percorso prima di muoverla.',tut3:'Una freccia bloccata non si muove finché non esce la freccia chiave dello stesso colore.',
+how:[['send','Tocca una freccia e uscirà dalla griglia nella direzione in cui punta.'],['x','Se un’altra freccia blocca il percorso, rimbalza e perdi un cuore.'],['eye','Tieni premuto per vedere il percorso: verde = libero, rosso = bloccato.'],['lock','Una freccia bloccata si apre quando esce la freccia chiave dello stesso colore.'],['spark','Le frecce dorate danno monete; sii veloce per fare combo.'],['bulb','Il suggerimento mostra una freccia libera, il fulmine rimuove qualsiasi freccia.']]},
+tr:{title:'Arrow Escape',tagline:'Okları doğru sırayla serbest bırak',play:'Oyna',level:'Seviye {0}',modes:'Oyun modları',daily:'Günlük bulmaca',zen:'Zen modu',zenSub:'Can yok, baskı yok',
+rush:'Zamana karşı',rushSub:'Rekor {0}',levels:'Tüm seviyeler',lvSub:'{0} yıldız kazanıldı',streak:'{0} günlük seri',dailyNew:'Her gün yeni bir bulmaca',new:'Yeni',doneTag:'Tamam',
+easy:'Kolay',normal:'Normal',hard:'Zor',expert:'Uzman',levelDone:'Seviye {0} tamamlandı',dailyWin:'Günlük bulmaca tamamlandı',next:'Sonraki seviye',newBoard:'Yeni tahta',home:'Ana sayfa',
+retry:'Tekrar dene',lose:'Canın kalmadı',loseSub:'Çok yaklaştın, pes etme.',cont:'1 canla devam et',timeUp:'Süre doldu',again:'Tekrar oyna',best:'Rekor {0} · tahta {1}',newBest:'Yeni rekor!',
+locked:'Kilitli: önce anahtar oku çıkar',bombPick:'Kaldırmak için bir ok seç',noCoins:'Yeterli altın yok',combo:'Kombo ×{0}',
+settings:'Ayarlar',lang:'Dil',theme:'Tema',colors:'Renkli oklar',sound:'Sesler',vib:'Titreşim',howto:'Nasıl oynanır',close:'Kapat',done:'Bitti',gotIt:'Anladım',privacy:'Gizlilik Politikası',
+time:'Süre',mistakesL:'Hatalar',coins:'Altın',perfect:'Hatasız!',good:'Harika iş',ok:'Aferin',zenWin:'Tahta temizlendi',board:'Tahta {0}',
+chapter:'Bölüm {0}',watchAd:'Reklam izle',free:'Ücretsiz',contAd:'Reklam izle ve devam et',double:'Altınları ikiye katla',getHint:'İpucu al',getBlast:'Yıldırım al',adFail:'Şu anda reklam yok. Daha sonra tekrar dene.',moreTime:'+15 saniye',orCoins:'{0} altın kullan',
+adPrivacy:'Reklam gizlilik seçenekleri',dailyReward:'Günlük ödül',dayN:'{0}. gün',claim:'Al',claimX2:'×2 al',comeBack:'Sonraki ödül için yarın tekrar gel',achievements:'Başarımlar',achUnlocked:'Başarım açıldı',achSub:'{0}/{1} açıldı',a_levels:'{0} seviye tamamla',a_perfect:'{0} seviyeyi hatasız bitir',a_arrows:'{0} ok serbest bırak',a_combo:'×{0} komboya ulaş',a_shapes:'{0} farklı şekil tamamla',a_daily:'{0} günlük bulmaca tamamla',a_streak:'Günlük bulmacayı {0} gün üst üste tamamla',a_login:'Günlük ödülü {0} gün üst üste al',a_rush:'Zamana karşı modunda {0} puan yap',a_zen:'{0} Zen tahtası temizle',a_keys:'{0} kilitli oku aç',a_gold:'{0} altın ok topla',
+noAdsT:'1 saat reklamsız',noAdsSub:'Bir video izle: 1 saat boyunca seviyeler arasında reklam yok',noAdsOn:'Etkin · {0} dk kaldı',notifT:'Günlük hatırlatma',notif1:'Günlük ödülün hazır 🎁 ve yeni bir bulmaca seni bekliyor.',notif2:'Oklar seni özledi! Kısa bir bulmaca için geri dön.',enjoyQ:'Arrow Escape’i beğendin mi?',enjoySub:'Görüşün bize çok yardımcı olur.',enjoyYes:'Evet, bayıldım!',enjoyNo:'Pek değil',fbQ:'Nasıl daha iyi yapabiliriz?',fbSub:'Neyi geliştirmemiz gerektiğini yaz; her mesajı okuyoruz.',fbSend:'Geri bildirim gönder',fbLater:'Sonra',shop:'Ok stilleri',shopSub:'{0}/{1} açıldı',equip:'Kullan',equipped:'Kullanılıyor',sk_classic:'Klasik',sk_rainbow:'Gökkuşağı',sk_neon:'Neon',sk_candy:'Şeker',sk_rope:'Halat',sk_beads:'Boncuk',sk_pixel:'Piksel',sk_royal:'Kraliyet',
+tut1:'Bir oka dokun, gösterdiği yöne doğru kayıp çıksın. Önünde başka bir ok varsa bir can kaybedersin.',tut2:'Bir oku hareket ettirmeden önce yolunu görmek için basılı tut.',tut3:'Kilitli bir ok, aynı renkteki anahtar ok çıkana kadar hareket etmez.',
+how:[['send','Bir oka dokun, gösterdiği yönde tahtadan çıksın.'],['x','Yolunu başka bir ok kapatıyorsa geri seker ve bir can kaybedersin.'],['eye','Yolu görmek için basılı tut: yeşil = açık, kırmızı = kapalı.'],['lock','Kilitli ok, aynı renkteki anahtar ok çıkınca açılır.'],['spark','Altın oklar altın kazandırır; hızlı oynayarak kombo yap.'],['bulb','İpucu serbest bir oku gösterir, yıldırım herhangi bir oku kaldırır.']]},
+ru:{title:'Arrow Escape',tagline:'Освободи стрелки в правильном порядке',play:'Играть',level:'Уровень {0}',modes:'Режимы игры',daily:'Задача дня',zen:'Дзен-режим',zenSub:'Без сердец и без спешки',
+rush:'На время',rushSub:'Рекорд {0}',levels:'Все уровни',lvSub:'Собрано звёзд: {0}',streak:'Серия: {0} дн.',dailyNew:'Новая головоломка каждый день',new:'Новое',doneTag:'Готово',
+easy:'Легко',normal:'Средне',hard:'Сложно',expert:'Эксперт',levelDone:'Уровень {0} пройден',dailyWin:'Задача дня решена',next:'Следующий уровень',newBoard:'Новое поле',home:'Главная',
+retry:'Ещё раз',lose:'Сердца закончились',loseSub:'Ты почти у цели — не сдавайся.',cont:'Продолжить с 1 сердцем',timeUp:'Время вышло',again:'Играть снова',best:'Рекорд {0} · полей {1}',newBest:'Новый рекорд!',
+locked:'Заперто — сначала убери стрелку-ключ',bombPick:'Выбери стрелку, чтобы убрать её',noCoins:'Недостаточно монет',combo:'Комбо ×{0}',
+settings:'Настройки',lang:'Язык',theme:'Тема',colors:'Цветные стрелки',sound:'Звуки',vib:'Вибрация',howto:'Как играть',close:'Закрыть',done:'Готово',gotIt:'Понятно',privacy:'Политика конфиденциальности',
+time:'Время',mistakesL:'Ошибки',coins:'Монеты',perfect:'Без единой ошибки!',good:'Отличная работа',ok:'Молодец',zenWin:'Поле очищено',board:'Поле {0}',
+chapter:'Глава {0}',watchAd:'Смотреть рекламу',free:'Бесплатно',contAd:'Посмотреть рекламу и продолжить',double:'Удвоить монеты',getHint:'Получить подсказку',getBlast:'Получить молнию',adFail:'Сейчас нет доступной рекламы. Попробуй позже.',moreTime:'+15 секунд',orCoins:'Потратить монеты: {0}',
+adPrivacy:'Настройки рекламы',dailyReward:'Ежедневная награда',dayN:'День {0}',claim:'Забрать',claimX2:'Забрать ×2',comeBack:'Возвращайся завтра за следующей наградой',achievements:'Достижения',achUnlocked:'Достижение открыто',achSub:'Открыто: {0} из {1}',a_levels:'Пройденные уровни: {0}',a_perfect:'Уровни без ошибок: {0}',a_arrows:'Освобождённые стрелки: {0}',a_combo:'Сделай комбо ×{0}',a_shapes:'Пройденные фигуры: {0}',a_daily:'Решённые задачи дня: {0}',a_streak:'Задача дня подряд, дней: {0}',a_login:'Награда дня подряд, дней: {0}',a_rush:'Очки в режиме «На время»: {0}',a_zen:'Очищенные поля в дзен-режиме: {0}',a_keys:'Открытые запертые стрелки: {0}',a_gold:'Собранные золотые стрелки: {0}',
+noAdsT:'1 час без рекламы',noAdsSub:'Посмотри одно видео — и час без рекламы между уровнями',noAdsOn:'Активно · осталось мин: {0}',notifT:'Ежедневное напоминание',notif1:'Ежедневная награда ждёт 🎁 и новая головоломка тоже.',notif2:'Стрелки скучают! Возвращайся на быструю головоломку.',enjoyQ:'Нравится Arrow Escape?',enjoySub:'Твоё мнение очень нам помогает.',enjoyYes:'Да, очень!',enjoyNo:'Не очень',fbQ:'Что нам улучшить?',fbSub:'Напиши, что улучшить, — мы читаем каждое сообщение.',fbSend:'Отправить отзыв',fbLater:'Позже',shop:'Стили стрелок',shopSub:'Открыто: {0} из {1}',equip:'Выбрать',equipped:'Выбрано',sk_classic:'Классика',sk_rainbow:'Радуга',sk_neon:'Неон',sk_candy:'Леденец',sk_rope:'Канат',sk_beads:'Бусины',sk_pixel:'Пиксели',sk_royal:'Королевский',
+tut1:'Нажми на стрелку — она уедет туда, куда указывает. Если путь закрыт другой стрелкой, ты теряешь сердце.',tut2:'Удерживай стрелку, чтобы увидеть её путь перед ходом.',tut3:'Запертая стрелка не двигается, пока не уйдёт стрелка-ключ того же цвета.',
+how:[['send','Нажми на стрелку, и она покинет поле в том направлении, куда указывает.'],['x','Если путь закрыт другой стрелкой, она отскочит, а ты потеряешь сердце.'],['eye','Удерживай, чтобы увидеть путь: зелёный — свободно, красный — закрыто.'],['lock','Запертая стрелка открывается, когда уходит стрелка-ключ того же цвета.'],['spark','Золотые стрелки дают монеты; убирай стрелки быстро для комбо.'],['bulb','Подсказка показывает свободную стрелку, молния убирает любую.']]},
+id:{title:'Arrow Escape',tagline:'Bebaskan panah dengan urutan yang benar',play:'Main',level:'Level {0}',modes:'Mode permainan',daily:'Tantangan harian',zen:'Mode Zen',zenSub:'Tanpa nyawa, tanpa tekanan',
+rush:'Lawan waktu',rushSub:'Rekor {0}',levels:'Semua level',lvSub:'{0} bintang terkumpul',streak:'Beruntun {0} hari',dailyNew:'Teka-teki baru setiap hari',new:'Baru',doneTag:'Selesai',
+easy:'Mudah',normal:'Normal',hard:'Sulit',expert:'Ahli',levelDone:'Level {0} selesai',dailyWin:'Tantangan harian selesai',next:'Level berikutnya',newBoard:'Papan baru',home:'Beranda',
+retry:'Coba lagi',lose:'Nyawa habis',loseSub:'Sedikit lagi, jangan menyerah.',cont:'Lanjut dengan 1 nyawa',timeUp:'Waktu habis',again:'Main lagi',best:'Rekor {0} · papan {1}',newBest:'Rekor baru!',
+locked:'Terkunci — keluarkan dulu panah kunci',bombPick:'Pilih panah untuk dihapus',noCoins:'Koin tidak cukup',combo:'Kombo ×{0}',
+settings:'Pengaturan',lang:'Bahasa',theme:'Tema',colors:'Panah berwarna',sound:'Suara',vib:'Getaran',howto:'Cara bermain',close:'Tutup',done:'Selesai',gotIt:'Mengerti',privacy:'Kebijakan Privasi',
+time:'Waktu',mistakesL:'Kesalahan',coins:'Koin',perfect:'Tanpa kesalahan!',good:'Kerja bagus',ok:'Bagus',zenWin:'Papan bersih',board:'Papan {0}',
+chapter:'Bab {0}',watchAd:'Tonton iklan',free:'Gratis',contAd:'Tonton iklan untuk lanjut',double:'Gandakan koin',getHint:'Dapatkan petunjuk',getBlast:'Dapatkan petir',adFail:'Iklan belum tersedia. Coba lagi nanti.',moreTime:'+15 detik',orCoins:'Pakai {0} koin',
+adPrivacy:'Privasi iklan',dailyReward:'Hadiah harian',dayN:'Hari {0}',claim:'Ambil',claimX2:'Ambil ×2',comeBack:'Kembali besok untuk hadiah berikutnya',achievements:'Pencapaian',achUnlocked:'Pencapaian terbuka',achSub:'{0} dari {1} terbuka',a_levels:'Selesaikan {0} level',a_perfect:'Selesaikan {0} level tanpa kesalahan',a_arrows:'Bebaskan {0} panah',a_combo:'Capai kombo ×{0}',a_shapes:'Selesaikan {0} bentuk berbeda',a_daily:'Selesaikan {0} tantangan harian',a_streak:'Selesaikan tantangan harian {0} hari berturut-turut',a_login:'Ambil hadiah harian {0} hari berturut-turut',a_rush:'Raih {0} poin di Lawan waktu',a_zen:'Bersihkan {0} papan Zen',a_keys:'Buka {0} panah terkunci',a_gold:'Kumpulkan {0} panah emas',
+noAdsT:'1 jam tanpa iklan',noAdsSub:'Tonton satu video: tanpa iklan antar-level selama 1 jam',noAdsOn:'Aktif · sisa {0} mnt',notifT:'Pengingat harian',notif1:'Hadiah harianmu sudah siap 🎁 dan teka-teki baru menunggu.',notif2:'Panah-panah merindukanmu! Kembali untuk teka-teki singkat.',enjoyQ:'Suka Arrow Escape?',enjoySub:'Pendapatmu sangat membantu kami.',enjoyYes:'Ya, suka sekali!',enjoyNo:'Kurang suka',fbQ:'Bagaimana kami bisa lebih baik?',fbSub:'Beri tahu kami apa yang perlu diperbaiki — kami membaca setiap pesan.',fbSend:'Kirim masukan',fbLater:'Nanti',shop:'Gaya panah',shopSub:'{0} dari {1} terbuka',equip:'Pakai',equipped:'Dipakai',sk_classic:'Klasik',sk_rainbow:'Pelangi',sk_neon:'Neon',sk_candy:'Permen',sk_rope:'Tali',sk_beads:'Manik-manik',sk_pixel:'Piksel',sk_royal:'Bangsawan',
+tut1:'Ketuk panah agar meluncur keluar ke arah yang ditunjuknya. Jika ada panah lain yang menghalangi, kamu kehilangan satu nyawa.',tut2:'Tekan lama sebuah panah untuk melihat jalurnya sebelum menggerakkannya.',tut3:'Panah terkunci tidak bisa bergerak sampai panah kunci dengan warna yang sama keluar.',
+how:[['send','Ketuk panah dan panah akan keluar dari papan ke arah yang ditunjuknya.'],['x','Jika jalurnya terhalang panah lain, panah memantul dan kamu kehilangan nyawa.'],['eye','Tekan lama untuk melihat jalur: hijau = bebas, merah = terhalang.'],['lock','Panah terkunci terbuka saat panah kunci dengan warna yang sama keluar.'],['spark','Panah emas memberi koin; bermain cepat menghasilkan kombo.'],['bulb','Petunjuk menunjukkan panah yang bebas, petir menghapus panah apa saja.']]}
+};
+/* ================= save ================= */
+const KEY='arrowEscape.v1';
+const DEF={lang:null,level:1,stars:{},coins:60,hints:3,bombs:1,sound:1,vib:1,colors:0,grid:0,theme:'light',tut:0,dailyDone:'',streak:0,rushBest:0,rushBoards:0,
+  rev:0,dr:{last:'',day:0,run:0},st:{},ach:{},asked:{},skin:'classic',owned:['classic','rainbow'],noAds:0,notif:1};
+// Arrow styles bought with in-game coins only (no real money).
+const SKINS=[{id:'classic',p:0},{id:'rainbow',p:0},{id:'neon',p:300},{id:'candy',p:400},{id:'rope',p:500},{id:'beads',p:600},{id:'pixel',p:800},{id:'royal',p:1000}];
+const DEF_ST={levels:0,perfect:0,arrows:0,combo:0,shapes:[],daily:0,streak:0,login:0,rush:0,zen:0,keys:0,gold:0};
+function fromJSON(j){const o=Object.assign({},DEF,j||{});o.dr=Object.assign({},DEF.dr,o.dr);o.st=Object.assign({},DEF_ST,o.st);o.st.shapes=[...(o.st.shapes||[])];
+  o.ach=Object.assign({},o.ach);o.asked=Object.assign({},o.asked);o.owned=[...new Set(['classic','rainbow',...(o.owned||[])])];
+  if(o.colors&&o.skin==='classic'){o.skin='rainbow';delete o.colors}if(!SKINS.some(k=>k.id===o.skin))o.skin='classic';return o}
+let S;try{S=fromJSON(JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){S=fromJSON({})}
+const CAP=window.Capacitor,NATIVE=!!(CAP&&CAP.isNativePlatform&&CAP.isNativePlatform());
+const NP=n=>NATIVE&&CAP.Plugins?CAP.Plugins[n]:null;
+if(!['light','dark','sand','mint'].includes(S.theme))S.theme='light';
+// Progress is kept in localStorage and, in the Android app, mirrored to native Preferences,
+// which Android does not clear under storage pressure the way it can clear WebView storage.
+let saveT=0;
+function save(){S.rev++;const j=JSON.stringify(S);try{localStorage.setItem(KEY,j)}catch(e){}
+  const P=NP('Preferences');if(P){clearTimeout(saveT);saveT=setTimeout(()=>P.set({key:KEY,value:JSON.stringify(S)}).catch(()=>{}),400)}}
+async function loadNative(){const P=NP('Preferences');if(!P)return;
+  try{const r=await P.get({key:KEY});if(!r||!r.value)return save();const n=JSON.parse(r.value);
+    if((n.rev||0)>(S.rev||0)){S=fromJSON(n);try{localStorage.setItem(KEY,r.value)}catch(e){}applyTheme();applyLang()}}catch(e){}}
+const LANGS={ar:'العربية',en:'English',fr:'Français',es:'Español',pt:'Português',de:'Deutsch',it:'Italiano',tr:'Türkçe',ru:'Русский',id:'Bahasa Indonesia'};
+if(!S.lang||!LANGS[S.lang]){const n=(navigator.language||'en').slice(0,2).toLowerCase();S.lang=LANGS[n]?n:n==='in'?'id':'en'}
+function t(k,...a){let s=(TX[S.lang]||TX.en)[k];if(s==null)s=TX.en[k]!=null?TX.en[k]:k;if(typeof s!=='string')return s;a.forEach((v,i)=>s=s.replace('{'+i+'}',v));return s}
+const $=s=>document.querySelector(s);
+
+/* ================= generator ================= */
+const DIRS=[[0,-1],[1,0],[0,1],[-1,0]]; // up,right,down,left as [dx,dy]
+function rngOf(a){return function(){a|=0;a=a+0x6D2B79F5|0;let x=Math.imul(a^a>>>15,1|a);x=x+Math.imul(x^x>>>7,61|x)^x;return((x^x>>>14)>>>0)/4294967296}}
+const nxy=(r,c,R,C)=>[(c+.5)/C*2-1,(r+.5)/R*2-1]; // normalized, y down
+function inPoly(x,y,P){let k=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=P[i],[xj,yj]=P[j];if((yi>y)!==(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)k=!k}return k}
+const poly=P=>(r,c,R,C)=>{const[x,y]=nxy(r,c,R,C);return inPoly(x,y,P)};
+const radial=(n,ro,ri,a0,dy)=>{const P=[];for(let i=0;i<n*2;i++){const a=a0+i*Math.PI/n,q=i%2?ri:ro;P.push([Math.cos(a)*q,Math.sin(a)*q+(dy||0)])}return P};
+const fn=f=>(r,c,R,C)=>{const[x,y]=nxy(r,c,R,C);return f(x,y)};
+const SHAPES={
+  rect:()=>true,
+  heart:(r,c,R,C)=>{const x=((c+.5)/C*2-1)*1.22,y=(1-(r+.5)/R*2)*1.3+.15;const a=x*x+y*y-1;return a*a*a-x*x*y*y*y<=0},
+  circle:fn((x,y)=>x*x+y*y<=1.08),
+  diamond:fn((x,y)=>Math.abs(x)+Math.abs(y)<=1.12),
+  ring:fn((x,y)=>{const d=x*x+y*y;return d<=1.08&&d>=.16}),
+  cross:fn((x,y)=>Math.abs(x)<.42||Math.abs(y)<.42),
+  hourglass:fn((x,y)=>Math.abs(x)<=Math.abs(y)*1.05+.18),
+  star:poly(radial(5,1.16,.62,-Math.PI/2,.12)),
+  star8:fn((x,y)=>Math.max(Math.abs(x),Math.abs(y))<=.74||Math.abs(x)+Math.abs(y)<=1.05),
+  hexagon:poly(radial(3,1.06,1.06,0).map(([x,y])=>[x,y*1.02])),
+  house:poly([[0,-1.05],[1.06,-.12],[.78,-.12],[.78,1.04],[-.78,1.04],[-.78,-.12],[-1.06,-.12]]),
+  tree:poly([[0,-1.06],[.55,-.45],[.32,-.45],[.8,.18],[.5,.18],[1.02,.72],[.2,.72],[.2,1.06],[-.2,1.06],[-.2,.72],[-1.02,.72],[-.5,.18],[-.8,.18],[-.32,-.45],[-.55,-.45]]),
+  arrow:poly([[-1.04,-.36],[.12,-.36],[.12,-.95],[1.05,0],[.12,.95],[.12,.36],[-1.04,.36]]),
+  crescent:fn((x,y)=>x*x+y*y<=1.08&&(x-.48)*(x-.48)+y*y>.5),
+  smile:fn((x,y)=>{if(x*x+y*y>1.08)return false;const e=(ex)=>(x-ex)*(x-ex)+(y+.32)*(y+.32)<.045;if(e(.36)||e(-.36))return false;const d=x*x+(y-.02)*(y-.02);return!(y>.18&&d>.2&&d<.42)}),
+  cat:fn((x,y)=>{const h=x*x/.95+(y-.18)*(y-.18)/.72<=1;const ear=inPoly(x,y,[[-.9,-.12],[-.8,-1.06],[-.22,-.55]])||inPoly(x,y,[[.9,-.12],[.8,-1.06],[.22,-.55]]);return h||ear}),
+  flower:fn((x,y)=>{const r=Math.hypot(x,y),a=Math.atan2(y,x);return r<=.68+.4*Math.abs(Math.cos(2.5*a+Math.PI/4))&&r<=1.08}),
+  butterfly:fn((x,y)=>{const r=Math.hypot(x,y),a=Math.atan2(y,x);return r<=.25+.85*Math.pow(Math.abs(Math.cos(a)),.6)*(.75+.25*Math.abs(Math.sin(2*a)))}),
+  frame:fn((x,y)=>{const m=Math.max(Math.abs(x),Math.abs(y));return m<=1.05&&m>=.42}),
+  drop:fn((x,y)=>{if(x*x+(y-.3)*(y-.3)<=.55)return true;return y<=.3&&y>=-1.06&&Math.abs(x)<=(y+1.06)*.55}),
+  triangle:poly([[0,-1.08],[1.08,.98],[-1.08,.98]]),
+  plus:fn((x,y)=>(Math.abs(x)<.36||Math.abs(y)<.36)&&Math.max(Math.abs(x),Math.abs(y))<=1.05||x*x+y*y<.36)
+};
+const ASPECT={heart:1,arrow:.85,butterfly:.9,cat:1,smile:1,circle:1,ring:1,flower:1,star:1,star8:1,hexagon:1,frame:1};
+const SHAPE_ORDER=['heart','diamond','star','circle','house','cross','hexagon','tree','ring','smile','arrow','crescent','star8','cat','flower','hourglass','frame','drop','butterfly','triangle','plus'];
+function generate(rng,cfg){
+  const R=cfg.rows,C=cfg.cols,N=R*C,valid=new Uint8Array(N),occ=new Int16Array(N).fill(-1),arrows=[];
+  const m=SHAPES[cfg.mask]||SHAPES.rect;
+  for(let r=0;r<R;r++)for(let c=0;c<C;c++)valid[r*C+c]=m(r,c,R,C)?1:0;
+  const ri=n=>Math.floor(rng()*n);
+  const free=i=>valid[i]&&occ[i]<0;
+  function tryPlace(h,d,target,minL){
+    const r=h/C|0,c=h%C,[dx,dy]=DIRS[d];
+    const ray=new Set();
+    for(let y=r+dy,x=c+dx;y>=0&&y<R&&x>=0&&x<C;y+=dy,x+=dx){const i=y*C+x;if(occ[i]>=0)return false;ray.add(i)}
+    let cy=r-dy,cx=c-dx;
+    if(cy<0||cy>=R||cx<0||cx>=C)return false;
+    let p=cy*C+cx;if(!free(p)||ray.has(p))return false;
+    const body=[h,p],used=new Set(body);let wd=(d+2)%4;
+    while(body.length<target){
+      const opts=[];let tw=0;
+      for(const nd of [wd,(wd+1)%4,(wd+3)%4]){
+        const ny=cy+DIRS[nd][1],nx2=cx+DIRS[nd][0];
+        if(ny<0||ny>=R||nx2<0||nx2>=C)continue;
+        const i=ny*C+nx2;if(!free(i)||used.has(i)||ray.has(i))continue;
+        const w=nd===wd?cfg.straight:1;opts.push([nd,i,w]);tw+=w;
+      }
+      if(!opts.length)break;
+      let k=rng()*tw,o=opts[0];for(const q of opts){k-=q[2];if(k<=0){o=q;break}}
+      wd=o[0];cy+=DIRS[wd][1];cx+=DIRS[wd][0];body.push(o[1]);used.add(o[1]);
+    }
+    if(body.length<minL)return false;
+    const id=arrows.length,cells=body.reverse();
+    for(const i of cells)occ[i]=id;
+    arrows.push({id,cells,dir:d});
+    return true;
+  }
+  let fails=0;
+  while(fails<220){
+    const fr=[];for(let i=0;i<N;i++)if(free(i))fr.push(i);
+    if(!fr.length)break;
+    const h=fr[ri(fr.length)],ds=[0,1,2,3].sort(()=>rng()-.5),tgt=cfg.minL+ri(cfg.maxL-cfg.minL+1);
+    let ok=false;for(const d of ds)if(tryPlace(h,d,tgt,Math.min(tgt,cfg.minL+1))){ok=true;break}
+    fails=ok?0:fails+1;
+  }
+  // fill pass: plug remaining holes with whatever fits
+  const order=[];for(let i=0;i<N;i++)order.push(i);order.sort(()=>rng()-.5);
+  for(const i of order)if(free(i))for(const d of [0,1,2,3].sort(()=>rng()-.5))if(tryPlace(i,d,cfg.maxL,2))break;
+  // locks & keys: placement order is a valid reverse-removal order, so key must have a higher index than its lock
+  const n=arrows.length,taken=new Set();let pid=0;
+  for(let tries=0;pid<cfg.locks&&tries<200;tries++){
+    const li=ri(Math.floor(n*.7)),ki=li+1+ri(n-li-1);
+    if(ki>=n||taken.has(li)||taken.has(ki)||arrows[li].cells.length<3||arrows[ki].cells.length<2)continue;
+    arrows[li].lock=pid;arrows[ki].key=pid;taken.add(li);taken.add(ki);pid++;
+  }
+  for(let g=0,tries=0;g<cfg.gold&&tries<100;tries++){const i=ri(n);if(!taken.has(i)){arrows[i].gold=1;taken.add(i);g++}}
+  return {rows:R,cols:C,valid,arrows};
+}
+
+function levelCfg(n){
+  const E=[[4,5,2,3],[5,6,2,3],[5,7,2,4],[6,8,2,4],[6,8,2,5]];
+  if(n<=E.length){const [c,r,a,b]=E[n-1];return{cols:c,rows:r,minL:a,maxL:b,locks:n===5?1:0,gold:n>2?1:0,mask:'rect',straight:2.5}}
+  let cols=Math.min(6+Math.floor((n-5)/5),13),rows=Math.round(cols*1.4),mask='rect';
+  if(n%5===0){mask=SHAPE_ORDER[(n/5-2)%SHAPE_ORDER.length];cols=Math.max(12,Math.min(cols+4,13));rows=Math.round(cols*(ASPECT[mask]||1.15))}
+  return{cols,rows,mask,minL:n>=40?3:2,maxL:Math.min(4+Math.floor((n-5)/4),12),locks:n<8?0:Math.min(1+Math.floor((n-8)/15),3),gold:1+n%2,straight:2+(n%3)*.8};
+}
+function diffOf(n){return n<=5?'easy':n<20?'normal':n<45?'hard':'expert'}
+function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+
+/* ================= rendering ================= */
+const COL={};
+function readColors(){const s=getComputedStyle(document.body);for(const k of['ink','mut','pri','dot','line','red','green','gold','bg','surface'])COL[k]=s.getPropertyValue('--'+k).trim()}
+const PAIR=['#e8455a','#16a34a','#7c3aed','#f08a00'];
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+function View(cv,maxCs,pad){this.cv=cv;this.c=cv.getContext('2d');this.W=this.H=0;this.cs=20;this.ox=this.oy=0;this.B=null;this.maxCs=maxCs;this.pad=pad}
+View.prototype.size=function(){const r=this.cv.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,3);this.W=r.width;this.H=r.height;
+  this.cv.width=Math.round(r.width*d);this.cv.height=Math.round(r.height*d);this.c.setTransform(d,0,0,d,0,0);this.fit()};
+View.prototype.fit=function(){const B=this.B;if(!B)return;this.cs=Math.min((this.W-this.pad*2)/B.cols,(this.H-this.pad*2)/B.rows,this.maxCs);
+  this.ox=(this.W-B.cols*this.cs)/2;this.oy=(this.H-B.rows*this.cs)/2};
+View.prototype.xy=function(i){const C=this.B.cols;return[this.ox+(i%C+.5)*this.cs,this.oy+((i/C|0)+.5)*this.cs]};
+View.prototype.set=function(B){this.B=B;this.fit()};
+
+function makeBoard(P){const occ=new Int16Array(P.rows*P.cols).fill(-1);
+  P.arrows.forEach(a=>{a.alive=1;a.anim=null;a.flash=0;for(const i of a.cells)occ[i]=a.id});
+  return Object.assign(P,{occ,left:P.arrows.length,t0:performance.now()})}
+function rayInfo(B,a){const h=a.cells[a.cells.length-1],[dx,dy]=DIRS[a.dir];let r=(h/B.cols|0)+dy,c=h%B.cols+dx;const out=[];
+  for(;r>=0&&r<B.rows&&c>=0&&c<B.cols;r+=dy,c+=dx){const i=r*B.cols+c;if(B.occ[i]>=0)return{cells:out,block:i};out.push(i)}return{cells:out,block:-1}}
+const keyAlive=(B,p)=>B.arrows.some(b=>b.alive&&b.key===p);
+const isLocked=(B,a)=>a.lock!=null&&keyAlive(B,a.lock);
+const freeArrows=B=>B.arrows.filter(a=>a.alive&&!isLocked(B,a)&&rayInfo(B,a).block<0);
+function launch(V,a,now){const B=V.B;a.alive=0;for(const i of a.cells)B.occ[i]=-1;B.left--;
+  const h=V.xy(a.cells[a.cells.length-1]),[dx,dy]=DIRS[a.dir],D=dx>0?V.W-h[0]:dx<0?h[0]:dy>0?V.H-h[1]:h[1],dist=(a.cells.length-1)*V.cs+D+V.cs*1.5;
+  a.anim={type:'exit',t0:now,dur:clamp(dist/1.6,240,560),dist}}
+
+function ptAt(cs,pts,dir,s){const L=(pts.length-1)*cs;if(s>=L){const p=pts[pts.length-1];return[p[0]+DIRS[dir][0]*(s-L),p[1]+DIRS[dir][1]*(s-L)]}
+  const k=Math.floor(s/cs),f=s/cs-k,a=pts[k],b=pts[k+1];return[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]}
+function slice(cs,pts,dir,s0,s1){const o=[ptAt(cs,pts,dir,s0)];for(let k=Math.floor(s0/cs)+1;k<pts.length&&k*cs<s1;k++)o.push(pts[k]);o.push(ptAt(cs,pts,dir,s1));return o}
+const hueOf=id=>(id*137.508+200)%360,DARK=()=>S.theme==='dark';
+function skinColor(id,skin){skin=skin||S.skin;const h=hueOf(id),d=DARK();
+  switch(skin){
+    case'rainbow':case'candy':case'beads':return`hsl(${h},${d?70:58}%,${d?66:46}%)`;
+    case'neon':return`hsl(${h},95%,${d?62:50}%)`;
+    case'rope':return d?'#d9a066':'#8a5a2b';
+    case'royal':return d?'#c4a5ff':'#4c1d95';
+    default:return COL.ink}}
+function arrowColor(a){return a.gold?COL.gold:skinColor(a.id)}
+function strokePath(c,p){c.beginPath();c.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)c.lineTo(p[i][0],p[i][1]);c.stroke()}
+function headPath(c,h,dir,cs,k){const[dx,dy]=DIRS[dir],len=Math.max(7,cs*.36)*k,wid=Math.max(4.5,cs*.22)*k;
+  const tx=h[0]+dx*len*.6,ty=h[1]+dy*len*.6,bx=h[0]-dx*len*.4,by=h[1]-dy*len*.4;
+  c.beginPath();c.moveTo(tx,ty);c.lineTo(bx-dy*wid,by+dx*wid);c.lineTo(bx+dy*wid,by-dx*wid);c.closePath()}
+function drawArrow(c,p,dir,col,lw,cs,skin){skin=skin||S.skin;const h=p[p.length-1];
+  c.strokeStyle=col;c.fillStyle=col;c.lineWidth=lw;c.lineCap='round';c.lineJoin='round';
+  switch(skin){
+    case'neon':{const a=c.globalAlpha;c.globalAlpha=a*.22;c.lineWidth=lw*2.8;strokePath(c,p);headPath(c,h,dir,cs,1.25);c.fill();
+      c.globalAlpha=a;c.lineWidth=lw*.95;strokePath(c,p);headPath(c,h,dir,cs,1);c.fill();
+      c.globalAlpha=a*.75;c.strokeStyle='#fff';c.lineWidth=lw*.3;strokePath(c,p);c.globalAlpha=a;return}
+    case'candy':c.lineWidth=lw*1.3;strokePath(c,p);c.save();c.setLineDash([lw*.8,lw*.9]);c.lineCap='butt';c.strokeStyle='rgba(255,255,255,.6)';strokePath(c,p);c.restore();break;
+    case'rope':c.lineWidth=lw*1.35;strokePath(c,p);c.save();c.setLineDash([lw*.45,lw*.55]);c.lineCap='butt';c.strokeStyle='rgba(0,0,0,.28)';strokePath(c,p);c.restore();break;
+    case'beads':{c.lineWidth=lw*.45;strokePath(c,p);const r=lw*.82,step=cs*.5;let carry=0;
+      for(let i=1;i<p.length;i++){const[x0,y0]=p[i-1],[x1,y1]=p[i],L=Math.hypot(x1-x0,y1-y0);let d=carry;
+        for(;d<L;d+=step){const f=d/L;c.beginPath();c.arc(x0+(x1-x0)*f,y0+(y1-y0)*f,r,0,7);c.fill()}carry=d-L}break}
+    case'pixel':{const q=lw*1.3,step=lw*1.55;let carry=0;   // a chain of square blocks
+      for(let i=1;i<p.length;i++){const[x0,y0]=p[i-1],[x1,y1]=p[i],L=Math.hypot(x1-x0,y1-y0);let d=carry;
+        for(;d<L;d+=step){const f=d/L;c.fillRect(x0+(x1-x0)*f-q/2,y0+(y1-y0)*f-q/2,q,q)}carry=d-L}
+      c.lineJoin='miter';c.lineWidth=lw*.45;headPath(c,h,dir,cs,1.12);c.fill();c.stroke();return}
+    case'royal':c.lineWidth=lw*1.2;strokePath(c,p);headPath(c,h,dir,cs,1.05);c.fill();c.strokeStyle='#f5b000';c.lineWidth=lw*.28;strokePath(c,p);c.lineJoin='round';c.lineWidth=lw*.35;headPath(c,h,dir,cs,1.05);c.stroke();return;
+    default:strokePath(c,p)}
+  c.lineWidth=lw*.45;c.strokeStyle=col;headPath(c,h,dir,cs,1);c.fill();c.stroke();
+}
+function badgePath(c,x,y,r,k){c.beginPath();
+  if(k===1){c.roundRect?c.roundRect(x-r*.9,y-r*.9,r*1.8,r*1.8,r*.35):c.rect(x-r*.9,y-r*.9,r*1.8,r*1.8)}
+  else if(k===2){const q=r*1.22;c.moveTo(x,y-q);c.lineTo(x+q,y);c.lineTo(x,y+q);c.lineTo(x-q,y);c.closePath()}
+  else if(k===3){for(let i=0;i<6;i++){const a=Math.PI/6+i*Math.PI/3;c.lineTo(x+Math.cos(a)*r*1.08,y+Math.sin(a)*r*1.08)}c.closePath()}
+  else c.arc(x,y,r,0,7)}
+// Each lock/key pair has its own colour AND badge shape (circle, square, diamond, hexagon) so pairs stay distinguishable without colour.
+function badge(c,x,y,r,col,type,k){
+  c.fillStyle=COL.bg;c.save();c.translate(x,y);c.scale((r+2)/r,(r+2)/r);badgePath(c,0,0,r,k);c.restore();c.fill();
+  c.fillStyle=col;badgePath(c,x,y,r,k);c.fill();
+  c.strokeStyle='#fff';c.fillStyle='#fff';c.lineWidth=Math.max(1.3,r*.15);c.lineCap='round';
+  if(type==='lock'){c.beginPath();c.roundRect?c.roundRect(x-r*.38,y-r*.06,r*.76,r*.56,r*.1):c.rect(x-r*.38,y-r*.06,r*.76,r*.56);c.fill();
+    c.beginPath();c.arc(x,y-r*.1,r*.24,Math.PI,0);c.stroke()}
+  else{c.beginPath();c.arc(x-r*.24,y,r*.2,0,7);c.stroke();c.beginPath();c.moveTo(x-r*.04,y);c.lineTo(x+r*.48,y);c.moveTo(x+r*.3,y);c.lineTo(x+r*.3,y+r*.22);c.stroke()}
+}
+function drawBoard(V,now,o){
+  const c=V.c,B=V.B,cs=V.cs;c.clearRect(0,0,V.W,V.H);if(!B)return;
+  const intro=now-B.t0;
+  if(o.grid){c.strokeStyle=COL.line;c.lineWidth=1;c.beginPath();
+    for(let i=0;i<B.valid.length;i++)if(B.valid[i]){const x=V.ox+(i%B.cols)*cs,y=V.oy+(i/B.cols|0)*cs;c.rect(x+.5,y+.5,cs,cs)}c.stroke()}
+  if(B.shaped){c.fillStyle=COL.line;c.globalAlpha=clamp(intro/400,0,1)*.75;c.beginPath();
+    for(let i=0;i<B.valid.length;i++)if(B.valid[i]){const[x,y]=V.xy(i);c.moveTo(x+cs*.62,y);c.arc(x,y,cs*.62,0,7)}c.fill();c.globalAlpha=1}
+  c.fillStyle=COL.dot;const dr=Math.max(1.5,cs*.06);
+  for(let i=0;i<B.valid.length;i++)if(B.valid[i]&&B.occ[i]<0){const[x,y]=V.xy(i);c.beginPath();c.arc(x,y,dr,0,7);c.fill()}
+  // path preview
+  if(o.preview!=null){const a=B.arrows[o.preview];if(a&&a.alive){const ri=rayInfo(B,a),h=V.xy(a.cells[a.cells.length-1]),[dx,dy]=DIRS[a.dir];
+    const bad=ri.block>=0||isLocked(B,a),col=bad?COL.red:COL.green;
+    let e;if(ri.block>=0){const b=V.xy(ri.block);e=[b[0]-dx*cs*.42,b[1]-dy*cs*.42]}else e=[h[0]+dx*3000,h[1]+dy*3000];
+    c.save();c.setLineDash([2,cs*.26]);c.lineDashOffset=-now/25;c.strokeStyle=col;c.lineWidth=Math.max(2.5,cs*.1);c.lineCap='round';
+    c.beginPath();c.moveTo(h[0]+dx*cs*.45,h[1]+dy*cs*.45);c.lineTo(e[0],e[1]);c.stroke();c.restore();
+    if(ri.block>=0){const b=V.xy(ri.block),q=cs*.16;c.strokeStyle=COL.red;c.lineWidth=Math.max(2,cs*.08);c.lineCap='round';
+      c.beginPath();c.moveTo(b[0]-q,b[1]-q);c.lineTo(b[0]+q,b[1]+q);c.moveTo(b[0]+q,b[1]-q);c.lineTo(b[0]-q,b[1]+q);c.stroke()}}}
+  const lw=Math.max(2,cs*.11),dg=Math.hypot(V.W/2,V.H/2);
+  for(const a of B.arrows){
+    if(!a.alive&&!a.anim)continue;
+    const n=a.cells.length,L=(n-1)*cs;let pts=a.cells.map(i=>V.xy(i)),off=0,alpha=1,col=arrowColor(a);
+    if(intro<900){const h=pts[n-1],p=clamp((intro-Math.hypot(h[0]-V.W/2,h[1]-V.H/2)/dg*380)/300,0,1),e=(1-p)*(1-p)*cs*.6,[dx,dy]=DIRS[a.dir];
+      alpha=p;if(e)pts=pts.map(q=>[q[0]-dx*e,q[1]-dy*e])}
+    if(a.anim){const A=a.anim,p=clamp((now-A.t0)/A.dur,0,1);
+      if(A.type==='exit'){off=A.dist*(.22*p+.78*p*p);col=a.gold?COL.gold:COL.pri;alpha=1-clamp((p-.75)/.25,0,1)}
+      else if(A.type==='bump'){off=p<.35?A.fwd*(1-Math.pow(1-p/.35,2)):A.fwd*(1-(p-.35)/.65)*(1-(p-.35)/.65)}
+      else if(A.type==='shake'){const k=Math.sin(p*Math.PI*6)*cs*.1*(1-p);pts=pts.map(q=>[q[0]+k,q[1]])}
+      if(p>=1)a.anim=null}
+    const poly=off>0?slice(cs,pts,a.dir,off,off+L):pts;
+    const locked=a.alive&&isLocked(B,a);
+    if(a.alive){if(o.press===a.id||o.hint===a.id||o.preview===a.id)col=COL.pri}
+    if(a.flash>now)col=COL.red;
+    c.globalAlpha=alpha*(locked?.38:1);
+    if(o.hint===a.id&&a.alive){const h=pts[n-1],r=cs*(.5+.08*Math.sin(now/180));c.strokeStyle=COL.pri;c.lineWidth=2;c.globalAlpha=.3;
+      c.beginPath();c.arc(h[0],h[1],r,0,7);c.stroke();c.globalAlpha=1}
+    drawArrow(c,poly,a.dir,col,lw,cs);
+    c.globalAlpha=alpha;
+    if(off===0&&a.alive){const br=clamp(cs*.24,7,13);
+      if(a.gold){const m=ptAt(cs,pts,a.dir,Math.floor((n-1)/2)*cs+cs*.5*(n>2?0:1)),s=br*.5*(.85+.15*Math.sin(now/220+a.id));
+        c.fillStyle='#fff';c.beginPath();c.moveTo(m[0],m[1]-s);c.quadraticCurveTo(m[0],m[1],m[0]+s,m[1]);c.quadraticCurveTo(m[0],m[1],m[0],m[1]+s);
+        c.quadraticCurveTo(m[0],m[1],m[0]-s,m[1]);c.quadraticCurveTo(m[0],m[1],m[0],m[1]-s);c.fill()}
+      if(locked){c.globalAlpha=1;const m=ptAt(cs,pts,a.dir,Math.floor((n-1)/2)*cs);badge(c,m[0],m[1],br,PAIR[a.lock%4],'lock',a.lock%4)}
+      if(a.key!=null){const m=ptAt(cs,pts,a.dir,Math.floor((n-1)/2)*cs);badge(c,m[0],m[1],br,PAIR[a.key%4],'key',a.key%4)}}
+    c.globalAlpha=1;
+  }
+  if(o.coach!=null){const a=B.arrows[o.coach];if(a&&a.alive){const m=V.xy(a.cells[Math.floor(a.cells.length/2)]);
+    for(let k=0;k<2;k++){const p=((now/1100)+k*.5)%1;c.strokeStyle=COL.pri;c.globalAlpha=(1-p)*.55;c.lineWidth=2.5;c.beginPath();c.arc(m[0],m[1],cs*(.25+p*.7),0,7);c.stroke()}
+    c.globalAlpha=1;c.fillStyle=COL.pri;c.beginPath();c.arc(m[0],m[1],cs*.14,0,7);c.fill()}}
+}
+
+/* ================= game state ================= */
+let G=null,R=null;
+const GV=new View($('#cv'),50,14),DV=new View($('#demo'),40,6);
+const parts=[],floats=[];
+let press=null,preview=null,coach=null,grid=0;
+
+function startGame(mode,level){
+  let cfg,seed;
+  if(mode==='levels'){cfg=levelCfg(level);seed=level*7919+101}
+  else if(mode==='daily'){const k=todayKey(),w=new Date().getDay();seed=+k.replace(/-/g,'');
+    cfg={cols:11,rows:w%2?14:12,mask:w%2?'rect':SHAPE_ORDER[w%SHAPE_ORDER.length],minL:2,maxL:9,locks:2,gold:3,straight:2.6};if(cfg.mask!=='rect')cfg.cols=13}
+  else if(mode==='zen'){seed=Math.random()*1e9|0;const r=rngOf(seed),c=6+Math.floor(r()*6),sh=r()<.4;
+    cfg={cols:sh?Math.min(c+3,13):c,rows:sh?Math.min(c+4,15):Math.round(c*1.4),mask:sh?SHAPE_ORDER[Math.floor(r()*SHAPE_ORDER.length)]:'rect',minL:2,maxL:4+Math.floor(r()*6),locks:Math.floor(r()*3),gold:2,straight:2.5}}
+  else{seed=Math.random()*1e9|0;const b=R.boards,c=Math.min(5+Math.floor(b/2),9);cfg={cols:c,rows:Math.round(c*1.35),mask:'rect',minL:2,maxL:Math.min(3+b,8),locks:b>2?1:0,gold:1,straight:2.5}}
+  G=makeBoard(generate(rngOf(seed),cfg));G.shaped=cfg.mask!=='rect';G.cfg=cfg;
+  Object.assign(G,{mode,level,hearts:mode==='levels'||mode==='daily'?3:0,mistakes:0,combo:0,lastT:0,hint:-1,bomb:false,over:false,coinsWon:0,start:performance.now()});
+  parts.length=floats.length=0;press=preview=null;coach=null;
+  show('game');GV.size();GV.set(G);updHUD(true);
+  $('#gTitle').textContent=mode==='levels'?t('level',level):mode==='daily'?t('daily'):mode==='zen'?t('zen'):t('rush');
+  $('#gSub').textContent=mode==='levels'?t(diffOf(level)):mode==='daily'?new Date().toLocaleDateString(S.lang,{day:'numeric',month:'long'}):mode==='zen'?t('zenSub'):t('board',R.boards+1);
+  $('#coach').classList.remove('show');
+  if(mode==='levels'){
+    const k=level===1&&S.tut<1?1:level===3&&S.tut<2?2:G.arrows.some(a=>a.lock!=null)&&S.tut<3?3:0;
+    if(k){S.tut=k;save();setTimeout(()=>{if(!G||G.over)return;$('#coachTx').textContent=t('tut'+k);$('#coach').classList.add('show');
+      if(k===1){const f=freeArrows(G);coach=f.length?f[0].id:null}},700)}
+  }
+}
+function hideCoach(){$('#coach').classList.remove('show')}
+
+function hit(x,y){let best=-1,bd=GV.cs*.55;
+  for(const a of G.arrows){if(!a.alive)continue;const p=a.cells.map(i=>GV.xy(i)),h=p[p.length-1];p.push([h[0]+DIRS[a.dir][0]*GV.cs*.3,h[1]+DIRS[a.dir][1]*GV.cs*.3]);
+    for(let i=0;i<p.length-1;i++){const d=segDist(x,y,p[i],p[i+1]);if(d<bd){bd=d;best=a.id}}}return best}
+function segDist(x,y,a,b){const vx=b[0]-a[0],vy=b[1]-a[1],l=vx*vx+vy*vy;let u=l?((x-a[0])*vx+(y-a[1])*vy)/l:0;u=clamp(u,0,1);return Math.hypot(x-a[0]-vx*u,y-a[1]-vy*u)}
+
+function tap(id){
+  if(!G||G.over)return;
+  const a=G.arrows[id],now=performance.now(),cs=GV.cs;
+  if(G.bomb){G.bomb=false;$('#tBomb').classList.remove('on');S.bombs--;save();
+    for(const i of a.cells){const q=GV.xy(i);burst(q[0],q[1],[COL.pri,COL.gold,COL.ink],5,4)}
+    a.alive=0;for(const i of a.cells)G.occ[i]=-1;G.left--;a.anim=null;sfx('boom');vib([20,30,40]);afterRemove(a,now,true);return}
+  if(isLocked(G,a)){a.anim={type:'shake',t0:now,dur:380};toast(t('locked'),'lock');sfx('lock');vib(20);
+    G.arrows.forEach(b=>{if(b.alive&&b.key===a.lock){b.anim={type:'shake',t0:now,dur:380}}});return}
+  const ri=rayInfo(G,a);
+  if(ri.block>=0){
+    G.mistakes++;G.combo=0;
+    a.anim={type:'bump',t0:now,dur:420,fwd:ri.cells.length*cs+cs*.32};a.flash=now+520;G.arrows[G.occ[ri.block]].flash=now+520;
+    sfx('bump');vib(70);
+    if(G.mode==='rush'){R.end-=4000;const h=GV.xy(a.cells[a.cells.length-1]);floatText('−4s',h[0],h[1]-cs*.6,COL.red)}
+    else if(G.hearts){G.hearts--;updHUD();const el=$('#gHearts').children[G.hearts];if(el){el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit')}
+      if(G.hearts<=0){G.over=true;setTimeout(lose,750)}}
+    return}
+  G.combo=now-G.lastT<1200?G.combo+1:1;G.lastT=now;if(G.combo>S.st.combo)S.st.combo=G.combo;
+  launch(GV,a,now);afterRemove(a,now,false);
+  if(coach===a.id){const f=freeArrows(G);coach=null;if(S.tut===1&&!G.coachDone&&f.length){coach=f[0].id;G.coachDone=1}else hideCoach()}
+  else if(S.tut>1)hideCoach();
+  const h=GV.xy(a.cells[a.cells.length-1]);
+  if(G.combo>=3){floatText(t('combo',G.combo),clamp(h[0],60,GV.W-60),clamp(h[1]-cs*.7,20,GV.H-20),COL.pri);if(G.combo%5===0)addCoins(2,h)}
+  sfx('whoosh',G.combo);vib(8);
+}
+function afterRemove(a,now,blast){
+  if(G.hint===a.id)G.hint=-1;
+  S.st.arrows++;
+  if(a.key!=null){const lk=G.arrows.find(b=>b.alive&&b.lock===a.key);if(lk){S.st.keys++;const m=GV.xy(lk.cells[Math.floor(lk.cells.length/2)]);ring(m[0],m[1],PAIR[a.key%4]);sfx('unlock')}}
+  if(a.gold){S.st.gold++;const h=GV.xy(a.cells[a.cells.length-1]);addCoins(5,[clamp(h[0],40,GV.W-40),clamp(h[1],30,GV.H-30)])}
+  if(G.mode==='rush')R.score++;
+  save();checkAch();updHUD();
+  if(G.left===0){G.over=true;hideCoach();setTimeout(win,blast?350:600)}
+}
+function addCoins(n,pt){S.coins+=n;G.coinsWon+=n;save();if(pt)floatText('+'+n,pt[0],pt[1],COL.gold,true)}
+function useHint(){
+  if(!G||G.over)return;if(G.hint>=0&&G.arrows[G.hint].alive)return;
+  if(S.hints<=0){openGet('hint');return}
+  const f=freeArrows(G);if(!f.length)return;S.hints--;save();G.hint=f[Math.floor(Math.random()*f.length)].id;sfx('hint');updHUD()}
+function useBomb(){
+  if(!G||G.over)return;
+  if(G.bomb){G.bomb=false;$('#tBomb').classList.remove('on');return}
+  if(S.bombs<=0){openGet('blast');return}
+  G.bomb=true;$('#tBomb').classList.add('on');toast(t('bombPick'),'bomb')}
+const PRICE={hint:25,blast:40};let getKind=null;
+function openGet(kind){getKind=kind;$('#gIco').innerHTML=ico(kind==='hint'?'bulb':'bomb');$('#gHead').textContent=t(kind==='hint'?'getHint':'getBlast');
+  const a=$('#gAd');a.style.display=Ads.ok()?'':'none';a.innerHTML=ico('play')+`<span>${t('watchAd')} · ${t('free')}</span>`;
+  const b=$('#gBuy');b.innerHTML=COIN+`<span>${t('orCoins',PRICE[kind])}</span>`;b.disabled=S.coins<PRICE[kind];show('ovGet',true)}
+function grant(kind){if(kind==='hint')S.hints++;else S.bombs++;save();updHUD();hide('ovGet');kind==='hint'?useHint():useBomb()}
+const COIN='<svg class="coin"><use href="#i-coin"/></svg>';
+const fmtTime=ms=>{const s=Math.round(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+
+function win(){
+  if(G.mode==='rush'){R.boards++;R.end+=12000;sfx('win');floatText('+12s',GV.W/2,GV.H/2,COL.pri,false,30);setTimeout(()=>{if($('#game').classList.contains('active'))startGame('rush')},450);return}
+  const st=G.mistakes===0?3:G.mistakes===1?2:1,el=performance.now()-G.start;let reward=0,title,next;
+  if(G.mode==='levels'){reward=8+st*4;if(st>(S.stars[G.level]||0))S.stars[G.level]=st;if(G.level>=S.level){S.level=G.level+1;S.st.levels++}
+    if(st===3)S.st.perfect++;if(G.shaped&&!S.st.shapes.includes(G.cfg.mask))S.st.shapes.push(G.cfg.mask);
+    title=t('levelDone',G.level);next=t('next');if(G.level%4===0)S.hints++}
+  else if(G.mode==='daily'){const k=todayKey();if(S.dailyDone!==k){const y=new Date();y.setDate(y.getDate()-1);
+      S.streak=S.dailyDone===dkey(y)?S.streak+1:1;S.dailyDone=k;reward=40+Math.min(S.streak,10)*5;S.bombs++;S.st.daily++;S.st.streak=Math.max(S.st.streak,S.streak)}
+    title=t('dailyWin');next=t('home')}
+  else{reward=5;title=t('zenWin');next=t('newBoard');S.st.zen++}
+  S.coins+=reward;save();setTimeout(checkAch,900);
+  $('#wTitle').textContent=title;
+  $('#wSub').textContent=G.mode==='zen'?'':st===3?t('perfect'):st===2?t('good'):t('ok');
+  const ss=$('#wStars');ss.style.display=G.mode==='zen'?'none':'';
+  [...ss.children].forEach((e,i)=>{e.classList.remove('on');e.style.animationDelay=(.25+i*.18)+'s';if(i<st)setTimeout(()=>e.classList.add('on'),10)});
+  $('#kTime').textContent=fmtTime(el);$('#kMis').textContent=G.mistakes;
+  $('#kCoins').innerHTML='<svg class="coin" style="width:16px;height:16px"><use href="#i-coin"/></svg>+'+(reward+G.coinsWon);
+  $('#wNext').textContent=next;
+  G.winCoins=reward+G.coinsWon;const wd=$('#wDouble');wd.innerHTML=ico('play')+`<span>${t('double')}</span>`;wd.style.display=Ads.ok()&&G.winCoins>0?'':'none';
+  drawThumb();show('ovWin',true);sfx('win');if(st===3||G.mode==='daily')confetti();
+}
+function lose(){const la=$('#lAd');la.innerHTML=ico('play')+`<span>${t('contAd')}</span>`;la.style.display=Ads.ok()&&!G.adCont?'':'none';const c=$('#lCont');c.innerHTML=t('cont')+'<span class="price"><svg class="coin" style="width:16px;height:16px"><use href="#i-coin"/></svg>30</span>';c.style.display=S.coins>=30?'':'none';show('ovLose',true);sfx('lose')}
+function rushOver(){G.over=true;const best=R.score>S.rushBest;if(best){S.rushBest=R.score;S.rushBoards=R.boards}const pay=Math.floor(R.score/3);S.coins+=pay-(R.paid||0);R.paid=pay;S.st.rush=Math.max(S.st.rush,R.score);save();setTimeout(checkAch,900);
+  const rm=$('#rMore');rm.innerHTML=ico('play')+`<span>${t('moreTime')}</span>`;rm.style.display=Ads.ok()&&!R.more?'':'none';
+  $('#rScore').textContent=R.score;$('#rInfo').textContent=best?t('newBest'):t('best',S.rushBest,S.rushBoards);show('ovRush',true);sfx(best?'win':'lose');if(best)confetti()}
+function drawThumb(){
+  const tc=$('#thumb'),c=tc.getContext('2d'),sz=300;c.clearRect(0,0,sz,sz);
+  const s=Math.min((sz-36)/G.cols,(sz-36)/G.rows),x0=(sz-G.cols*s)/2,y0=(sz-G.rows*s)/2,xy=i=>[x0+(i%G.cols+.5)*s,y0+((i/G.cols|0)+.5)*s];
+  for(const a of G.arrows)drawArrow(c,a.cells.map(xy),a.dir,arrowColor(a),Math.max(1.6,s*.11),s);
+}
+
+/* ================= HUD ================= */
+const heartSvg=on=>`<svg viewBox="0 0 24 24" class="${on?'on':'off'}"><use href="#i-heart"/></svg>`;
+function updHUD(full){
+  if(!G)return;
+  $('#gLeft').textContent=G.left;
+  const hs=$('#gHearts');
+  if(G.mode==='levels'||G.mode==='daily'){if(full||hs.children.length!==3)hs.innerHTML=heartSvg(1)+heartSvg(1)+heartSvg(1);
+    [...hs.children].forEach((e,i)=>e.setAttribute('class',i<G.hearts?'on':'off'))}
+  else if(full)hs.innerHTML=G.mode==='zen'?`<span style="color:var(--green)">${ico('leaf')}</span>`:'';
+  if(G.mode!=='rush')$('#gRight').innerHTML=`<svg class="coin"><use href="#i-coin"/></svg>${S.coins}`;
+  const bh=$('#bHint'),bb=$('#bBomb');
+  bh.textContent=S.hints>0?S.hints:'+';bh.classList.toggle('buy',S.hints<=0);
+  bb.textContent=S.bombs>0?S.bombs:'+';bb.classList.toggle('buy',S.bombs<=0);
+  $('#tGrid').classList.toggle('on',!!S.grid);
+}
+let toastT,toastQ=[],toastBusy=false;
+function toast(s,icon,ms){toastQ.push([s,icon,ms||1700]);if(!toastBusy)nextToast()}
+function nextToast(){const q=toastQ.shift();if(!q){toastBusy=false;return}toastBusy=true;const[s,icon,ms]=q,b=$('#toast');
+  b.innerHTML=(icon?ico(icon):'')+'<span></span>';b.lastChild.textContent=s;b.classList.add('show');clearTimeout(toastT);
+  toastT=setTimeout(()=>{b.classList.remove('show');setTimeout(nextToast,250)},ms)}
+function show(id,overlay){
+  if(overlay){$('#'+id).classList.add('show');return}
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
+  document.querySelectorAll('.ov').forEach(o=>o.classList.remove('show'));
+  if(id==='home'){renderHome();demoNew()}
+}
+const hide=id=>$('#'+id).classList.remove('show');
+const dkey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function renderHome(){
+  $('#hCoins').textContent=S.coins;
+  $('#hLvl').textContent=t('level',S.level)+' · '+t(diffOf(S.level));
+  $('#hProg').style.width=(((S.level-1)%10)/10*100+5)+'%';
+  const done=S.dailyDone===todayKey();
+  $('#dailySub').textContent=S.streak&&(done||S.dailyDone===dkey(new Date(Date.now()-864e5)))?t('streak',S.streak):t('dailyNew');
+  $('#dailyTag').innerHTML=`<span class="tagn${done?' ok':''}">${done?t('doneTag'):t('new')}</span>`;
+  $('#rushSub').textContent=t('rushSub',S.rushBest);
+  $('#lvSub').textContent=t('lvSub',Object.values(S.stars).reduce((a,b)=>a+b,0));
+  $('#achSubH').textContent=t('achSub',Object.keys(S.ach).length,ACH_TOTAL);
+  $('#giftDot').hidden=!drCan();
+  $('#shopSubH').textContent=t('sk_'+S.skin)+' · '+t('shopSub',SKINS.filter(k=>S.owned.includes(k.id)).length,SKINS.length);
+  $('#mNoAds').style.display=Ads.ok()?'':'none';const na=noAdsLeft();$('#noAdsSubH').textContent=na?t('noAdsOn',Math.ceil(na/60000)):t('noAdsSub');
+}
+function applyLang(){
+  const L=S.lang;document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));
+  $('#howList').innerHTML=t('how').map(([i,s])=>`<div><span class="ico">${ico(i)}</span><span></span></div>`).join('');
+  [...$('#howList').children].forEach((d,k)=>d.lastChild.textContent=t('how')[k][1]);
+  document.title=L==='ar'?'هروب الأسهم — Arrow Escape':'Arrow Escape';
+  $('#sLang').value=L;
+  renderHome();if(G)updHUD();
+}
+function applyTheme(){document.body.className=S.theme==='light'?'':S.theme;readColors();document.dispatchEvent(new Event('themechange'));
+  document.querySelector('meta[name=theme-color]').content=COL.bg;
+  document.querySelectorAll('#sTheme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
+  document.querySelectorAll('.tg').forEach(b=>b.classList.toggle('on',!!S[b.dataset.k]))}
+let lvPage=0;const shpCache={};
+function shapeIcon(m){const k=m+S.theme;if(shpCache[k])return shpCache[k];const c=document.createElement('canvas'),n=11;c.width=c.height=44;const x=c.getContext('2d');x.fillStyle=COL.pri;
+  for(let r=0;r<n;r++)for(let q=0;q<n;q++)if(SHAPES[m](r,q,n,n)){x.fillRect(q*4,r*4,4.2,4.2)}return shpCache[k]=c.toDataURL()}
+function renderLevels(){
+  const per=20,maxPage=Math.floor((S.level-1)/per);lvPage=clamp(lvPage,0,maxPage);const a=lvPage*per+1,g=$('#lvGrid');g.innerHTML='';let st=0;
+  for(let i=a;i<a+per;i++){const b=document.createElement('button');b.className='lv'+(i===S.level?' cur':'');b.disabled=i>S.level;const s=S.stars[i]||0;st+=s;
+    const m=levelCfg(i).mask;b.innerHTML=(m!=='rect'?`<img class="shp" alt="" src="${shapeIcon(m)}">`:'')+(b.disabled?'':`${i}<span class="ss">${[0,1,2].map(k=>`<svg viewBox="0 0 24 24" class="${k<s?'on':''}"><use href="#i-star"/></svg>`).join('')}</span>`);
+    b.onclick=()=>{hide('ovLevels');startGame('levels',i)};g.appendChild(b)}
+  $('#lvTitle').textContent=t('chapter',lvPage+1);$('#lvRange').textContent=`${a}–${a+per-1} · ★ ${st}/${per*3}`;
+  $('#lvPrev').disabled=lvPage===0;$('#lvNext').disabled=lvPage>=maxPage;
+}
+
+/* ================= effects ================= */
+function burst(x,y,cols,n,sp){for(let i=0;i<n;i++){const a=Math.random()*6.28,v=Math.random()*sp+1;parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1.5,life:.5+Math.random()*.4,col:cols[i%cols.length],s:Math.random()*2.5+1.5})}}
+const rings=[];function ring(x,y,col){rings.push({x,y,col,t0:performance.now()})}
+function floatText(text,x,y,col,coin,size){floats.push({text,x,y,col,coin,size:size||17,t0:performance.now()})}
+function drawFx(c,now){
+  for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.life-=1/60;if(p.life<=0){parts.splice(i,1);continue}
+    p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.vx*=.97;c.globalAlpha=clamp(p.life*2,0,1);c.fillStyle=p.col;c.beginPath();c.arc(p.x,p.y,p.s,0,7);c.fill()}
+  for(let i=rings.length-1;i>=0;i--){const r=rings[i],p=(now-r.t0)/500;if(p>1){rings.splice(i,1);continue}
+    c.globalAlpha=1-p;c.strokeStyle=r.col;c.lineWidth=3*(1-p)+1;c.beginPath();c.arc(r.x,r.y,GV.cs*(.3+p*1.1),0,7);c.stroke()}
+  c.textAlign='center';c.textBaseline='middle';
+  for(let i=floats.length-1;i>=0;i--){const f=floats[i],p=(now-f.t0)/900;if(p>1){floats.splice(i,1);continue}
+    const y=f.y-p*30;c.globalAlpha=p<.75?1:1-(p-.75)/.25;c.font=`600 ${f.size}px Rubik,system-ui,sans-serif`;
+    const w=c.measureText(f.text).width,pw=w+(f.coin?34:22),ph=f.size+12;
+    c.fillStyle=COL.surface;c.beginPath();c.roundRect?c.roundRect(f.x-pw/2,y-ph/2,pw,ph,ph/2):c.rect(f.x-pw/2,y-ph/2,pw,ph);c.fill();
+    c.strokeStyle=COL.line;c.lineWidth=1;c.stroke();
+    let tx=f.x;if(f.coin){const cx=f.x-pw/2+14;c.fillStyle=COL.gold;c.beginPath();c.arc(cx,y,6.5,0,7);c.fill();tx+=8}
+    c.fillStyle=f.col===COL.gold?'#b07a00':f.col;c.fillText(f.text,tx,y+1)}
+  c.globalAlpha=1;
+}
+const fxc=$('#fx'),fctx=fxc.getContext('2d');let conf=[],fxDirty=false;
+function sizeFx(){const d=Math.min(window.devicePixelRatio||1,3);fxc.width=innerWidth*d;fxc.height=innerHeight*d;fctx.setTransform(d,0,0,d,0,0)}
+function confetti(){const C=['#2f6bff','#f5b000','#16a34a','#e8455a','#7c3aed'];
+  for(let i=0;i<70;i++)conf.push({x:Math.random()*innerWidth,y:-20-Math.random()*innerHeight*.5,vx:(Math.random()-.5)*1.5,vy:2+Math.random()*2.5,r:Math.random()*6,vr:(Math.random()-.5)*.2,w:Math.random()*.8+.2,c:C[i%5]})}
+function drawConf(){fctx.clearRect(0,0,innerWidth,innerHeight);
+  for(let i=conf.length-1;i>=0;i--){const p=conf[i];p.x+=p.vx+Math.sin(p.y/40)*.6;p.y+=p.vy;p.r+=p.vr;if(p.y>innerHeight+20){conf.splice(i,1);continue}
+    fctx.save();fctx.translate(p.x,p.y);fctx.rotate(p.r);fctx.scale(Math.cos(p.r*2),1);fctx.fillStyle=p.c;fctx.fillRect(-3,-5,6,10);fctx.restore()}}
+
+/* ================= audio & haptics ================= */
+let AC=null,NB=null;
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return null}}if(AC.state==='suspended')AC.resume();return AC}
+function tone(f,d,type,v,f2,delay){const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t0=a.currentTime+(delay||0);
+  o.type=type||'sine';o.frequency.setValueAtTime(f,t0);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t0+d);
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.008);g.gain.exponentialRampToValueAtTime(.0001,t0+d);o.connect(g).connect(a.destination);o.start(t0);o.stop(t0+d+.02)}
+function noise(d,f1,f2,v,q){const a=ac();if(!a)return;if(!NB){NB=a.createBuffer(1,a.sampleRate*.5,a.sampleRate);const x=NB.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=Math.random()*2-1}
+  const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain(),t0=a.currentTime;s.buffer=NB;f.type='bandpass';f.Q.value=q||1.2;
+  f.frequency.setValueAtTime(f1,t0);f.frequency.exponentialRampToValueAtTime(f2,t0+d);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+d*.3);
+  g.gain.exponentialRampToValueAtTime(.0001,t0+d);s.connect(f).connect(g).connect(a.destination);s.start(t0);s.stop(t0+d)}
+function sfx(n,k){if(!S.sound)return;
+  switch(n){
+    case'whoosh':{const m=Math.pow(1.05,Math.min(k||1,12));noise(.2,500*m,2600*m,.35);tone(520*m,.08,'sine',.04,780*m);break}
+    case'bump':tone(160,.16,'sine',.22,70);noise(.08,300,200,.12,2);break;
+    case'lock':tone(1100,.04,'square',.03);tone(900,.05,'square',.03,null,.06);break;
+    case'unlock':tone(990,.12,'sine',.08);tone(1480,.2,'sine',.07,null,.08);break;
+    case'hint':tone(740,.15,'sine',.07);tone(1110,.22,'sine',.06,null,.1);break;
+    case'boom':noise(.45,900,120,.5,.7);tone(110,.35,'sine',.2,45);break;
+    case'win':[523,659,784,1047].forEach((f,i)=>tone(f,.5,'sine',.07,null,i*.09));break;
+    case'lose':[392,330,262].forEach((f,i)=>tone(f,.4,'sine',.08,null,i*.16));break;
+  }}
+function vib(p){if(S.vib&&navigator.vibrate)try{navigator.vibrate(p)}catch(e){}}
+
+/* ================= ads (AdMob through the Capacitor plugin) ================= */
+// Ads use Google's test units (marked "Test Ad", no earnings) until ADS_LIVE is true.
+// Keep test ads during closed testing; switch to live only for the production release,
+// together with the real AdMob app ID in android/app/src/main/res/values/strings.xml.
+const ADS_LIVE=false;
+const AD_TEST={interstitial:'ca-app-pub-3940256099942544/1033173712',rewarded:'ca-app-pub-3940256099942544/5224354917'};
+const AD_LIVE={interstitial:'ca-app-pub-XXXXXXXXXXXXXXXX/NNNNNNNNNN',rewarded:'ca-app-pub-XXXXXXXXXXXXXXXX/NNNNNNNNNN'};
+// A live unit that was never filled in falls back to the test unit instead of failing silently.
+const AD_UNITS=ADS_LIVE&&!/X|N{4}/.test(AD_LIVE.interstitial+AD_LIVE.rewarded)?AD_LIVE:AD_TEST;
+const Ads={native:null,test:/[?&]ads=test/.test(location.search),busy:false,last:0,boards:0,
+  async init(){const C=window.Capacitor,P=C&&C.isNativePlatform&&C.isNativePlatform()&&C.Plugins&&C.Plugins.AdMob;if(!P)return;
+    try{await P.initialize({});
+      try{const c=await P.requestConsentInfo();if(c.isConsentFormAvailable&&c.status==='REQUIRED')await P.showConsentForm()}catch(e){}
+      this.native=P;this.load('i');this.load('r');
+      try{const c=await P.requestConsentInfo();if(c.privacyOptionsRequirementStatus==='REQUIRED'||c.isConsentFormAvailable)$('#sAdPriv').style.display=''}catch(e){}}catch(e){}},
+  ok(){return!!this.native||this.test},
+  load(k){const P=this.native;if(!P)return;(k==='i'?P.prepareInterstitial({adId:AD_UNITS.interstitial}):P.prepareRewardVideoAd({adId:AD_UNITS.rewarded})).catch(()=>{})},
+  // Between levels only, never before level 7, at most once every 3 boards and 2.5 minutes.
+  async interstitial(){this.boards++;
+    if(!this.ok()||this.busy||noAdsLeft()||S.level<7||this.boards<3||Date.now()-this.last<150000)return;
+    this.busy=true;audioPause();
+    try{if(this.native){const P=this.native;await new Promise(async ok=>{let h1,h2;const end=()=>{h1&&h1.remove();h2&&h2.remove();ok()};
+        h1=await P.addListener('interstitialAdDismissed',end);h2=await P.addListener('interstitialAdFailedToShow',end);setTimeout(end,90000);
+        P.showInterstitial().catch(end)});this.load('i')}else await fakeAd(false)}catch(e){}
+    audioResume();this.busy=false;this.boards=0;this.last=Date.now()},
+  // Resolves true only when the player earned the reward.
+  rewarded(){return new Promise(async done=>{
+    if(!this.ok()||this.busy)return done(false);this.busy=true;audioPause();
+    const fin=v=>{this.busy=false;audioResume();if(v){this.last=Date.now();this.boards=0}done(v)};
+    if(!this.native){fin(await fakeAd(true));return}
+    const P=this.native,hs=[];let got=false,ended=false;
+    const end=()=>{if(ended)return;ended=true;hs.forEach(h=>h&&h.remove&&h.remove());this.load('r');setTimeout(()=>fin(got),300)};
+    try{hs.push(await P.addListener('onRewardedVideoAdReward',()=>{got=true}));
+      hs.push(await P.addListener('onRewardedVideoAdDismissed',end));
+      hs.push(await P.addListener('onRewardedVideoAdFailedToShow',end));
+      const r=await P.showRewardVideoAd();if(r&&r.amount!=null)got=true}catch(e){end()}})}
+};
+// Stand-in ad used only in the browser with ?ads=test, to try the ad flows without a phone.
+function fakeAd(rewarded){return new Promise(res=>{const d=document.createElement('div');d.id='adfake';let n=3;
+  d.innerHTML=`<div style="opacity:.6;font-size:13px">TEST AD · ${rewarded?'rewarded':'interstitial'}</div><div id="adN" style="font-size:42px;font-weight:700">${n}</div><button style="visibility:hidden">✕</button>`;
+  document.body.appendChild(d);const iv=setInterval(()=>{n--;d.querySelector('#adN').textContent=n;if(n<=0){clearInterval(iv);const b=d.querySelector('button');b.style.visibility='visible';b.onclick=()=>{d.remove();res(true)}}},1000)})}
+
+/* ================= daily reward ================= */
+// A 7-day cycle; missing a day starts the cycle again from day 1.
+const DR=[{c:30},{h:1},{c:50},{b:1},{c:80},{h:2},{c:150,b:1}];
+const yKey=()=>dkey(new Date(Date.now()-864e5));
+const drCan=()=>S.dr.last!==todayKey();
+const drIdx=()=>S.dr.last===yKey()||S.dr.last===todayKey()?S.dr.day:0;
+function drCard(r,i,cls){const big=i===6,ic=r.c?COIN:ico(r.h?'bulb':'bomb'),amt=r.c?'+'+r.c:'×'+(r.h||r.b);
+  const extra=big&&r.b?`<span class="di">${ico('bomb')}</span><b>×${r.b}</b>`:'';
+  return`<div class="day ${cls}${big?' wide':''}"><span>${t('dayN',i+1)}</span><span class="di">${ic}</span><b>${amt}</b>${extra}</div>`}
+function openDaily(){const can=drCan(),cur=can?drIdx():(S.dr.day+6)%7;
+  $('#drDays').innerHTML=DR.map((r,i)=>drCard(r,i,i<cur?'got':i===cur?(can?'now':'got'):'')).join('');
+  $('#drSub').textContent=can?t('dayN',cur+1):t('comeBack');
+  $('#drClaim').style.display=can?'':'none';const x=$('#drX2');x.innerHTML=ico('play')+`<span>${t('claimX2')}</span>`;x.style.display=can&&Ads.ok()?'':'none';
+  show('ovDaily',true)}
+function claimDaily(mult){if(!drCan())return;const i=drIdx(),r=DR[i];
+  S.coins+=(r.c||0)*mult;S.hints+=(r.h||0)*mult;S.bombs+=(r.b||0)*mult;
+  S.dr.run=S.dr.last===yKey()?S.dr.run+1:1;S.dr.last=todayKey();S.dr.day=(i+1)%7;S.st.login=Math.max(S.st.login,S.dr.run);
+  save();hide('ovDaily');sfx('win');confetti();renderHome();setTimeout(checkAch,600);setTimeout(askNotif,1500)}
+
+/* ================= achievements ================= */
+const ACH=[['levels','flag',[10,50,150,300]],['perfect','star',[5,25,100]],['arrows','send',[500,2500,10000]],['combo','spark',[5,10,20]],
+  ['shapes','shapes',[5,12,21]],['daily','cal',[3,15,50]],['streak','fire',[3,7,30]],['login','gift',[3,7,30]],['rush','watch',[20,50,100]],
+  ['zen','leaf',[5,25,100]],['keys','key',[10,50,200]],['gold','spark',[20,100,500]]];
+const ACH_PAY=[25,60,120,250],ACH_TOTAL=ACH.reduce((n,a)=>n+a[2].length,0);
+const stat=k=>k==='shapes'?S.st.shapes.length:S.st[k]||0;
+function checkAch(){let got=0;
+  for(const[k,,goals]of ACH)goals.forEach((g,i)=>{const id=k+i;if(!S.ach[id]&&stat(k)>=g){S.ach[id]=1;S.coins+=ACH_PAY[i];got++;
+    toast(`${t('achUnlocked')} · +${ACH_PAY[i]}`,'trophy',2200)}});
+  if(got){save();sfx('unlock');if(G&&$('#game').classList.contains('active'))updHUD();else renderHome()}}
+function openAch(){
+  $('#achSub').textContent=t('achSub',Object.keys(S.ach).length,ACH_TOTAL);
+  $('#achList').innerHTML=ACH.map(([k,icon,goals])=>{const v=stat(k),done=goals.filter((g,i)=>S.ach[k+i]).length,all=done===goals.length,
+      g=goals[Math.min(done,goals.length-1)],pct=Math.min(100,v/g*100);
+    return`<div class="ach${all?' done':''}"><span class="ico">${ico(icon)}</span><div class="tx"><b>${t('a_'+k,g)}</b>
+      <div class="bar"><i style="width:${pct}%"></i></div><div class="tiers">${goals.map((x,i)=>`<i class="${S.ach[k+i]?'on':''}"></i>`).join('')}</div></div>
+      ${all?`<span class="ok">${ico('check')}</span>`:`<div style="text-align:end"><span class="rw">${COIN}${ACH_PAY[done]}</span><small>${Math.min(v,g)}/${g}</small></div>`}</div>`}).join('');
+  show('ovAch',true)}
+
+/* ================= arrow styles ================= */
+function skinPreview(cv,skin){const d=Math.min(window.devicePixelRatio||1,3),w=120,h=78;cv.width=w*d;cv.height=h*d;const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);
+  const cs=22,ox=(w-4*cs)/2,oy=(h-3*cs)/2,P=([x,y])=>[ox+(x+.5)*cs,oy+(y+.5)*cs];
+  drawArrow(c,[[0,2],[2,2],[2,0],[3,0]].map(P),1,skinColor(3,skin),Math.max(2,cs*.11),cs,skin);
+  drawArrow(c,[[0,0],[0,1]].map(P),2,skinColor(8,skin),Math.max(2,cs*.11),cs,skin)}
+function openShop(){const own=SKINS.filter(k=>S.owned.includes(k.id)).length;$('#shopSub').textContent=t('shopSub',own,SKINS.length);
+  const L=$('#skinList');L.innerHTML='';
+  for(const k of SKINS){const has=S.owned.includes(k.id),on=S.skin===k.id,b=document.createElement('button');
+    b.className='skin'+(on?' on':'')+(has?'':' lock')+(!has&&S.coins<k.p?' cant':'');
+    b.innerHTML=`<canvas></canvas><b></b><small>${on?t('equipped'):has?t('equip'):COIN+k.p}</small>`;b.querySelector('b').textContent=t('sk_'+k.id);
+    skinPreview(b.querySelector('canvas'),k.id);
+    b.onclick=()=>{if(!has){if(S.coins<k.p){toast(t('noCoins'));sfx('lock');return}S.coins-=k.p;S.owned.push(k.id);sfx('unlock');confetti()}else sfx('hint');
+      S.skin=k.id;save();openShop();renderHome()};L.appendChild(b)}
+  show('ovShop',true)}
+
+/* ================= one hour without ads ================= */
+const noAdsLeft=()=>Math.max(0,S.noAds-Date.now());
+async function buyNoAds(){if(noAdsLeft())return;if(await Ads.rewarded()){S.noAds=Date.now()+3600e3;save();renderHome();sfx('unlock');toast(t('noAdsOn',60),'noad')}else toast(t('adFail'))}
+
+/* ================= "enjoying the game?" before asking for a review ================= */
+function enjoyPrompt(level){return new Promise(done=>{
+  if(!NATIVE||S.asked[level]||S.asked.enjoy==='no'||![12,40,100].includes(level))return done(false);
+  S.asked[level]=1;save();
+  const step=(icon,bg,title,sub,yes,no,onYes,onNo)=>{$('#ejIco').innerHTML=ico(icon);$('#ejIco').style.background=bg;$('#ejTitle').textContent=t(title);$('#ejSub').textContent=t(sub);
+    $('#ejYes').innerHTML=yes;$('#ejNo').textContent=t(no);$('#ejYes').onclick=onYes;$('#ejNo').onclick=onNo;show('ovEnjoy',true)};
+  const end=()=>{hide('ovEnjoy');done(true)};
+  step('heart','rgba(239,68,68,.12)','enjoyQ','enjoySub',t('enjoyYes'),'enjoyNo',
+    ()=>{end();const P=NP('InAppReview');if(P)P.requestReview().catch(()=>{})},
+    ()=>{S.asked.enjoy='no';save();step('mail','var(--pri-t)','fbQ','fbSub',ico('mail')+`<span>${t('fbSend')}</span>`,'fbLater',
+      ()=>{end();location.href='mailto:ass.tazrzit@gmail.com?subject='+encodeURIComponent('Arrow Escape — feedback (v'+APP_VERSION+', '+S.lang+')')},end)});
+  $('#ejYes').style.display='flex';$('#ejYes').style.justifyContent='center';$('#ejYes').style.gap='8px'})}
+const APP_VERSION='1.0';
+
+/* ================= daily reminder notifications ================= */
+// One reminder for the next evening (today if the reward is still unclaimed) and a gentle one 3 days later.
+async function scheduleReminders(){const N=NP('LocalNotifications');if(!N)return;
+  try{await N.cancel({notifications:[{id:101},{id:102}]});if(!S.notif)return;
+    const perm=await N.checkPermissions();if(perm.display!=='granted')return;
+    const now=new Date(),at=new Date();at.setHours(19,0,0,0);if(!drCan()||at<=now)at.setDate(at.getDate()+1);
+    const at2=new Date(at);at2.setDate(at2.getDate()+3);
+    const n=(id,body,when)=>({id,title:t('title'),body:t(body),schedule:{at:when},isExactNotification:false,smallIcon:'ic_stat_arrow',iconColor:'#2F6BFF'});
+    await N.schedule({notifications:[n(101,'notif1',at),n(102,'notif2',at2)]})}catch(e){}}
+async function askNotif(){const N=NP('LocalNotifications');if(!N||S.asked.notif)return;S.asked.notif=1;save();
+  try{await N.requestPermissions()}catch(e){}scheduleReminders()}
+
+/* ================= app lifecycle (pause, back button, review) ================= */
+let pausedAt=0;
+function audioPause(){if(AC&&AC.state==='running')AC.suspend()}
+function audioResume(){if(AC&&AC.state==='suspended'&&!document.hidden)AC.resume()}
+function onPause(){if(pausedAt)return;pausedAt=performance.now();audioPause();scheduleReminders()}
+function onResume(){if(!pausedAt)return;const d=performance.now()-pausedAt;pausedAt=0;if(R)R.end+=d;if(G)G.start+=d;if(!Ads.busy)audioResume()}
+function onBack(){
+  if(Ads.busy||document.getElementById('adfake'))return;
+  const open=[...document.querySelectorAll('.ov.show')];
+  if(open.length){const o=open[open.length-1].id,home={ovWin:'#wHome',ovLose:'#lHome',ovRush:'#rHome'}[o];if(home)$(home).click();else hide(o);return}
+  if($('#game').classList.contains('active')){$('#gBack').click();return}
+  const A=NP('App');if(A)A.exitApp()}
+function initNative(){if(!NATIVE)return;
+  const A=NP('App');if(A){A.addListener('backButton',onBack);A.addListener('pause',onPause);A.addListener('resume',onResume)}
+  const SB=NP('StatusBar');const syncBar=()=>{if(!SB)return;SB.setBackgroundColor({color:COL.bg}).catch(()=>{});SB.setStyle({style:S.theme==='dark'?'DARK':'LIGHT'}).catch(()=>{})};
+  syncBar();document.addEventListener('themechange',syncBar);
+  // Links such as the privacy policy open the hosted page in the system browser.
+  document.querySelectorAll('a[href="privacy.html"]').forEach(a=>{a.href='https://lhamami12.github.io/arrows/privacy.html';a.target='_blank';a.rel='noopener'});
+  if(NP('LocalNotifications'))$('#notifRow').style.display='';
+  const SS=NP('SplashScreen');if(SS)setTimeout(()=>SS.hide().catch(()=>{}),150)}
+
+/* ================= home demo ================= */
+let demoNext=0,demoEnd=0;
+function demoNew(){DV.size();DV.set(makeBoard(generate(rngOf(Math.random()*1e9|0),{cols:5,rows:5,mask:'rect',minL:2,maxL:4,locks:0,gold:0,straight:2})));
+  demoNext=performance.now()+1300;demoEnd=0}
+function demoStep(now){
+  const B=DV.B;if(!B)return;
+  if(now>demoNext&&B.left>0){const f=freeArrows(B);if(f.length)launch(DV,f[Math.floor(Math.random()*f.length)],now);demoNext=now+520;if(B.left===0)demoEnd=now+1100}
+  if(demoEnd&&now>demoEnd)demoNew();
+  drawBoard(DV,now,{});
+}
+
+/* ================= loop ================= */
+function loop(now){
+  if($('#home').classList.contains('active'))demoStep(now);
+  else if(G&&$('#game').classList.contains('active')){
+    drawBoard(GV,now,{grid:S.grid,preview,press:press&&press.id>=0?press.id:null,hint:G.hint,coach});
+    drawFx(GV.c,now);
+    if(G.mode==='rush'&&R&&!G.over&&!pausedAt){const l=Math.max(0,R.end-now),s=Math.ceil(l/1000);
+      const txt=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');if(R.txt!==txt){R.txt=txt;$('#gHearts').innerHTML=`<span class="chip" style="color:${s<=10?'var(--red)':'inherit'}">${ico('watch')}${txt}</span>`}
+      if(R.sc!==R.score){R.sc=R.score;$('#gRight').innerHTML=`${ico('star')}${R.score}`}
+      if(l<=0)rushOver()}
+  }
+  if(conf.length){drawConf();fxDirty=true}else if(fxDirty){fctx.clearRect(0,0,innerWidth,innerHeight);fxDirty=false}
+  requestAnimationFrame(loop);
+}
+
+/* ================= input ================= */
+const cv=$('#cv');
+cv.addEventListener('pointerdown',e=>{
+  if(!G||G.over)return;ac();
+  const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,id=hit(x,y);
+  press={id,x,y,long:false,timer:id>=0?setTimeout(()=>{if(press&&press.id===id){press.long=true;preview=id;vib(6)}},360):0}});
+cv.addEventListener('pointermove',e=>{if(!press||press.long)return;const r=cv.getBoundingClientRect();
+  if(Math.hypot(e.clientX-r.left-press.x,e.clientY-r.top-press.y)>14){clearTimeout(press.timer);press.id=-1}});
+function endPress(fire){if(!press)return;clearTimeout(press.timer);const p=press;press=null;preview=null;
+  if(fire&&!p.long&&p.id>=0&&G&&G.arrows[p.id].alive)tap(p.id)}
+cv.addEventListener('pointerup',()=>endPress(true));
+cv.addEventListener('pointercancel',()=>endPress(false));
+cv.addEventListener('pointerleave',()=>endPress(false));
+cv.addEventListener('contextmenu',e=>e.preventDefault());
+
+/* ================= wiring ================= */
+const newRush=()=>{R={score:0,boards:0,end:performance.now()+60000};startGame('rush')};
+$('#hPlay').onclick=()=>{ac();startGame('levels',S.level)};
+$('#mDaily').onclick=()=>{ac();startGame('daily')};
+$('#mZen').onclick=()=>{ac();startGame('zen')};
+$('#mRush').onclick=()=>{ac();newRush()};
+$('#mLevels').onclick=()=>{lvPage=Math.floor((S.level-1)/20);renderLevels();show('ovLevels',true)};
+$('#lvClose').onclick=()=>hide('ovLevels');
+$('#gBack').onclick=()=>{G=null;R=null;show('home')};
+$('#tHint').onclick=useHint;$('#tBomb').onclick=useBomb;
+$('#tGrid').onclick=()=>{S.grid=S.grid?0:1;save();updHUD()};
+$('#wNext').onclick=async()=>{hide('ovWin');const m=G.mode,l=G.level;if(m!=='daily'&&!(m==='levels'&&await enjoyPrompt(l)))await Ads.interstitial();if(m==='levels')startGame('levels',l+1);else if(m==='zen')startGame('zen');else show('home')};
+$('#wDouble').onclick=async()=>{if(await Ads.rewarded()){S.coins+=G.winCoins;save();$('#kCoins').innerHTML=COIN.replace('class="coin"','class="coin" style="width:16px;height:16px"')+'+'+G.winCoins*2;$('#wDouble').style.display='none';sfx('hint')}else toast(t('adFail'))};
+$('#lAd').onclick=async()=>{if(await Ads.rewarded()){G.adCont=1;G.hearts=1;G.over=false;hide('ovLose');updHUD(true)}else toast(t('adFail'))};
+$('#rMore').onclick=async()=>{if(await Ads.rewarded()){R.more=1;R.end=performance.now()+15000;G.over=false;hide('ovRush')}else toast(t('adFail'))};
+$('#gAd').onclick=async()=>{const k=getKind;if(await Ads.rewarded())grant(k);else toast(t('adFail'))};
+$('#gBuy').onclick=()=>{const p=PRICE[getKind];if(S.coins<p){toast(t('noCoins'));return}S.coins-=p;grant(getKind)};
+$('#gClose').onclick=()=>hide('ovGet');
+$('#hGift').onclick=openDaily;$('#mShop').onclick=openShop;$('#shopClose').onclick=()=>hide('ovShop');$('#mNoAds').onclick=buyNoAds;$('#mAch').onclick=openAch;$('#achClose').onclick=()=>hide('ovAch');$('#drClose').onclick=()=>hide('ovDaily');
+$('#drClaim').onclick=()=>claimDaily(1);
+$('#drX2').onclick=async()=>{if(await Ads.rewarded())claimDaily(2);else toast(t('adFail'))};
+$('#sAdPriv').onclick=()=>{try{Ads.native&&Ads.native.showPrivacyOptionsForm()}catch(e){}};
+$('#lvPrev').onclick=()=>{lvPage--;renderLevels()};$('#lvNext').onclick=()=>{lvPage++;renderLevels()};
+$('#wHome').onclick=()=>show('home');
+$('#lRetry').onclick=()=>{hide('ovLose');startGame(G.mode,G.level)};
+$('#lHome').onclick=()=>show('home');
+$('#lCont').onclick=()=>{if(S.coins<30)return;S.coins-=30;save();G.hearts=1;G.over=false;hide('ovLose');updHUD(true)};
+$('#rAgain').onclick=()=>{hide('ovRush');newRush()};
+$('#rHome').onclick=()=>show('home');
+$('#hSet').onclick=$('#gSet').onclick=()=>show('ovSet',true);
+$('#sClose').onclick=()=>hide('ovSet');
+$('#sHow').onclick=()=>show('ovHow',true);
+$('#hwClose').onclick=()=>hide('ovHow');
+document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o&&['ovSet','ovHow','ovLevels','ovGet','ovAch','ovDaily','ovShop'].includes(o.id))hide(o.id)}));
+$('#sLang').innerHTML=Object.entries(LANGS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+$('#sLang').onchange=e=>{S.lang=e.target.value;save();applyLang()};
+document.querySelectorAll('#sTheme button').forEach(b=>b.onclick=()=>{S.theme=b.dataset.v;save();applyTheme()});
+document.querySelectorAll('.tg').forEach(b=>b.onclick=()=>{S[b.dataset.k]=S[b.dataset.k]?0:1;save();applyTheme();if(b.dataset.k==='notif')S.notif?askNotif().then(scheduleReminders):scheduleReminders()});
+addEventListener('resize',()=>{GV.size();DV.size();sizeFx()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)onPause();else onResume()});
+
+applyTheme();applyLang();sizeFx();demoNew();requestAnimationFrame(loop);initNative();
+loadNative().then(()=>{Ads.init().then(renderHome);scheduleReminders();checkAch();if(drCan()&&S.level>=2)setTimeout(()=>{if($('#home').classList.contains('active')&&!document.querySelector('.ov.show'))openDaily()},600)});
+</script>
+</body>
+</html>

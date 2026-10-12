@@ -1,0 +1,28 @@
+{
+  "appId": "com.arrowescape.jeux",
+  "appName": "Arrow Escape",
+  "webDir": "www",
+  "backgroundColor": "#f5f7fb",
+  "android": {
+    "backgroundColor": "#f5f7fb",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "launchShowDuration": 3000,
+      "backgroundColor": "#f5f7fb",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP"
+    },
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "LIGHT",
+      "backgroundColor": "#f5f7fb"
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_arrow",
+      "iconColor": "#2F6BFF"
+    }
+  }
+}
