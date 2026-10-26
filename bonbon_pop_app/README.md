@@ -18,8 +18,9 @@ ou pour continuer un niveau perdu.
 
 Sur le site web, le pont `AdBridge` n'existe pas : aucune publicité n'est affichée.
 
-> ⚠️ Les identifiants AdMob actuels sont les **identifiants de test** de Google :
-> ils affichent des pubs « Test Ad » et ne rapportent rien.
+> Depuis la version 1.3.1, les builds **release** (Play Store) utilisent les
+> vrais blocs d'annonces Bonbon Pop ; les builds **debug** gardent les blocs de
+> test de Google. Ne cliquez jamais sur vos propres annonces.
 
 ## Structure
 

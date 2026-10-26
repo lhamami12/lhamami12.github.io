@@ -37,9 +37,8 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        // AdMob App ID. This is Google's TEST App ID: replace it with the
-        // App ID of your AdMob app before publishing for real.
-        manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+        // AdMob App ID of Bonbon Pop (ad unit IDs are in lib/ad_config.dart).
+        manifestPlaceholders["admobAppId"] = "ca-app-pub-3524601599534787~2097526125"
     }
 
     signingConfigs {
