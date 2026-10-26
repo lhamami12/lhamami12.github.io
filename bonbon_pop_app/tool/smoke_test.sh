@@ -44,6 +44,7 @@ grep -n -A40 "FATAL EXCEPTION\|Fatal signal\|AndroidRuntime" smoke/logcat.txt | 
 echo "== Flutter / ads log"
 grep -E " (flutter|Ads|chromium|UserMessagingPlatform)\b" smoke/logcat.txt | tail -60
 
+emulator_alive soft
 if ! adb shell pidof "$PKG" >/dev/null; then
   echo "RESULT: app is NOT running (crashed or closed)"
   exit 1
