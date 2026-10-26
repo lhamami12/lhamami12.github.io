@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Installs the release APK on the running emulator, launches it and reports
-# whether the app is still alive after 30 s. Prints any crash from logcat and
+# whether the app is still alive after 15 s. Prints any crash from logcat and
 # saves logcat + a screenshot into smoke/ for the workflow artifacts.
 set -u
 APK="$1"
@@ -25,7 +25,7 @@ AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | tail -1)
 adb install -r "$APK"
 adb logcat -c
 adb shell am start -W -n "$PKG/.MainActivity"
-sleep 30
+sleep 15
 emulator_alive
 adb shell screencap -p /sdcard/screen.png && adb pull /sdcard/screen.png smoke/screen.png >/dev/null
 adb logcat -d > smoke/logcat.txt
@@ -42,7 +42,7 @@ if ! adb shell pidof "$PKG" >/dev/null; then
   echo "RESULT: app is NOT running (crashed or closed)"
   exit 1
 fi
-echo "RESULT: app still running after 30 s"
+echo "RESULT: app still running after 15 s"
 
 echo "== Back button on the home screen must open the quit dialog, not close the app"
 adb shell input keyevent KEYCODE_BACK
