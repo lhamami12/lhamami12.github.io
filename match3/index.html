@@ -136,6 +136,27 @@ button{font:inherit;cursor:pointer}
 .cell.jpop{animation:jpop .4s ease-out}
 @keyframes jpop{0%{transform:scale(1)}40%{transform:scale(1.2);filter:brightness(1.6)}100%{transform:scale(1)}}
 .tiles{overflow:hidden;border-radius:14px}
+.blocks{pointer-events:none}
+.ice{position:absolute;left:0;top:0;width:var(--cell);height:var(--cell);transform:var(--pos)}
+.ice::before{content:'';position:absolute;inset:2px;border-radius:10px;
+  background:linear-gradient(150deg,rgba(240,252,255,.97),rgba(170,222,250,.92) 50%,rgba(112,182,236,.95));
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.85),inset 0 -6px 10px rgba(30,95,170,.35),0 3px 6px rgba(20,0,60,.3)}
+.ice::after{content:'';position:absolute;left:18%;top:14%;width:40%;height:16%;border-radius:999px;background:rgba(255,255,255,.85);transform:rotate(-30deg)}
+.ice.i2::before{box-shadow:inset 0 0 0 2px #fff,inset 0 0 0 5px rgba(120,190,240,.9),inset 0 0 0 7px rgba(255,255,255,.75),inset 0 -6px 10px rgba(30,95,170,.4),0 3px 6px rgba(20,0,60,.3)}
+.ice.i1::before{background:linear-gradient(62deg,transparent 47%,rgba(255,255,255,.95) 48% 51%,transparent 52%),
+  linear-gradient(-32deg,transparent 58%,rgba(255,255,255,.85) 59% 62%,transparent 63%),
+  linear-gradient(150deg,rgba(235,250,255,.88),rgba(165,218,248,.8) 50%,rgba(112,182,236,.85))}
+.ice.hit{animation:iceHit .3s ease-out}
+@keyframes iceHit{40%{transform:var(--pos) scale(1.12);filter:brightness(1.4)}}
+.ice.gone{animation:iceGone .32s ease-in forwards}
+@keyframes iceGone{to{transform:var(--pos) scale(1.3);opacity:0}}
+.ice-ico{width:22px;height:22px;border-radius:7px;background:linear-gradient(150deg,#f0fcff,#8fcaf2);box-shadow:inset 0 0 0 2px #fff,0 1px 2px rgba(0,0,0,.25)}
+.tile.locked::after{content:'🔒';position:absolute;inset:4%;display:flex;align-items:flex-end;justify-content:flex-end;font-size:calc(var(--cell) * .3);line-height:1;border-radius:12px;
+  background:linear-gradient(45deg,transparent 43%,#9aa0b8 43% 47%,#5d6380 47% 53%,#9aa0b8 53% 57%,transparent 57%),
+  linear-gradient(-45deg,transparent 43%,#9aa0b8 43% 47%,#5d6380 47% 53%,#9aa0b8 53% 57%,transparent 57%);
+  filter:drop-shadow(0 2px 1px rgba(0,0,0,.35))}
+.tile.unlock .candy{animation:spawnIn .4s var(--bounce)}
+.new-tip{margin:4px 0 10px;padding:8px 12px;border-radius:14px;background:#e4f3ff;color:#1b4f86;font-size:15px;line-height:1.4;font-weight:600}
 .fx{pointer-events:none}
 
 /* ---------- tiles & candies ---------- */
@@ -334,6 +355,7 @@ html[lang=ar] body{font-family:'Baloo Bhaijaan 2','Fredoka',system-ui,sans-serif
     <div class="board" id="board">
       <div class="layer cells" id="cells"></div>
       <div class="layer tiles" id="tiles"></div>
+      <div class="layer blocks" id="blocks"></div>
       <div class="layer fx" id="fx"></div>
       <div class="praise" id="praise"></div>
       <div class="tip" id="tip"></div>
@@ -385,6 +407,27 @@ const LEVELS = [
   { moves: 25, colors: 6, stars: [5000, 8500, 12000], collect: { 0: 18, 1: 18, 3: 18 } },
   { moves: 32, colors: 6, stars: [5500, 9000, 13000], jelly: [
     '1.1.1.1.', '.1.1.1.1', '1.1.1.1.', '.1.1.1.1', '1.1.1.1.', '.1.1.1.1', '1.1.1.1.', '.1.1.1.1'] },
+  // Ice blocks (1 or 2 hits) and chained candies start here.
+  { moves: 24, colors: 5, stars: [3000, 5500, 8000], tip: 'helpIce', ice: [
+    '........', '........', '........', '..1111..', '..1111..', '........', '........', '........'] },
+  { moves: 26, colors: 5, stars: [3500, 6000, 8500], collect: { 1: 18, 3: 18 }, ice: [
+    '........', '........', '.1....1.', '.11..11.', '.11..11.', '.1....1.', '........', '........'] },
+  { moves: 28, colors: 5, stars: [4000, 6500, 9500], ice: [
+    '........', '........', '1......1', '12....21', '12....21', '1......1', '........', '........'], jelly: [
+    '........', '........', '..1111..', '..1111..', '..1111..', '..1111..', '........', '........'] },
+  { moves: 24, colors: 5, stars: [3500, 6000, 8500], tip: 'helpLock', locks: [
+    '........', '........', '..x..x..', '...xx...', '...xx...', '..x..x..', '........', '........'] },
+  { moves: 28, colors: 6, stars: [4000, 7000, 10000], collect: { 0: 16, 4: 16 }, locks: [
+    '........', '........', '.x....x.', '..x..x..', '..x..x..', '.x....x.', '........', '........'] },
+  { moves: 30, colors: 5, stars: [4500, 7500, 10500], ice: [
+    '.2....2.', '2......2', '........', '...11...', '...11...', '........', '2......2', '.2....2.'] },
+  { moves: 32, colors: 6, stars: [5000, 8000, 11500], jelly: [
+    '........', '.111111.', '.1....1.', '.1....1.', '.1....1.', '.1....1.', '.111111.', '........'], locks: [
+    '........', '.x....x.', '........', '...xx...', '...xx...', '........', '.x....x.', '........'] },
+  { moves: 35, colors: 6, stars: [5500, 9000, 12500], ice: [
+    '........', '........', '11....11', '........', '........', '22....22', '........', '........'], locks: [
+    '........', '..x..x..', '........', '...xx...', '...xx...', '........', '..x..x..', '........'], jelly: [
+    '........', '........', '........', '1.1111.1', '1.1111.1', '........', '........', '........'] },
 ];
 
 function mulberry32(a) {
@@ -424,6 +467,23 @@ function getLevel(n) {
     if (!rows.join('').match(/[12]/)) rows[3] = rows[4] = '..1111..';
     lv.jelly = rows;
   }
+  // One level out of two also gets ice blocks or chained candies (symmetric, never in row 0).
+  const extra = rng();
+  if (extra < .5) {
+    const ice = [], locks = [];
+    for (let r = 0; r < ROWS; r++) {
+      const hi = [], hl = [];
+      for (let c = 0; c < COLS / 2; c++) {
+        const free = r > 0 && r < ROWS - 1 && (!lv.jelly || lv.jelly[r][c] === '.');
+        hi.push(extra < .25 && free && rng() < .2 ? (rng() < .3 ? '2' : '1') : '.');
+        hl.push(extra >= .25 && r > 0 && rng() < .12 ? 'x' : '.');
+      }
+      ice.push(hi.join('') + hi.slice().reverse().join(''));
+      locks.push(hl.join('') + hl.slice().reverse().join(''));
+    }
+    if (ice.join('').match(/[12]/)) { lv.ice = ice; lv.moves += 2; }
+    if (locks.join('').includes('x')) { lv.locks = locks; lv.moves += 2; }
+  }
   return lv;
 }
 
@@ -438,6 +498,8 @@ const STR = {
     goalScore: n => `Atteins <b>${n}</b> points`,
     goalCollect: (n, c) => `Collecte <b>${n}</b> bonbons ${['rouges', 'orange', 'jaunes', 'verts', 'bleus', 'violets'][c]}`,
     goalJelly: 'Fais fondre toute la <b>gelée</b>',
+    goalIce: 'Brise toute la <b>glace</b>',
+    goalLock: 'Libère les bonbons <b>enchaînés</b>',
     noSettings: 'Aucun réglage requis', sound: 'Son', music: 'Musique', language: 'Langue', on: 'Activé', off: 'Coupé',
     levelN: n => `Niveau ${n}`, yourGoals: 'Tes objectifs', inMoves: n => `en <b>${n}</b> coups`, letsPlay: 'Jouer !',
     backToMap: 'Retour à la carte', pause: 'Pause', resume: 'Reprendre', restart: 'Recommencer', levelMap: 'Carte des niveaux',
@@ -451,6 +513,8 @@ const STR = {
     helpLT: '<b>Forme en L ou en T</b> : bonbon emballé, il explose en 3×3.',
     help5: '<b>5 alignés</b> : bombe chocolat, elle détruit tous les bonbons d\'une couleur.',
     helpJelly: 'Fais fondre la <b>gelée</b> en faisant exploser les bonbons posés dessus.',
+    helpIce: 'La <b>glace</b> se brise quand tu fais exploser des bonbons juste à côté. La glace épaisse demande 2 coups.',
+    helpLock: 'Un bonbon <b>enchaîné</b> ne peut pas être déplacé : aligne-le avec d\'autres pour briser la chaîne.',
     helpTip: 'Astuce : échange deux bonbons spéciaux pour un combo dévastateur !', go: 'C\'est parti !',
     quitTitle: 'Quitter ?', quitText: 'Ta progression est sauvegardée.', quit: 'Quitter', cancel: 'Annuler',
     settings: 'Réglages', shop: 'Boutique', notEnough: 'Pas assez de pièces',
@@ -471,6 +535,8 @@ const STR = {
     goalScore: n => `Reach <b>${n}</b> points`,
     goalCollect: (n, c) => `Collect <b>${n}</b> ${['red', 'orange', 'yellow', 'green', 'blue', 'purple'][c]} candies`,
     goalJelly: 'Clear all the <b>jelly</b>',
+    goalIce: 'Break all the <b>ice</b>',
+    goalLock: 'Free all the <b>chained</b> candies',
     noSettings: 'No settings required', sound: 'Sound', music: 'Music', language: 'Language', on: 'On', off: 'Off',
     levelN: n => `Level ${n}`, yourGoals: 'Your goals', inMoves: n => `in <b>${n}</b> moves`, letsPlay: 'Play!',
     backToMap: 'Back to the map', pause: 'Pause', resume: 'Resume', restart: 'Restart', levelMap: 'Level map',
@@ -484,6 +550,8 @@ const STR = {
     helpLT: '<b>L or T shape</b>: wrapped candy, explodes in a 3×3 area.',
     help5: '<b>5 in a row</b>: chocolate bomb, destroys every candy of one colour.',
     helpJelly: 'Melt the <b>jelly</b> by blasting the candies sitting on it.',
+    helpIce: 'Make matches right next to the <b>ice</b> to crack it. Thick ice takes 2 hits.',
+    helpLock: 'A <b>chained</b> candy can\'t be swapped: match it with others to break the chain.',
     helpTip: 'Tip: swap two special candies for a devastating combo!', go: 'Let\'s go!',
     quitTitle: 'Quit?', quitText: 'Your progress is saved.', quit: 'Quit', cancel: 'Cancel',
     settings: 'Settings', shop: 'Shop', notEnough: 'Not enough coins',
@@ -504,6 +572,8 @@ const STR = {
     goalScore: n => `احصل على <b>${n}</b> نقطة`,
     goalCollect: (n, c) => `اجمع <b>${n}</b> من الحلوى ${['الحمراء', 'البرتقالية', 'الصفراء', 'الخضراء', 'الزرقاء', 'البنفسجية'][c]}`,
     goalJelly: 'أذِب كل <b>الهلام</b>',
+    goalIce: 'اكسر كل <b>الجليد</b>',
+    goalLock: 'حرّر كل الحلوى <b>المقيّدة</b>',
     noSettings: 'لا توجد إعدادات مطلوبة', sound: 'المؤثرات', music: 'الموسيقى', language: 'اللغة', on: 'مفعّل', off: 'متوقف',
     levelN: n => `المستوى ${n}`, yourGoals: 'أهدافك', inMoves: n => `في <b>${n}</b> حركة`, letsPlay: 'العب!',
     backToMap: 'العودة إلى الخريطة', pause: 'إيقاف مؤقت', resume: 'متابعة', restart: 'إعادة', levelMap: 'خريطة المستويات',
@@ -517,6 +587,8 @@ const STR = {
     helpLT: '<b>شكل L أو T</b>: حلوى مغلّفة تنفجر في مساحة 3×3.',
     help5: '<b>5 في صف</b>: قنبلة شوكولاتة تدمّر كل الحلوى من لون واحد.',
     helpJelly: 'أذِب <b>الهلام</b> بتفجير الحلوى الموجودة فوقه.',
+    helpIce: 'اصنع تطابقًا بجانب <b>الجليد</b> لتكسره. الجليد السميك يحتاج ضربتين.',
+    helpLock: 'الحلوى <b>المقيّدة</b> لا يمكن تحريكها: طابِقها مع غيرها لتكسر السلسلة.',
     helpTip: 'نصيحة: بدّل قطعتين خاصتين معًا لتحصل على تركيبة مدمّرة!', go: 'هيا بنا!',
     quitTitle: 'الخروج؟', quitText: 'تقدّمك محفوظ.', quit: 'خروج', cancel: 'إلغاء',
     settings: 'الإعدادات', shop: 'المتجر', notEnough: 'لا تملك عملات كافية',
@@ -646,11 +718,11 @@ const sfx = {
 };
 
 /* ================= DOM ================= */
-const tilesEl = $('#tiles'), fxEl = $('#fx'), cellsEl = $('#cells'), boardEl = $('#board'), praiseEl = $('#praise');
+const blocksEl = $('#blocks'), tilesEl = $('#tiles'), fxEl = $('#fx'), cellsEl = $('#cells'), boardEl = $('#board'), praiseEl = $('#praise');
 const overlay = $('#overlay'), modal = $('#modal');
 
 /* ================= state ================= */
-let grid = [], jelly = [], cellEls = [];
+let grid = [], jelly = [], cellEls = [], ice = [], iceEls = [];
 let L = null, levelNum = 1, score = 0, shownScore = 0, moves = 0, goals = { collect: {} };
 let busy = false, playing = false, selected = null, cascade = 0, cell = 48;
 let hintTimer = 0, drag = null, pendingPause = false, goalChips = [];
@@ -668,6 +740,7 @@ function makeTile(type, special = null) {
 function paint(t) {
   const sp = t.special;
   t.el.firstChild.className = 'candy ' + (sp === 'color' ? 'cb' : 'c' + t.type + (sp ? ' sp-' + sp : ''));
+  t.el.classList.toggle('locked', !!t.locked);
 }
 function place(t, r, c, dur = 0, ease = SWAP_EASE, delay = 0) {
   t.r = r; t.c = c;
@@ -688,6 +761,7 @@ function layout() {
   cell = Math.max(30, Math.floor(size / COLS));
   document.documentElement.style.setProperty('--cell', cell + 'px');
   for (const t of allTiles()) place(t, t.r, t.c, 0);
+  for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (iceEls[r] && iceEls[r][c]) placeIce(r, c);
 }
 window.addEventListener('resize', () => { if ($('#game').classList.contains('active')) layout(); });
 
@@ -704,6 +778,33 @@ function buildCells() {
     }
   }
 }
+function placeIce(r, c) {
+  const el = iceEls[r][c];
+  el.style.setProperty('--pos', `translate(${c * cell}px,${r * cell}px)`);
+}
+function buildIce() {
+  blocksEl.innerHTML = '';
+  iceEls = [];
+  for (let r = 0; r < ROWS; r++) {
+    iceEls[r] = [];
+    for (let c = 0; c < COLS; c++) {
+      if (!ice[r][c]) continue;
+      const d = document.createElement('div');
+      d.className = 'ice i' + ice[r][c];
+      blocksEl.appendChild(d);
+      iceEls[r][c] = d;
+      placeIce(r, c);
+    }
+  }
+}
+/* An ice block takes one hit per clear step, from a blast or a match next to it. */
+function hitIce(r, c) {
+  const el = iceEls[r][c];
+  ice[r][c]--;
+  burst(r, c, '#bfe6ff', 6);
+  if (ice[r][c] > 0) { el.className = 'ice i' + ice[r][c]; retrigger(el, 'hit'); }
+  else { iceEls[r][c] = null; el.classList.add('gone'); setTimeout(() => el.remove(), 340); }
+}
 function paintCell(r, c) {
   cellEls[r][c].className = 'cell' + ((r + c) % 2 ? ' alt' : '') + (jelly[r][c] ? ' j' + jelly[r][c] : '');
 }
@@ -716,6 +817,10 @@ function parseJelly(rows) {
   return j;
 }
 const jellyLeft = () => jelly.reduce((s, row) => s + row.filter(v => v > 0).length, 0);
+const iceLeft = () => ice.reduce((s, row) => s + row.filter(v => v > 0).length, 0);
+const locksLeft = () => allTiles().filter(t => t.locked).length;
+const parseLocks = rows => Array.from({ length: ROWS }, (_, r) => Array.from({ length: COLS }, (_, c) => !!rows && rows[r][c] === 'x'));
+const N4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 
 /* ================= matching ================= */
 function findRuns() {
@@ -748,10 +853,11 @@ function findRuns() {
 function analyze(runs, prefer) {
   const keys = new Set(), spawns = [], used = new Set(), consumed = new Set();
   runs.forEach(run => run.cells.forEach(([y, x]) => keys.add(K(y, x))));
+  const ok = (y, x) => !used.has(K(y, x)) && !grid[y][x].locked;
   const pick = (cells, fallback) => {
-    if (prefer) for (const p of prefer) if (cells.some(([y, x]) => y === p.r && x === p.c) && !used.has(K(p.r, p.c))) return [p.r, p.c];
-    if (fallback && !used.has(K(...fallback))) return fallback;
-    for (const cc of cells) if (!used.has(K(...cc))) return cc;
+    if (prefer) for (const p of prefer) if (cells.some(([y, x]) => y === p.r && x === p.c) && ok(p.r, p.c)) return [p.r, p.c];
+    if (fallback && ok(...fallback)) return fallback;
+    for (const cc of cells) if (ok(...cc)) return cc;
     return null;
   };
   const H = runs.filter(r => r.dir === 'h'), V = runs.filter(r => r.dir === 'v');
@@ -825,12 +931,12 @@ function matchAt(r, c) {
 function findMove() {
   for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
     const t = grid[r][c];
-    if (!t) continue;
+    if (!t || t.locked) continue;
     for (const [dr, dc] of [[0, 1], [1, 0]]) {
       const r2 = r + dr, c2 = c + dc;
       if (r2 >= ROWS || c2 >= COLS) continue;
       const u = grid[r2][c2];
-      if (!u) continue;
+      if (!u || t.locked || u.locked) continue;
       if (t.special === 'color' || u.special === 'color' || (t.special && u.special)) return [[r, c], [r2, c2]];
       grid[r][c] = u; grid[r2][c2] = t;
       const ok = matchAt(r, c) || matchAt(r2, c2);
@@ -940,12 +1046,28 @@ async function clearStep(keys, spawns = [], skip, effects = []) {
   sfx.pop(cascade);
   let pts = 0, n = 0, sr = 0, sc = 0;
   const particles = keys.size > 24 ? 2 : keys.size > 10 ? 3 : 5;
+  const iceHits = new Set();
+  for (const k of keys) {
+    const [r, c] = unK(k);
+    if (ice[r][c]) iceHits.add(k);
+    else if (grid[r][c]) for (const [dy, dx] of N4) {
+      const y = r + dy, x = c + dx;
+      if (y >= 0 && y < ROWS && x >= 0 && x < COLS && ice[y][x]) iceHits.add(K(y, x));
+    }
+  }
+  for (const k of iceHits) {
+    const [r, c] = unK(k);
+    hitIce(r, c);
+    n++; sr += r; sc += c; pts += 80;
+  }
   for (const k of keys) {
     const [r, c] = unK(k), t = grid[r][c];
     if (!t) continue;
     n++; sr += r; sc += c;
-    if (t.type >= 0 && goals.collect[t.type] != null && goals.collect[t.type] > 0) goals.collect[t.type]--;
     if (jelly[r][c] > 0) { jelly[r][c]--; paintCell(r, c); retrigger(cellEls[r][c], 'jpop'); pts += 100; }
+    // A chained candy only loses its chain and stays in place.
+    if (t.locked) { t.locked = false; paint(t); retrigger(t.el, 'unlock'); burst(r, c, '#9aa0b8', 4); pts += 60; continue; }
+    if (t.type >= 0 && goals.collect[t.type] != null && goals.collect[t.type] > 0) goals.collect[t.type]--;
     pts += t.special ? 120 : 30;
     t.el.classList.remove('sel', 'hint');
     t.el.classList.add('pop');
@@ -972,30 +1094,34 @@ async function gravity() {
   let maxDur = 0;
   const fresh = [];
   for (let c = 0; c < COLS; c++) {
-    let write = ROWS - 1;
-    for (let r = ROWS - 1; r >= 0; r--) {
+    // Open slots of this column, bottom first. Candies slide behind ice blocks.
+    const slots = [];
+    for (let r = ROWS - 1; r >= 0; r--) if (!ice[r][c]) slots.push(r);
+    let w = 0;
+    for (const r of slots) {
       const t = grid[r][c];
       if (!t) continue;
+      const write = slots[w++];
       if (r !== write) {
         grid[write][c] = t; grid[r][c] = null;
         const d = 110 + 50 * (write - r);
         place(t, write, c, d, FALL_EASE);
         maxDur = Math.max(maxDur, d);
       }
-      write--;
     }
-    const missing = write + 1;
-    for (let r = write; r >= 0; r--) {
+    const empty = slots.slice(w), missing = empty.length;
+    empty.forEach((r, i) => {
       const t = makeTile(rnd(L.colors));
       grid[r][c] = t;
-      place(t, r - missing, c, 0);
-      fresh.push([t, r, c, missing]);
-    }
+      const from = -1 - i;
+      place(t, from, c, 0);
+      fresh.push([t, r, c, r - from]);
+    });
   }
   if (fresh.length) {
     void tilesEl.offsetWidth;
     for (const [t, r, c, m] of fresh) {
-      const d = 110 + 50 * m;
+      const d = 110 + 50 * Math.min(m, ROWS);
       place(t, r, c, d, FALL_EASE);
       maxDur = Math.max(maxDur, d);
     }
@@ -1077,6 +1203,11 @@ async function trySwap(a, b) {
   if (busy || !playing) return;
   const ta = grid[a.r][a.c], tb = grid[b.r][b.c];
   if (!ta || !tb) return;
+  if (ta.locked || tb.locked) {
+    sfx.bad();
+    for (const u of [ta, tb]) if (u.locked) u.el.animate([{ transform: u.el.style.transform }, { transform: u.el.style.transform + ' translateX(3px)' }, { transform: u.el.style.transform }], { duration: 120, iterations: 2 });
+    return;
+  }
   busy = true;
   clearHint();
   grid[a.r][a.c] = tb; grid[b.r][b.c] = ta;
@@ -1109,7 +1240,7 @@ async function trySwap(a, b) {
   pendingPause = false;
 }
 
-const goalsDone = () => score >= L.stars[0] && Object.values(goals.collect).every(v => v <= 0) && jellyLeft() === 0;
+const goalsDone = () => score >= L.stars[0] && Object.values(goals.collect).every(v => v <= 0) && jellyLeft() === 0 && iceLeft() === 0 && locksLeft() === 0;
 
 async function afterTurn() {
   if (goalsDone()) {
@@ -1134,7 +1265,7 @@ async function sugarRush() {
   await wait(1100);
   for (let i = 0; i < 14; i++) {
     if (moves > 0) {
-      const normals = shuffleArr(allTiles().filter(t => !t.special));
+      const normals = shuffleArr(allTiles().filter(t => !t.special && !t.locked));
       const n = Math.min(moves, normals.length, 6);
       for (let j = 0; j < n; j++) {
         const t = normals[j];
@@ -1159,14 +1290,15 @@ async function sugarRush() {
 async function reshuffle() {
   showPraise(t('shuffle'), true);
   await wait(500);
-  const tiles = allTiles();
+  const tiles = allTiles(), spots = [];
+  for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (grid[r][c]) spots.push([r, c]);
   for (let tries = 0; tries < 300; tries++) {
     shuffleArr(tiles);
-    tiles.forEach((t, i) => { grid[Math.floor(i / COLS)][i % COLS] = t; });
+    tiles.forEach((t, i) => { grid[spots[i][0]][spots[i][1]] = t; });
     if (!findRuns().length && findMove()) break;
     if (tries > 150) tiles.forEach(t => { if (!t.special) { t.type = rnd(L.colors); paint(t); } });
   }
-  for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) place(grid[r][c], r, c, 450, 'cubic-bezier(.5,0,.3,1.2)');
+  for (const [r, c] of spots) place(grid[r][c], r, c, 450, 'cubic-bezier(.5,0,.3,1.2)');
   await wait(480);
 }
 
@@ -1417,8 +1549,7 @@ async function activateBooster(kind) {
 }
 async function useHammer(p) {
   setHammerMode(false);
-  const tile = grid[p.r][p.c];
-  if (!tile) return;
+  if (!grid[p.r][p.c] && !ice[p.r][p.c]) return;
   save.boosters.hammer--;
   persist();
   renderBoosters();
@@ -1528,6 +1659,14 @@ function goalItems() {
   if (jellyLeft() || (L.jelly && L.jelly.join('').match(/[12]/))) items.push({
     kind: 'jelly', ico: '<span class="ico"><span class="jelly-ico"></span></span>', text: t('goalJelly'),
     get: () => [jellyLeft(), jellyLeft() === 0]
+  });
+  if (L.ice && L.ice.join('').match(/[12]/)) items.push({
+    kind: 'ice', ico: '<span class="ico"><span class="ice-ico"></span></span>', text: t('goalIce'),
+    get: () => [iceLeft(), iceLeft() === 0]
+  });
+  if (L.locks && L.locks.join('').includes('x')) items.push({
+    kind: 'lock', ico: '<span class="ico">🔒</span>', text: t('goalLock'),
+    get: () => [locksLeft(), locksLeft() === 0]
   });
   return items;
 }
@@ -1659,6 +1798,7 @@ function showIntro() {
   openModal(`<div class="ribbon">${t('levelN', levelNum)}</div>
     <p class="sub">${t('yourGoals')}</p>
     <div class="goal-list">${goalRowsHTML(false)}</div>
+    ${L.tip ? `<p class="new-tip">${t(L.tip)}</p>` : ''}
     <p class="moves-info">${t('inMoves', L.moves)}</p>
     <div class="btn-col"><button class="btn green" data-act="play">${t('letsPlay')}</button>
     <button class="btn ghost" data-act="map">${t('backToMap')}</button></div>`, 'intro');
@@ -1723,6 +1863,8 @@ function showHelp() {
       <div class="hrow">${candyHTML(3, 'sp-bomb')}<span>${t('helpLT')}</span></div>
       <div class="hrow"><div class="candy cb"><div class="shape"></div></div><span>${t('help5')}</span></div>
       <div class="hrow"><span class="ico" style="width:38px;display:grid;place-items:center"><span class="jelly-ico" style="width:30px;height:30px"></span></span><span>${t('helpJelly')}</span></div>
+      <div class="hrow"><span class="ico" style="width:38px;display:grid;place-items:center"><span class="ice-ico" style="width:30px;height:30px"></span></span><span>${t('helpIce')}</span></div>
+      <div class="hrow"><span class="ico" style="width:38px;display:grid;place-items:center;font-size:28px">🔒</span><span>${t('helpLock')}</span></div>
       <p style="margin:12px 0 16px">${t('helpTip')}</p>
     </div>
     <div class="btn-col"><button class="btn green" data-act="close">${t('go')}</button></div>`, 'help');
@@ -1824,39 +1966,49 @@ async function startLevel(n) {
   renderBoosters();
   goals = { collect: Object.assign({}, L.collect || {}) };
   jelly = parseJelly(L.jelly);
+  ice = parseJelly(L.ice);
+  const locks = parseLocks(L.locks);
   $('#lvlNum').textContent = n;
   showScreen('game');
   grid = [];
   tilesEl.innerHTML = ''; fxEl.innerHTML = '';
+  iceEls = [];
   layout();
   buildCells();
-  renderGoals();
+  buildIce();
   updateHUD();
   renderScore();
 
   // generate a board without initial matches and with at least one move
   let tries = 0;
+  const ty = (r, c) => grid[r][c] ? grid[r][c].type : -1;
   do {
     grid = [];
     for (let r = 0; r < ROWS; r++) {
       grid[r] = [];
       for (let c = 0; c < COLS; c++) {
+        if (ice[r][c]) { grid[r][c] = null; continue; }
         let t;
         do { t = rnd(L.colors); } while (
-          (c >= 2 && grid[r][c - 1].type === t && grid[r][c - 2].type === t) ||
-          (r >= 2 && grid[r - 1][c].type === t && grid[r - 2][c].type === t));
-        grid[r][c] = { type: t, special: null };
+          (c >= 2 && ty(r, c - 1) === t && ty(r, c - 2) === t) ||
+          (r >= 2 && ty(r - 1, c) === t && ty(r - 2, c) === t));
+        grid[r][c] = { type: t, special: null, locked: locks[r][c] };
       }
     }
   } while (!findMove() && ++tries < 50);
   for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+    if (!grid[r][c]) continue;
     const t = makeTile(grid[r][c].type);
+    t.locked = grid[r][c].locked;
+    paint(t);
     grid[r][c] = t;
     place(t, r - ROWS - 1, c, 0);
   }
+  renderGoals();
+  updateHUD();
   void tilesEl.offsetWidth;
   for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++)
-    place(grid[r][c], r, c, 520, FALL_EASE, (ROWS - 1 - r) * 45 + c * 12);
+    if (grid[r][c]) place(grid[r][c], r, c, 520, FALL_EASE, (ROWS - 1 - r) * 45 + c * 12);
   await wait(520 + ROWS * 45 + COLS * 12);
   if (token !== startToken) return;
   for (const t of allTiles()) t.el.style.transitionDelay = '0ms';
