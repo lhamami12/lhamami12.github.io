@@ -477,13 +477,13 @@ function getLevel(n) {
       for (let c = 0; c < COLS / 2; c++) {
         const free = r > 0 && r < ROWS - 1 && (!lv.jelly || lv.jelly[r][c] === '.');
         hi.push(extra < .25 && free && rng() < .2 ? (rng() < .3 ? '2' : '1') : '.');
-        hl.push(extra >= .25 && r > 0 && r < ROWS - 1 && rng() < .12 ? 'x' : '.');
+        hl.push(extra >= .25 && r > 0 && r < ROWS - 1 && rng() < .08 ? 'x' : '.');
       }
       ice.push(hi.join('') + hi.slice().reverse().join(''));
       locks.push(hl.join('') + hl.slice().reverse().join(''));
     }
-    if (ice.join('').match(/[12]/)) { lv.ice = ice; lv.moves += 2; }
-    if (locks.join('').includes('x')) { lv.locks = locks; lv.moves += 2; }
+    if (ice.join('').match(/[12]/)) { lv.ice = ice; lv.moves += 3; }
+    if (locks.join('').includes('x')) { lv.locks = locks; lv.moves += 3; }
   }
   return lv;
 }
