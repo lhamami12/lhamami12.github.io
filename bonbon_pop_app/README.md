@@ -28,8 +28,8 @@ Sur le site web, le pont `AdBridge` n'existe pas : aucune publicité n'est affic
 | --- | --- |
 | `lib/main.dart` | WebView plein écran, pont JavaScript `AdBridge`, liens externes ouverts dans le navigateur |
 | `lib/ads_manager.dart` | Consentement UMP, initialisation AdMob, préchargement et affichage des pubs |
-| `lib/ad_config.dart` | Identifiants des blocs d'annonces (test) |
-| `android/app/build.gradle.kts` | ID d'application, App ID AdMob (test), signature release |
+| `lib/ad_config.dart` | Identifiants des blocs d'annonces (réels en release, test en debug) |
+| `android/app/build.gradle.kts` | ID d'application, App ID AdMob, signature release |
 | `assets/game/index.html` | Copie du jeu, à resynchroniser avec `tool/sync_game.sh` |
 | `store/play_icon_512.png` | Icône 512×512 pour la fiche Play Store |
 
@@ -67,11 +67,11 @@ flutter build appbundle --release
 
 ## Avant de publier pour de vrai
 
-1. **AdMob** : créez l'application et deux blocs d'annonces (Interstitiel,
-   Récompensé) dans AdMob, puis remplacez :
-   - l'App ID dans `android/app/build.gradle.kts` (`admobAppId`) ;
-   - les deux identifiants dans `lib/ad_config.dart`.
-2. **Version** : augmentez `version:` dans `pubspec.yaml` (`1.0.0+1` → `1.0.1+2`…)
+1. **AdMob** : l'App ID (`admobAppId` dans `android/app/build.gradle.kts`) et
+   les deux blocs d'annonces (`lib/ad_config.dart`) sont déjà ceux de Bonbon Pop.
+   Une fois l'app publiée, associez-la à sa fiche Play Store dans AdMob
+   (*Apps → Bonbon Pop → App settings → Add app store*).
+2. **Version** : augmentez `version:` dans `pubspec.yaml` (actuellement `1.3.1+5`)
    à chaque nouvel envoi sur le Play Store.
 3. **Play Console** :
    - *Contenu de l'application → Annonces* : « Oui, mon application contient des annonces » ;
