@@ -518,7 +518,8 @@ function getLevel(n) {
     if (ice.join('').match(/[12]/)) { lv.ice = ice; lv.moves += 3; }
     if (locks.join('').includes('x')) { lv.locks = locks; lv.moves += 3; }
     if (choco.join('').includes('x')) { lv.choco = choco; lv.moves += 3; }
-    if (extra >= .4) { lv.ingredients = 2 + (rng() < .4 ? 1 : 0); lv.moves += 4; }
+    // Cherries only on collect levels: on top of a jelly board they are too much.
+    if (extra >= .4 && kind === 1) { lv.ingredients = 2 + (rng() < .4 ? 1 : 0); lv.moves += 4; }
   }
   return lv;
 }
