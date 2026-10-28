@@ -1,4 +1,4 @@
-package io.github.lhamami12.bonbon_pop
+package com.bonbon.pop
 
 import io.flutter.embedding.android.FlutterActivity
 

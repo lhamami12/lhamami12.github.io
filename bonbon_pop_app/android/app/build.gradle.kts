@@ -15,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "io.github.lhamami12.bonbon_pop"
+    namespace = "com.bonbon.pop"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -25,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "io.github.lhamami12.bonbon_pop"
+        applicationId = "com.bonbon.pop"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         // google_mobile_ads requires API 24+.
@@ -37,9 +37,8 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        // AdMob App ID. This is Google's TEST App ID: replace it with the
-        // App ID of your AdMob app before publishing for real.
-        manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+        // AdMob App ID of Bonbon Pop (ad unit IDs are in lib/ad_config.dart).
+        manifestPlaceholders["admobAppId"] = "ca-app-pub-3524601599534787~2097526125"
     }
 
     signingConfigs {

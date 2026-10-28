@@ -18,8 +18,9 @@ ou pour continuer un niveau perdu.
 
 Sur le site web, le pont `AdBridge` n'existe pas : aucune publicité n'est affichée.
 
-> ⚠️ Les identifiants AdMob actuels sont les **identifiants de test** de Google :
-> ils affichent des pubs « Test Ad » et ne rapportent rien.
+> Depuis la version 1.3.1, les builds **release** (Play Store) utilisent les
+> vrais blocs d'annonces Bonbon Pop ; les builds **debug** gardent les blocs de
+> test de Google. Ne cliquez jamais sur vos propres annonces.
 
 ## Structure
 
@@ -27,8 +28,8 @@ Sur le site web, le pont `AdBridge` n'existe pas : aucune publicité n'est affic
 | --- | --- |
 | `lib/main.dart` | WebView plein écran, pont JavaScript `AdBridge`, liens externes ouverts dans le navigateur |
 | `lib/ads_manager.dart` | Consentement UMP, initialisation AdMob, préchargement et affichage des pubs |
-| `lib/ad_config.dart` | Identifiants des blocs d'annonces (test) |
-| `android/app/build.gradle.kts` | ID d'application, App ID AdMob (test), signature release |
+| `lib/ad_config.dart` | Identifiants des blocs d'annonces (réels en release, test en debug) |
+| `android/app/build.gradle.kts` | ID d'application, App ID AdMob, signature release |
 | `assets/game/index.html` | Copie du jeu, à resynchroniser avec `tool/sync_game.sh` |
 | `store/play_icon_512.png` | Icône 512×512 pour la fiche Play Store |
 
@@ -66,11 +67,11 @@ flutter build appbundle --release
 
 ## Avant de publier pour de vrai
 
-1. **AdMob** : créez l'application et deux blocs d'annonces (Interstitiel,
-   Récompensé) dans AdMob, puis remplacez :
-   - l'App ID dans `android/app/build.gradle.kts` (`admobAppId`) ;
-   - les deux identifiants dans `lib/ad_config.dart`.
-2. **Version** : augmentez `version:` dans `pubspec.yaml` (`1.0.0+1` → `1.0.1+2`…)
+1. **AdMob** : l'App ID (`admobAppId` dans `android/app/build.gradle.kts`) et
+   les deux blocs d'annonces (`lib/ad_config.dart`) sont déjà ceux de Bonbon Pop.
+   Une fois l'app publiée, associez-la à sa fiche Play Store dans AdMob
+   (*Apps → Bonbon Pop → App settings → Add app store*).
+2. **Version** : augmentez `version:` dans `pubspec.yaml` (actuellement `1.3.1+5`)
    à chaque nouvel envoi sur le Play Store.
 3. **Play Console** :
    - *Contenu de l'application → Annonces* : « Oui, mon application contient des annonces » ;
@@ -84,5 +85,5 @@ flutter build appbundle --release
    et le site `lhamami12.github.io` doit être indiqué comme site web du développeur
    sur la fiche Play Store.
 
-L'ID d'application `io.github.lhamami12.bonbon_pop` est définitif après le premier
+L'ID d'application `com.bonbon.pop` est définitif après le premier
 envoi sur le Play Store : changez-le avant si vous en préférez un autre.
