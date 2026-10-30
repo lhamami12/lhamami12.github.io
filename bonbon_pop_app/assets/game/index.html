@@ -598,6 +598,14 @@ const STR = {
     goalCollect: (n, c) => `Collecte <b>${n}</b> bonbons ${['rouges', 'orange', 'jaunes', 'verts', 'bleus', 'violets'][c]}`,
     goalJelly: 'Fais fondre toute la <b>gelée</b>',
     goalIce: 'Brise toute la <b>glace</b>',
+    reminders: 'Rappels',
+    remChannel: 'Rappels quotidiens',
+    remMsgs: n => [
+      ['🎁 Ton cadeau du jour t\'attend !', 'Reviens récupérer tes pièces gratuites et garde ta série.'],
+      ['🍬 Les bonbons s\'ennuient sans toi', `Le niveau ${n} t'attend dans Bonbon Pop.`],
+      ['⭐ Prêt pour 3 étoiles ?', `Reviens jouer le niveau ${n} et remplis ton plateau de combos !`],
+      ['🎁 Des pièces gratuites t\'attendent', 'Ton cadeau du jour est prêt dans Bonbon Pop.'],
+    ],
     worldNames: ['Pays des Bonbons', 'Montagnes Glacées', 'Vallée du Chocolat', 'Marrakech', 'Chefchaouen', 'Sahara'],
     worldTags: ['Là où tout commence !', 'Attention, ça glisse !', 'Le chocolat envahit tout !', 'Zellige, épices et thé à la menthe.', 'La perle bleue du Rif.', 'Des dunes d\'or sous les étoiles.'],
     newWorld: 'Nouveau monde !', worldN: n => `Monde ${n}`,
@@ -642,6 +650,14 @@ const STR = {
     goalCollect: (n, c) => `Collect <b>${n}</b> ${['red', 'orange', 'yellow', 'green', 'blue', 'purple'][c]} candies`,
     goalJelly: 'Clear all the <b>jelly</b>',
     goalIce: 'Break all the <b>ice</b>',
+    reminders: 'Reminders',
+    remChannel: 'Daily reminders',
+    remMsgs: n => [
+      ['🎁 Your daily gift is waiting!', 'Come back for your free coins and keep your streak.'],
+      ['🍬 The candies miss you', `Level ${n} is waiting for you in Bonbon Pop.`],
+      ['⭐ Ready for 3 stars?', `Come back to level ${n} and fill the board with combos!`],
+      ['🎁 Free coins are waiting', 'Your daily gift is ready in Bonbon Pop.'],
+    ],
     worldNames: ['Candy Land', 'Frozen Peaks', 'Chocolate Valley', 'Marrakech', 'Chefchaouen', 'Sahara'],
     worldTags: ['Where it all begins!', 'Careful, it\'s slippery!', 'The chocolate is taking over!', 'Zellige, spices and mint tea.', 'The blue pearl of the Rif.', 'Golden dunes under the stars.'],
     newWorld: 'New world!', worldN: n => `World ${n}`,
@@ -686,6 +702,14 @@ const STR = {
     goalCollect: (n, c) => `اجمع <b>${n}</b> من الحلوى ${['الحمراء', 'البرتقالية', 'الصفراء', 'الخضراء', 'الزرقاء', 'البنفسجية'][c]}`,
     goalJelly: 'أذِب كل <b>الهلام</b>',
     goalIce: 'اكسر كل <b>الجليد</b>',
+    reminders: 'التذكيرات',
+    remChannel: 'تذكيرات يومية',
+    remMsgs: n => [
+      ['🎁 هديتك اليومية في انتظارك!', 'عُد لتأخذ عملاتك المجانية وتحافظ على سلسلتك.'],
+      ['🍬 الحلوى اشتاقت إليك', `المستوى ${n} في انتظارك في Bonbon Pop.`],
+      ['⭐ مستعد لـ 3 نجوم؟', `عُد إلى المستوى ${n} واملأ اللوحة بالتركيبات!`],
+      ['🎁 عملات مجانية في انتظارك', 'هديتك اليومية جاهزة في Bonbon Pop.'],
+    ],
     worldNames: ['أرض الحلوى', 'الجبال الجليدية', 'وادي الشوكولاتة', 'مراكش', 'شفشاون', 'الصحراء'],
     worldTags: ['هنا تبدأ المغامرة!', 'انتبه، المكان زلق!', 'الشوكولاتة تغزو كل شيء!', 'زليج وتوابل وأتاي بالنعناع.', 'الجوهرة الزرقاء في الريف.', 'كثبان ذهبية تحت النجوم.'],
     newWorld: 'عالم جديد!', worldN: n => `العالم ${n}`,
@@ -1561,6 +1585,33 @@ const Ads = {
     if (await this.call('interstitial')) this.lastInterstitial = Date.now();
   },
 };
+/* ================= app features (Android app only) =================
+   Messages to the Flutter wrapper through the "AppBridge" channel: Play
+   in-app review, and local "daily gift" reminders scheduled for the next days
+   (rescheduled at every launch, so a daily player never gets one). */
+const App = {
+  available() { return !!(window.AppBridge && typeof window.AppBridge.postMessage === 'function'); },
+  send(msg) { if (this.available()) try { window.AppBridge.postMessage(JSON.stringify(msg)); } catch (e) {} },
+  syncReminders() {
+    if (save.reminders === false) return this.send({ type: 'reminders', on: false });
+    this.send({ type: 'reminders', on: true, channel: t('remChannel'),
+      items: t('remMsgs', save.unlocked).map(([title, body]) => ({ title, body })) });
+  },
+  // Asked once, after the first win on level 3: the player knows the game by then.
+  askNotifications() {
+    if (save.notifAsked || levelNum < 3) return;
+    save.notifAsked = true; persist();
+    this.send({ type: 'notifPermission' });
+  },
+  // Play decides whether the review card really shows (it has its own quota).
+  // We ask after a good win on level 8, and once more from level 30.
+  askReview(stars) {
+    const asks = save.reviewAsks || 0;
+    if (stars < 2 || (asks === 0 && levelNum < 8) || (asks === 1 && levelNum < 30) || asks >= 2) return;
+    save.reviewAsks = asks + 1; persist();
+    setTimeout(() => this.send({ type: 'review' }), 1600);
+  },
+};
 window.__adResult = (id, ok) => { const f = Ads.pending[id]; if (f) { delete Ads.pending[id]; f(!!ok); } };
 let usedContinue = false;
 const EXTRA_MOVES = 5;
@@ -1993,13 +2044,19 @@ overlay.addEventListener('click', e => {
   else if (act === 'pauseback') openPause();
   else if (act === 'sound') { toggleSound(); refreshToggles(); }
   else if (act === 'music') { toggleMusic(); refreshToggles(); }
+  else if (act === 'reminders') {
+    save.reminders = save.reminders === false; persist(); refreshToggles();
+    if (save.reminders) App.send({ type: 'notifPermission' });
+    App.syncReminders();
+  }
   else if (act === 'lang') {
     setLang(b.dataset.lang);
+    App.syncReminders();
     if (modalKind === 'pause') openPause();
     else if (modalKind === 'settings') showSettings();
     else { closeModal(); showMap(); }
   }
-  else if (act === 'quit') { if (window.AppBridge) window.AppBridge.postMessage('exit'); else closeModal(); }
+  else if (act === 'quit') { if (App.available()) window.AppBridge.postMessage('exit'); else closeModal(); }
 });
 
 function toggleSound() {
@@ -2015,8 +2072,8 @@ function toggleMusic() {
   refreshToggles();
 }
 function refreshToggles() {
-  modal.querySelectorAll('[data-act=sound],[data-act=music]').forEach(b => {
-    const on = b.dataset.act === 'sound' ? save.sound : save.music;
+  modal.querySelectorAll('[data-act=sound],[data-act=music],[data-act=reminders]').forEach(b => {
+    const on = b.dataset.act === 'sound' ? save.sound : b.dataset.act === 'music' ? save.music : save.reminders !== false;
     b.textContent = on ? t('on') : t('off');
     b.classList.toggle('off', !on);
   });
@@ -2093,6 +2150,9 @@ function win() {
   modal.querySelectorAll('.big-stars span').forEach((s, i) => {
     if (i < st) setTimeout(() => { s.classList.add('on'); tone(660 + i * 220, .2, 'triangle', .15); }, 450 + i * 380);
   });
+  App.askNotifications();
+  App.askReview(st);
+  App.syncReminders();
 }
 function lose() {
   sfx.lose();
@@ -2134,6 +2194,7 @@ function showSettings() {
   openModal(`<div class="ribbon blue">${t('settings')}</div>
     ${toggleRow('sound', t('sound'), save.sound)}
     ${toggleRow('music', t('music'), save.music)}
+    ${App.available() ? toggleRow('reminders', t('reminders'), save.reminders !== false) : ''}
     ${langSeg()}
     <div class="btn-col"><button class="btn" data-act="help">${t('howTo')}</button>
     <button class="btn ghost" data-act="close">OK</button></div>
@@ -2170,9 +2231,12 @@ window.__onAppState = visible => {
     Music.stop();
     if (actx && actx.state === 'running') actx.suspend();
     if (playing && !busy && !overlay.classList.contains('show')) openPause();
-  } else if (actx && (save.sound || save.music)) {
-    actx.resume();
-    if (save.music) Music.start();
+  } else {
+    App.syncReminders();
+    if (actx && (save.sound || save.music)) {
+      actx.resume();
+      if (save.music) Music.start();
+    }
   }
 };
 document.addEventListener('visibilitychange', () => window.__onAppState(!document.hidden));
@@ -2287,6 +2351,7 @@ async function startLevel(n) {
 
 /* ================= boot ================= */
 applyLang();
+App.syncReminders();
 refreshToggles();
 showMap();
 requestAnimationFrame(scoreLoop);

@@ -16,6 +16,15 @@ Ce projet emballe le jeu web `../match3/index.html` dans une application Android
 (série de 7 jours), dépensées en boosters (marteau 120, mélange 80, +3 coups 150)
 ou pour continuer un niveau perdu.
 
+Autres fonctions de l'app (pont `AppBridge`) :
+
+- **Avis Google Play** dans l'app (`in_app_review`) : demandé après une victoire à
+  2 étoiles ou plus au niveau 8, puis une fois à partir du niveau 30 ;
+- **Rappels quotidiens** (`flutter_local_notifications`) : « ton cadeau du jour
+  t'attend », programmés à 19 h pour J+1, J+2, J+4 et J+7 et reprogrammés à chaque
+  ouverture. La permission est demandée après la première victoire au niveau 3 ;
+  désactivables dans les réglages du jeu (`lib/reminders.dart`).
+
 Sur le site web, le pont `AdBridge` n'existe pas : aucune publicité n'est affichée.
 
 > Depuis la version 1.3.1, les builds **release** (Play Store) utilisent les
@@ -27,6 +36,7 @@ Sur le site web, le pont `AdBridge` n'existe pas : aucune publicité n'est affic
 | Fichier | Rôle |
 | --- | --- |
 | `lib/main.dart` | WebView plein écran, pont JavaScript `AdBridge`, liens externes ouverts dans le navigateur |
+| `lib/reminders.dart` | Rappels quotidiens (notifications locales) |
 | `lib/ads_manager.dart` | Consentement UMP, initialisation AdMob, préchargement et affichage des pubs |
 | `lib/ad_config.dart` | Identifiants des blocs d'annonces (réels en release, test en debug) |
 | `android/app/build.gradle.kts` | ID d'application, App ID AdMob, signature release |

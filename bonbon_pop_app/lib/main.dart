@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 import 'ads_manager.dart';
+import 'reminders.dart';
 
 const _background = Color(0xFF3A1478);
 
@@ -35,8 +37,9 @@ class BonbonPopApp extends StatelessWidget {
 ///
 /// The page sends `{"type": "interstitial" | "rewarded" | "privacy", "id": ...}`
 /// through the `AdBridge` JavaScript channel and receives the result through
-/// `window.__adResult(id, ok)`. It sends "exit" through `AppBridge` to close
-/// the app. The Android back button calls `window.__onBack()`, and app
+/// `window.__adResult(id, ok)`. Through `AppBridge` it sends "exit" to close
+/// the app, and JSON messages for the Play in-app review and the daily
+/// reminders (`review`, `notifPermission`, `reminders`). The Android back button calls `window.__onBack()`, and app
 /// lifecycle changes call `window.__onAppState(visible)`.
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -47,6 +50,7 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   final _ads = AdsManager();
+  final _reminders = Reminders();
   late final WebViewController _web;
 
   @override
@@ -82,8 +86,26 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
   }
 
-  void _onAppMessage(JavaScriptMessage message) {
-    if (message.message == 'exit') SystemNavigator.pop();
+  Future<void> _onAppMessage(JavaScriptMessage message) async {
+    if (message.message == 'exit') {
+      SystemNavigator.pop();
+      return;
+    }
+    try {
+      final data = jsonDecode(message.message) as Map<String, dynamic>;
+      switch (data['type']) {
+        case 'review':
+          final review = InAppReview.instance;
+          if (await review.isAvailable()) await review.requestReview();
+        case 'notifPermission':
+          await _reminders.requestPermission();
+        case 'reminders':
+          final items = data['on'] == true ? (data['items'] as List).cast<Map<String, dynamic>>() : <Map<String, dynamic>>[];
+          await _reminders.schedule(data['channel'] as String? ?? 'Reminders', items);
+      }
+    } catch (e) {
+      debugPrint('AppBridge error: $e');
+    }
   }
 
   /// Keeps the game inside the WebView and opens web links (e.g. the privacy
