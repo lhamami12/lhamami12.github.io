@@ -13,16 +13,16 @@ const OUT = path.join(__dirname);
 const TMP = fs.mkdtempSync(path.join(require('os').tmpdir(), 'ae-store-'));
 
 const HEAD = {
-  en: ['Tap the arrows.\nClear the board!', '21 beautiful shapes', 'Locks, keys & path preview', 'Daily rewards & a new puzzle every day', 'Unlock stylish arrows', '4 game modes · 37 achievements'],
-  fr: ['Touchez les flèches.\nVidez le plateau !', '21 formes magnifiques', 'Cadenas, clés et aperçu du trajet', 'Récompenses et nouveau puzzle chaque jour', 'Débloquez des styles de flèches', '4 modes de jeu · 37 succès'],
-  ar: ['اضغط على الأسهم.\nنظّف اللوحة!', '21 شكلًا جميلًا', 'أقفال ومفاتيح ومعاينة المسار', 'مكافآت يومية ولغز جديد كل يوم', 'افتح أشكالًا مميزة للأسهم', '4 أوضاع لعب · 37 إنجازًا'],
-  es: ['Toca las flechas.\n¡Despeja el tablero!', '21 formas preciosas', 'Candados, llaves y vista previa', 'Recompensas y un puzle nuevo cada día', 'Desbloquea estilos de flecha', '4 modos de juego · 37 logros'],
-  pt: ['Toque nas setas.\nLimpe o tabuleiro!', '21 formas lindas', 'Cadeados, chaves e prévia do caminho', 'Recompensas e um desafio novo todo dia', 'Desbloqueie estilos de seta', '4 modos de jogo · 37 conquistas'],
-  de: ['Tippe auf die Pfeile.\nLeere das Brett!', '21 schöne Formen', 'Schlösser, Schlüssel & Wegvorschau', 'Tagesbelohnungen & jeden Tag ein neues Rätsel', 'Schalte Pfeil-Stile frei', '4 Spielmodi · 37 Erfolge'],
-  it: ['Tocca le frecce.\nLibera la griglia!', '21 forme bellissime', 'Lucchetti, chiavi e anteprima', 'Ricompense e un nuovo puzzle ogni giorno', 'Sblocca stili di frecce', '4 modalità · 37 obiettivi'],
-  tr: ['Oklara dokun.\nTahtayı temizle!', '21 güzel şekil', 'Kilitler, anahtarlar ve yol önizleme', 'Günlük ödüller ve her gün yeni bulmaca', 'Şık ok stillerinin kilidini aç', '4 oyun modu · 37 başarım'],
-  ru: ['Нажимай на стрелки.\nОчисти поле!', '21 красивая фигура', 'Замки, ключи и предпросмотр пути', 'Ежедневные награды и новая головоломка', 'Открывай стили стрелок', '4 режима · 37 достижений'],
-  id: ['Ketuk panahnya.\nBersihkan papan!', '21 bentuk yang indah', 'Gembok, kunci & pratinjau jalur', 'Hadiah harian & teka-teki baru tiap hari', 'Buka gaya panah keren', '4 mode permainan · 37 pencapaian'],
+  en: ['Tap the arrows.\nClear the board!', '32 beautiful shapes', 'Locks, keys & path preview', 'Daily rewards & a new puzzle every day', 'Unlock stylish arrows', '4 game modes · 37 achievements'],
+  fr: ['Touchez les flèches.\nVidez le plateau !', '32 formes magnifiques', 'Cadenas, clés et aperçu du trajet', 'Récompenses et nouveau puzzle chaque jour', 'Débloquez des styles de flèches', '4 modes de jeu · 37 succès'],
+  ar: ['اضغط على الأسهم.\nنظّف اللوحة!', '32 شكلًا جميلًا', 'أقفال ومفاتيح ومعاينة المسار', 'مكافآت يومية ولغز جديد كل يوم', 'افتح أشكالًا مميزة للأسهم', '4 أوضاع لعب · 37 إنجازًا'],
+  es: ['Toca las flechas.\n¡Despeja el tablero!', '32 formas preciosas', 'Candados, llaves y vista previa', 'Recompensas y un puzle nuevo cada día', 'Desbloquea estilos de flecha', '4 modos de juego · 37 logros'],
+  pt: ['Toque nas setas.\nLimpe o tabuleiro!', '32 formas lindas', 'Cadeados, chaves e prévia do caminho', 'Recompensas e um desafio novo todo dia', 'Desbloqueie estilos de seta', '4 modos de jogo · 37 conquistas'],
+  de: ['Tippe auf die Pfeile.\nLeere das Brett!', '32 schöne Formen', 'Schlösser, Schlüssel & Wegvorschau', 'Tagesbelohnungen & jeden Tag ein neues Rätsel', 'Schalte Pfeil-Stile frei', '4 Spielmodi · 37 Erfolge'],
+  it: ['Tocca le frecce.\nLibera la griglia!', '32 forme bellissime', 'Lucchetti, chiavi e anteprima', 'Ricompense e un nuovo puzzle ogni giorno', 'Sblocca stili di frecce', '4 modalità · 37 obiettivi'],
+  tr: ['Oklara dokun.\nTahtayı temizle!', '32 güzel şekil', 'Kilitler, anahtarlar ve yol önizleme', 'Günlük ödüller ve her gün yeni bulmaca', 'Şık ok stillerinin kilidini aç', '4 oyun modu · 37 başarım'],
+  ru: ['Нажимай на стрелки.\nОчисти поле!', '32 красивые фигуры', 'Замки, ключи и предпросмотр пути', 'Ежедневные награды и новая головоломка', 'Открывай стили стрелок', '4 режима · 37 достижений'],
+  id: ['Ketuk panahnya.\nBersihkan papan!', '32 bentuk yang indah', 'Gembok, kunci & pratinjau jalur', 'Hadiah harian & teka-teki baru tiap hari', 'Buka gaya panah keren', '4 mode permainan · 37 pencapaian'],
 };
 const BG = [['#2f6bff', '#6c9bff'], ['#7c3aed', '#b07cff'], ['#0f9d82', '#3fd0b2'], ['#f08a00', '#ffb547'], ['#db2777', '#ff6fae'], ['#1e293b', '#475569']];
 
