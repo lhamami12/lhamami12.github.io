@@ -1061,9 +1061,9 @@ function vib(p){if(S.vib&&navigator.vibrate)try{navigator.vibrate(p)}catch(e){}}
 // Ads use Google's test units (marked "Test Ad", no earnings) until ADS_LIVE is true.
 // Keep test ads during closed testing; switch to live only for the production release,
 // together with the real AdMob app ID in android/app/src/main/res/values/strings.xml.
-const ADS_LIVE=false;
+const ADS_LIVE=true;
 const AD_TEST={interstitial:'ca-app-pub-3940256099942544/1033173712',rewarded:'ca-app-pub-3940256099942544/5224354917'};
-const AD_LIVE={interstitial:'ca-app-pub-XXXXXXXXXXXXXXXX/NNNNNNNNNN',rewarded:'ca-app-pub-XXXXXXXXXXXXXXXX/NNNNNNNNNN'};
+const AD_LIVE={interstitial:'ca-app-pub-3524601599534787/9444816495',rewarded:'ca-app-pub-3524601599534787/4882307846'};
 // A live unit that was never filled in falls back to the test unit instead of failing silently.
 const AD_UNITS=ADS_LIVE&&!/X|N{4}/.test(AD_LIVE.interstitial+AD_LIVE.rewarded)?AD_LIVE:AD_TEST;
 const Ads={native:null,test:/[?&]ads=test/.test(location.search),busy:false,last:0,boards:0,
