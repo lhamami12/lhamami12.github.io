@@ -35,6 +35,50 @@ body{
 }
 button{font:inherit;cursor:pointer}
 
+/* ---------- worlds ---------- */
+body{--board:rgba(35,6,85,.45)}
+body[data-world=ice]{--board:rgba(10,40,100,.45);background:
+    radial-gradient(120% 70% at 15% 0%,rgba(190,245,255,.8) 0%,transparent 55%),
+    radial-gradient(90% 60% at 100% 100%,rgba(140,200,255,.35) 0%,transparent 60%),
+    linear-gradient(165deg,#5cc3f0 0%,#2b67c9 45%,#132a68 100%);background-color:#2b67c9}
+body[data-world=choco]{--board:rgba(60,20,5,.45);background:
+    radial-gradient(120% 70% at 15% 0%,rgba(255,180,100,.75) 0%,transparent 55%),
+    radial-gradient(90% 60% at 100% 100%,rgba(255,120,150,.3) 0%,transparent 60%),
+    linear-gradient(165deg,#c46a33 0%,#7c3518 45%,#3a150a 100%);background-color:#7c3518}
+body[data-world=marrakech]{--board:rgba(80,10,15,.45);background:
+    radial-gradient(120% 70% at 15% 0%,rgba(255,200,120,.7) 0%,transparent 55%),
+    radial-gradient(90% 60% at 100% 100%,rgba(40,170,120,.3) 0%,transparent 60%),
+    linear-gradient(165deg,#e0663d 0%,#a8302a 45%,#4a1018 100%);background-color:#a8302a}
+body[data-world=chefchaouen]{--board:rgba(10,30,90,.45);background:
+    radial-gradient(120% 70% at 15% 0%,rgba(215,235,255,.75) 0%,transparent 55%),
+    radial-gradient(90% 60% at 100% 100%,rgba(120,220,255,.3) 0%,transparent 60%),
+    linear-gradient(165deg,#6aa4ee 0%,#2a5cc4 45%,#0f2460 100%);background-color:#2a5cc4}
+body[data-world=sahara]{--board:rgba(70,30,40,.42);background:
+    radial-gradient(120% 70% at 15% 0%,rgba(255,232,160,.8) 0%,transparent 55%),
+    radial-gradient(90% 60% at 100% 100%,rgba(255,120,80,.35) 0%,transparent 60%),
+    linear-gradient(165deg,#f2ab4c 0%,#c4662a 45%,#3c1b40 100%);background-color:#c4662a}
+.bg::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .5s;background-size:64px 64px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2760%27 height=%2760%27 viewBox=%270 0 60 60%27%3E%3Cg fill=%27none%27 stroke=%27%23fff%27 stroke-width=%271.6%27%3E%3Cpath d=%27M30 12l5.3 12.7L48 30l-12.7 5.3L30 48l-5.3-12.7L12 30l12.7-5.3z%27/%3E%3Cpath d=%27M17.3 17.3h25.4v25.4H17.3z%27 transform=%27rotate%280 30 30%29%27/%3E%3Cpath d=%27M30 12L48 30 30 48 12 30z%27/%3E%3Cpath d=%27M0 0l12 12M60 0L48 12M0 60l12-12M60 60L48 48%27/%3E%3Ccircle cx=%2730%27 cy=%2730%27 r=%274%27/%3E%3C/g%3E%3C/svg%3E")}
+body.maroc .bg::before{opacity:.13}
+body.maroc .board{border-color:rgba(255,214,140,.75);box-shadow:0 22px 44px rgba(20,0,50,.45),inset 0 0 0 3px rgba(255,214,140,.25),inset 0 0 30px rgba(255,255,255,.06)}
+body.maroc .board::before{content:'';position:absolute;inset:0;border-radius:20px;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2760%27 height=%2760%27 viewBox=%270 0 60 60%27%3E%3Cg fill=%27none%27 stroke=%27%23fff%27 stroke-width=%271.6%27%3E%3Cpath d=%27M30 12l5.3 12.7L48 30l-12.7 5.3L30 48l-5.3-12.7L12 30l12.7-5.3z%27/%3E%3Cpath d=%27M17.3 17.3h25.4v25.4H17.3z%27 transform=%27rotate%280 30 30%29%27/%3E%3Cpath d=%27M30 12L48 30 30 48 12 30z%27/%3E%3Cpath d=%27M0 0l12 12M60 0L48 12M0 60l12-12M60 60L48 48%27/%3E%3Ccircle cx=%2730%27 cy=%2730%27 r=%274%27/%3E%3C/g%3E%3C/svg%3E");background-size:48px 48px;pointer-events:none}
+/* Moroccan worlds: every candy carries a small khatam star. */
+body.maroc .candy:not(.ingr):not(.cb)::after{content:'';position:absolute;inset:31%;z-index:2;pointer-events:none;background:rgba(255,255,255,.55);
+  clip-path:polygon(50% 0%,64% 16%,85% 15%,84% 36%,100% 50%,84% 64%,85% 85%,64% 84%,50% 100%,36% 84%,15% 85%,16% 64%,0% 50%,16% 36%,15% 15%,36% 16%)}
+body.maroc .sp-h::after,body.maroc .sp-v::after{display:none}
+.world-banner{flex:none;display:flex;align-items:center;gap:10px;padding:8px 18px 8px 10px;border-radius:999px;background:var(--glass);border:1.5px solid var(--glass-b);
+  font-weight:700;font-size:18px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 16px rgba(30,0,60,.18)}
+.world-banner .we{font-size:28px;line-height:1}
+.world-banner small{font-size:14px;opacity:.85;font-weight:600}
+.world-banner small b{color:#ffd84a}
+.world-banner.locked{opacity:.55}
+.world-splash{font-size:84px;line-height:1;margin:6px 0 4px;animation:bump 1.2s ease-in-out infinite}
+.node.w2:not(.done):not(.locked){background:radial-gradient(circle at 35% 30%,#d4f6ff,#3cc0ff 55%,#1563b8);box-shadow:0 6px 0 #0b3a78,0 12px 20px rgba(0,0,0,.3)}
+.node.w3:not(.done):not(.locked){background:radial-gradient(circle at 35% 30%,#ffd6a8,#d9772f 55%,#7a3412);box-shadow:0 6px 0 #4a1c08,0 12px 20px rgba(0,0,0,.3)}
+.node.w4:not(.done):not(.locked){background:radial-gradient(circle at 35% 30%,#ffc9a8,#e2553a 55%,#8c1f22);box-shadow:0 6px 0 #5a0f14,0 12px 20px rgba(0,0,0,.3)}
+.node.w5:not(.done):not(.locked){background:radial-gradient(circle at 35% 30%,#d6e8ff,#3f7fe0 55%,#173f9c);box-shadow:0 6px 0 #0d2766,0 12px 20px rgba(0,0,0,.3)}
+.node.w6:not(.done):not(.locked){background:radial-gradient(circle at 35% 30%,#fff0c2,#f0a43c 55%,#a65a17);box-shadow:0 6px 0 #6b3508,0 12px 20px rgba(0,0,0,.3)}
+
 /* ---------- decorative background ---------- */
 .bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
 .bg i{position:absolute;border-radius:50%;filter:blur(2px);opacity:.18;background:#fff;animation:floaty 14s ease-in-out infinite}
@@ -125,7 +169,7 @@ button{font:inherit;cursor:pointer}
 .jelly-ico{width:22px;height:22px;border-radius:7px;background:linear-gradient(145deg,#ff8ad8,#d21f97);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
 .board-wrap{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;padding:6px 10px 14px}
 .board{position:relative;width:calc(var(--cell) * 8);height:calc(var(--cell) * 8);padding:6px;box-sizing:content-box;border-radius:22px;
-  background:rgba(35,6,85,.45);border:2px solid rgba(255,255,255,.25);touch-action:none;
+  background:var(--board);border:2px solid rgba(255,255,255,.25);touch-action:none;transition:background .4s;
   box-shadow:0 22px 44px rgba(20,0,50,.45),inset 0 0 30px rgba(255,255,255,.06);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .layer{position:absolute;left:6px;top:6px;width:calc(var(--cell) * 8);height:calc(var(--cell) * 8)}
 .cells{display:grid;grid-template-columns:repeat(8,var(--cell));grid-auto-rows:var(--cell)}
@@ -401,6 +445,24 @@ const fmt = n => Math.round(n).toLocaleString(LANG === 'fr' ? 'fr-FR' : 'en-US')
 const shuffleArr = a => { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const candyHTML = (t, extra = '') => `<div class="candy c${t} ${extra}"><div class="shape"></div></div>`;
 
+/* ================= worlds ================= */
+// Ten levels per world. Each world has its own colours, music and map style.
+const WORLDS = [
+  { key: 'candy', emoji: '🍬', music: 'candy' },
+  { key: 'ice', emoji: '🏔️', music: 'ice' },
+  { key: 'choco', emoji: '🍫', music: 'choco' },
+  { key: 'marrakech', emoji: '🕌', music: 'hijaz', maroc: true },
+  { key: 'chefchaouen', emoji: '💙', music: 'andalus', maroc: true },
+  { key: 'sahara', emoji: '🐪', music: 'desert', maroc: true },
+];
+const worldOf = n => Math.min(WORLDS.length - 1, Math.floor((n - 1) / 10));
+function setWorld(w) {
+  const W = WORLDS[w];
+  document.body.dataset.world = W.key;
+  document.body.classList.toggle('maroc', !!W.maroc);
+  Music.setTheme(W.music);
+}
+
 /* ================= levels ================= */
 const LEVELS = [
   { moves: 20, colors: 5, stars: [1500, 3000, 4500] },
@@ -536,6 +598,9 @@ const STR = {
     goalCollect: (n, c) => `Collecte <b>${n}</b> bonbons ${['rouges', 'orange', 'jaunes', 'verts', 'bleus', 'violets'][c]}`,
     goalJelly: 'Fais fondre toute la <b>gelée</b>',
     goalIce: 'Brise toute la <b>glace</b>',
+    worldNames: ['Pays des Bonbons', 'Montagnes Glacées', 'Vallée du Chocolat', 'Marrakech', 'Chefchaouen', 'Sahara'],
+    worldTags: ['Là où tout commence !', 'Attention, ça glisse !', 'Le chocolat envahit tout !', 'Zellige, épices et thé à la menthe.', 'La perle bleue du Rif.', 'Des dunes d\'or sous les étoiles.'],
+    newWorld: 'Nouveau monde !', worldN: n => `Monde ${n}`,
     goalLock: 'Libère les bonbons <b>enchaînés</b>',
     goalChoco: 'Détruis tout le <b>chocolat</b>',
     goalIngr: n => `Fais descendre <b>${n}</b> cerise${n > 1 ? 's' : ''} tout en bas`,
@@ -577,6 +642,9 @@ const STR = {
     goalCollect: (n, c) => `Collect <b>${n}</b> ${['red', 'orange', 'yellow', 'green', 'blue', 'purple'][c]} candies`,
     goalJelly: 'Clear all the <b>jelly</b>',
     goalIce: 'Break all the <b>ice</b>',
+    worldNames: ['Candy Land', 'Frozen Peaks', 'Chocolate Valley', 'Marrakech', 'Chefchaouen', 'Sahara'],
+    worldTags: ['Where it all begins!', 'Careful, it\'s slippery!', 'The chocolate is taking over!', 'Zellige, spices and mint tea.', 'The blue pearl of the Rif.', 'Golden dunes under the stars.'],
+    newWorld: 'New world!', worldN: n => `World ${n}`,
     goalLock: 'Free all the <b>chained</b> candies',
     goalChoco: 'Clear all the <b>chocolate</b>',
     goalIngr: n => `Bring <b>${n}</b> cherr${n > 1 ? 'ies' : 'y'} down to the bottom`,
@@ -618,6 +686,9 @@ const STR = {
     goalCollect: (n, c) => `اجمع <b>${n}</b> من الحلوى ${['الحمراء', 'البرتقالية', 'الصفراء', 'الخضراء', 'الزرقاء', 'البنفسجية'][c]}`,
     goalJelly: 'أذِب كل <b>الهلام</b>',
     goalIce: 'اكسر كل <b>الجليد</b>',
+    worldNames: ['أرض الحلوى', 'الجبال الجليدية', 'وادي الشوكولاتة', 'مراكش', 'شفشاون', 'الصحراء'],
+    worldTags: ['هنا تبدأ المغامرة!', 'انتبه، المكان زلق!', 'الشوكولاتة تغزو كل شيء!', 'زليج وتوابل وأتاي بالنعناع.', 'الجوهرة الزرقاء في الريف.', 'كثبان ذهبية تحت النجوم.'],
+    newWorld: 'عالم جديد!', worldN: n => `العالم ${n}`,
     goalLock: 'حرّر كل الحلوى <b>المقيّدة</b>',
     goalChoco: 'أزِل كل <b>الشوكولاتة</b>',
     goalIngr: n => `أنزِل <b>الكرز</b> إلى الأسفل (<b>${n}</b>)`,
@@ -693,12 +764,35 @@ function initAudio() {
 }
 
 /* Background music: a soft looping arpeggio generated with Web Audio. */
+/* One theme per world. Moroccan worlds use the Hijaz mode, the Andalusian
+   cadence and a darbuka rhythm (doum = low, tek = high). */
+const THEMES = {
+  candy: { bpm: 92, wave: 'triangle',
+    chords: [[60, 64, 67], [59, 62, 67], [57, 60, 64], [57, 60, 65], [60, 64, 67], [59, 62, 67], [57, 62, 65], [59, 62, 67]],
+    bass: [48, 43, 45, 41, 48, 43, 38, 43] },
+  ice: { bpm: 84, wave: 'sine', up: 12,
+    chords: [[64, 67, 71], [60, 64, 67], [62, 65, 69], [59, 62, 67], [64, 67, 71], [60, 64, 69], [57, 60, 64], [59, 62, 67]],
+    bass: [52, 48, 50, 43, 52, 45, 45, 43] },
+  choco: { bpm: 100, wave: 'triangle',
+    chords: [[60, 64, 71], [57, 60, 67], [62, 65, 72], [55, 59, 65], [60, 64, 71], [57, 60, 67], [62, 65, 72], [55, 59, 65]],
+    bass: [48, 45, 50, 43, 48, 45, 50, 43] },
+  hijaz: { bpm: 108, wave: 'triangle', drums: [1, 0, 2, 1, 2, 0, 2, 2],
+    chords: [[62, 66, 69], [63, 67, 70], [62, 66, 69], [60, 63, 67], [62, 66, 69], [63, 66, 70], [67, 70, 74], [62, 66, 69]],
+    bass: [50, 51, 50, 48, 50, 51, 43, 50] },
+  andalus: { bpm: 100, wave: 'triangle', drums: [1, 0, 2, 0, 1, 2, 2, 0],
+    chords: [[57, 60, 64], [55, 59, 62], [53, 57, 60], [52, 56, 59], [57, 60, 64], [55, 59, 62], [53, 57, 60], [52, 56, 59]],
+    bass: [45, 43, 41, 40, 45, 43, 41, 40] },
+  desert: { bpm: 80, wave: 'sine', drums: [1, 0, 0, 2, 1, 0, 2, 0],
+    chords: [[62, 65, 69], [62, 63, 67], [60, 63, 67], [62, 66, 69], [62, 65, 69], [58, 62, 65], [60, 63, 67], [62, 66, 69]],
+    bass: [38, 38, 36, 38, 38, 34, 36, 38] },
+};
 const Music = {
-  timer: 0, next: 0, step: 0, out: null,
-  CHORDS: [[60, 64, 67], [59, 62, 67], [57, 60, 64], [57, 60, 65], [60, 64, 67], [59, 62, 67], [57, 62, 65], [59, 62, 67]],
-  BASS: [48, 43, 45, 41, 48, 43, 38, 43],
+  timer: 0, next: 0, step: 0, out: null, theme: THEMES.candy, noise: null,
   ARP: [0, 1, 2, 3, 2, 1, 2, 1],
-  STEP: 60 / 92 / 2,
+  get CHORDS() { return this.theme.chords; },
+  get BASS() { return this.theme.bass; },
+  get STEP() { return 60 / this.theme.bpm / 2; },
+  setTheme(key) { this.theme = THEMES[key] || THEMES.candy; },
   start() {
     if (!actx || !save.music || this.timer) return;
     if (!this.out) { this.out = actx.createGain(); this.out.connect(actx.destination); }
@@ -732,12 +826,37 @@ const Music = {
     o.connect(g).connect(this.out);
     o.start(t); o.stop(t + dur + .05);
   },
+  drum(kind, t) {
+    if (kind === 1) {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.frequency.setValueAtTime(150, t);
+      o.frequency.exponentialRampToValueAtTime(55, t + .16);
+      g.gain.setValueAtTime(.9, t);
+      g.gain.exponentialRampToValueAtTime(.0001, t + .25);
+      o.connect(g).connect(this.out);
+      o.start(t); o.stop(t + .3);
+    } else {
+      if (!this.noise) {
+        this.noise = actx.createBuffer(1, actx.sampleRate * .1, actx.sampleRate);
+        const d = this.noise.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      }
+      const src = actx.createBufferSource(), f = actx.createBiquadFilter(), g = actx.createGain();
+      src.buffer = this.noise;
+      f.type = 'bandpass'; f.frequency.value = 3200; f.Q.value = 1.2;
+      g.gain.setValueAtTime(.35, t);
+      g.gain.exponentialRampToValueAtTime(.0001, t + .07);
+      src.connect(f).connect(g).connect(this.out);
+      src.start(t); src.stop(t + .1);
+    }
+  },
   play(step, t) {
-    const bar = step >> 3, beat = step & 7, chord = this.CHORDS[bar];
+    const th = this.theme, bar = step >> 3, beat = step & 7, chord = th.chords[bar], up = th.up || 0;
     const i = this.ARP[beat];
-    this.note(i === 3 ? chord[0] + 12 : chord[i], t, .35, 'triangle', .5);
-    if (beat === 0 || beat === 4) this.note(this.BASS[bar], t, .8, 'sine', .9);
-    if (beat === 0) this.note(chord[2] + 12, t, 1.4, 'sine', .25);
+    this.note((i === 3 ? chord[0] + 12 : chord[i]) + up, t, .35, th.wave, .5);
+    if (beat === 0 || beat === 4) this.note(th.bass[bar], t, .8, 'sine', .9);
+    if (beat === 0) this.note(chord[2] + 12 + up, t, 1.4, 'sine', .25);
+    if (th.drums && th.drums[beat]) this.drum(th.drums[beat], t);
   },
 };
 function tone(f, dur = .12, type = 'sine', vol = .15, delay = 0, slide = 0) {
@@ -1854,6 +1973,7 @@ overlay.addEventListener('click', e => {
   const act = b.dataset.act;
   if (act === 'play' || act === 'resume') { closeModal(); playing = true; updateHUD(); resetHint(); }
   else if (act === 'restart') startLevel(levelNum);
+  else if (act === 'worldok') showIntro();
   else if (act === 'again' || act === 'next') {
     const target = act === 'next' ? Math.min(MAX_LEVEL, levelNum + 1) : levelNum;
     overlay.querySelectorAll('button').forEach(x => x.disabled = true);
@@ -1915,6 +2035,14 @@ function goalRowsHTML(withState) {
   }).join('');
 }
 
+function showWorldIntro(w) {
+  sfx.win();
+  openModal(`<div class="ribbon">${t('newWorld')}</div>
+    <div class="world-splash">${WORLDS[w].emoji}</div>
+    <h2 style="margin:4px 0">${t('worldNames')[w]}</h2>
+    <p class="sub">${t('worldTags')[w]}</p>
+    <div class="btn-col"><button class="btn green" data-act="worldok">${t('go')}</button></div>`, 'world');
+}
 function showIntro() {
   openModal(`<div class="ribbon">${t('levelN', levelNum)}</div>
     <p class="sub">${t('yourGoals')}</p>
@@ -2021,7 +2149,7 @@ $('#coinsBtn').addEventListener('click', () => { sfx.click(); showShop(); });
 window.__onBack = () => {
   if (overlay.classList.contains('show')) {
     if (modalKind === 'pause' || modalKind === 'offer') { closeModal(); playing = true; updateHUD(); resetHint(); }
-    else if (modalKind === 'intro' || modalKind === 'win' || modalKind === 'lose') { closeModal(); showMap(); }
+    else if (modalKind === 'intro' || modalKind === 'world' || modalKind === 'win' || modalKind === 'lose') { closeModal(); showMap(); }
     else if (modalKind === 'shop' && $('#game').classList.contains('active')) openPause();
     else closeModal();
     return;
@@ -2055,12 +2183,21 @@ function showMap() {
   const map = $('#map');
   map.innerHTML = '';
   let total = 0, current = null;
+  setWorld(worldOf(save.unlocked));
   for (let i = 1; i <= MAX_LEVEL; i++) {
     const st = save.stars[i] || 0;
     total += st;
+    if (i % 10 === 1) {
+      const w = worldOf(i), banner = document.createElement('div');
+      let ws = 0;
+      for (let k = i; k < i + 10; k++) ws += save.stars[k] || 0;
+      banner.className = 'world-banner' + (i > save.unlocked ? ' locked' : '');
+      banner.innerHTML = `<span class="we">${WORLDS[w].emoji}</span><span>${t('worldNames')[w]}<br><small>${t('worldN', w + 1)} · <b>★</b> ${ws}/30</small></span>`;
+      map.appendChild(banner);
+    }
     const b = document.createElement('button');
     const locked = i > save.unlocked;
-    b.className = 'node' + (locked ? ' locked' : st ? ' done' : '') + (i === save.unlocked ? ' current' : '');
+    b.className = 'node w' + (worldOf(i) + 1) + (locked ? ' locked' : st ? ' done' : '') + (i === save.unlocked ? ' current' : '');
     b.style.setProperty('--x', Math.round(Math.sin(i * .8) * Math.min(100, innerWidth * .24)) + 'px');
     b.innerHTML = (locked ? '🔒' : i) + (locked ? '' : `<span class="ns">${[0, 1, 2].map(k => `<b class="${k < st ? 'on' : ''}">★</b>`).join('')}</span>`);
     if (!locked) b.addEventListener('click', () => { sfx.click(); initAudio(); startLevel(i); });
@@ -2083,6 +2220,7 @@ async function startLevel(n) {
   closeModal();
   levelNum = n;
   L = getLevel(n);
+  setWorld(worldOf(n));
   score = 0; shownScore = 0; moves = L.moves;
   selected = null; playing = false; busy = true; pendingPause = false; usedContinue = false;
   if (hammerMode) setHammerMode(false);
@@ -2141,7 +2279,10 @@ async function startLevel(n) {
   if (token !== startToken) return;
   for (const t of allTiles()) t.el.style.transitionDelay = '0ms';
   busy = false;
-  showIntro();
+  const w = worldOf(n);
+  save.worlds = save.worlds || [0];
+  if (!save.worlds.includes(w)) { save.worlds.push(w); persist(); showWorldIntro(w); }
+  else showIntro();
 }
 
 /* ================= boot ================= */
