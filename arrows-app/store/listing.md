@@ -20,13 +20,13 @@ Arrow Escape is a calm, clever logic puzzle that is easy to learn and hard to pu
 
 ★ WHAT MAKES IT SPECIAL
 • Endless levels, grouped into chapters, that get smarter as you play
-• 21 beautiful board shapes: heart, star, cat, tree, flower, crescent and more
+• 32 beautiful board shapes: heart, star, cat, tree, flower, crescent and more
 • Locks & keys: some arrows stay locked until the key arrow of the same color leaves
 • Path preview: long-press any arrow to see where it will go before you move it
 • Golden arrows and quick combos that earn coins
 
 ★ 4 GAME MODES
-• Levels — hundreds of puzzles, from easy to expert
+• Levels — hundreds of puzzles, from Easy to Legend
 • Daily Challenge — a new puzzle every day, keep your streak alive
 • Time Rush — clear as many boards as you can in 60 seconds
 • Zen Mode — no hearts, no pressure, just relax
@@ -34,8 +34,8 @@ Arrow Escape is a calm, clever logic puzzle that is easy to learn and hard to pu
 ★ ALWAYS SOMETHING NEW
 • Daily rewards on a 7-day calendar
 • 37 achievements to unlock
-• 8 arrow styles: Neon, Candy, Rope, Beads, Pixel, Royal…
-• 4 color themes, including dark mode
+• 12 arrow styles: Neon, Candy, Chalk, Gradient, Pixel, Royal…
+• 8 color themes, including dark mode
 • Hints and a lightning blast when you are stuck
 
 ★ PLAY ANYWHERE
@@ -62,13 +62,13 @@ Arrow Escape est un jeu de logique calme et malin, facile à apprendre et diffic
 
 ★ CE QUI LE REND UNIQUE
 • Des niveaux infinis, regroupés en chapitres, de plus en plus astucieux
-• 21 formes de plateau : cœur, étoile, chat, sapin, fleur, croissant de lune…
+• 32 formes de plateau : cœur, étoile, chat, sapin, fleur, croissant de lune…
 • Cadenas et clés : certaines flèches restent bloquées tant que la flèche clé de la même couleur n’est pas sortie
 • Aperçu du trajet : appui long sur une flèche pour voir où elle va avant de la jouer
 • Flèches dorées et combos rapides pour gagner des pièces
 
 ★ 4 MODES DE JEU
-• Niveaux — des centaines de puzzles, de facile à expert
+• Niveaux — des centaines de puzzles, de Facile à Légende
 • Défi du jour — un nouveau puzzle chaque jour, gardez votre série
 • Contre-la-montre — videz un maximum de plateaux en 60 secondes
 • Mode Zen — sans cœurs, sans pression
@@ -76,8 +76,8 @@ Arrow Escape est un jeu de logique calme et malin, facile à apprendre et diffic
 ★ TOUJOURS DU NOUVEAU
 • Récompenses quotidiennes sur 7 jours
 • 37 succès à débloquer
-• 8 styles de flèches : Néon, Bonbon, Corde, Perles, Pixel, Royal…
-• 4 thèmes de couleurs, dont le mode sombre
+• 12 styles de flèches : Néon, Bonbon, Craie, Dégradé, Pixel, Royal…
+• 8 thèmes de couleurs, dont le mode sombre
 • Indices et éclair quand vous êtes bloqué
 
 ★ JOUEZ PARTOUT
@@ -104,13 +104,13 @@ Entraînez votre cerveau quelques minutes par jour : saurez-vous libérer toutes
 
 ★ ما الذي يميّزها
 • مستويات لا تنتهي، مقسّمة إلى فصول، تزداد ذكاءً كلما تقدّمت
-• 21 شكلًا جميلًا للوحات: قلب، نجمة، قطة، شجرة، وردة، هلال والمزيد
+• 32 شكلًا جميلًا للوحات: قلب، نجمة، قطة، شجرة، وردة، هلال والمزيد
 • أقفال ومفاتيح: بعض الأسهم تبقى مقفلة حتى يخرج سهم المفتاح من نفس اللون
 • معاينة المسار: اضغط مطوّلًا على أي سهم لترى أين سيذهب قبل تحريكه
 • أسهم ذهبية وسلاسل سريعة تمنحك العملات
 
 ★ 4 أوضاع لعب
-• المستويات: مئات الألغاز من السهل إلى الخبير
+• المستويات: مئات الألغاز من السهل إلى الأسطورة
 • تحدي اليوم: لغز جديد كل يوم، حافظ على سلسلتك
 • سباق الوقت: نظّف أكبر عدد من اللوحات في 60 ثانية
 • وضع الهدوء: بلا قلوب ولا ضغط
@@ -118,8 +118,8 @@ Entraînez votre cerveau quelques minutes par jour : saurez-vous libérer toutes
 ★ دائمًا هناك جديد
 • مكافآت يومية على مدار 7 أيام
 • 37 إنجازًا لتفتحها
-• 8 أشكال للأسهم: نيون، حلوى، حبل، خرز، بكسل، ملكي…
-• 4 مظاهر ألوان، منها الوضع الداكن
+• 12 شكلًا للأسهم: نيون، حلوى، طباشير، متدرّج، بكسل، ملكي…
+• 8 مظاهر ألوان، منها الوضع الداكن
 • تلميحات وبرق يساعدانك عندما تعلق
 
 ★ العب في أي مكان
@@ -146,13 +146,13 @@ Arrow Escape es un juego de lógica tranquilo e ingenioso, fácil de aprender y 
 
 ★ LO QUE LO HACE ESPECIAL
 • Niveles infinitos, agrupados en capítulos, cada vez más ingeniosos
-• 21 formas de tablero: corazón, estrella, gato, árbol, flor, luna y más
+• 32 formas de tablero: corazón, estrella, gato, árbol, flor, luna y más
 • Candados y llaves: algunas flechas siguen bloqueadas hasta que sale la flecha llave del mismo color
 • Vista previa: mantén pulsada una flecha para ver su recorrido antes de moverla
 • Flechas doradas y combos rápidos que dan monedas
 
 ★ 4 MODOS DE JUEGO
-• Niveles: cientos de puzles, de fácil a experto
+• Niveles: cientos de puzles, de Fácil a Leyenda
 • Reto diario: un puzle nuevo cada día, mantén tu racha
 • Contrarreloj: despeja todos los tableros que puedas en 60 segundos
 • Modo Zen: sin corazones, sin presión
@@ -160,8 +160,8 @@ Arrow Escape es un juego de lógica tranquilo e ingenioso, fácil de aprender y 
 ★ SIEMPRE HAY ALGO NUEVO
 • Recompensas diarias durante 7 días
 • 37 logros por desbloquear
-• 8 estilos de flecha: Neón, Caramelo, Cuerda, Cuentas, Píxel, Real…
-• 4 temas de color, incluido el modo oscuro
+• 12 estilos de flecha: Neón, Caramelo, Tiza, Degradado, Píxel, Real…
+• 8 temas de color, incluido el modo oscuro
 • Pistas y un rayo para cuando te atasques
 
 ★ JUEGA DONDE QUIERAS
@@ -188,13 +188,13 @@ Arrow Escape é um jogo de lógica calmo e inteligente, fácil de aprender e dif
 
 ★ O QUE ELE TEM DE ESPECIAL
 • Níveis infinitos, organizados em capítulos, cada vez mais desafiadores
-• 21 formas de tabuleiro: coração, estrela, gato, árvore, flor, lua e mais
+• 32 formas de tabuleiro: coração, estrela, gato, árvore, flor, lua e mais
 • Cadeados e chaves: algumas setas ficam trancadas até a seta-chave da mesma cor sair
 • Prévia do caminho: mantenha pressionada uma seta para ver para onde ela vai
 • Setas douradas e combos rápidos que rendem moedas
 
 ★ 4 MODOS DE JOGO
-• Níveis — centenas de desafios, do fácil ao especialista
+• Níveis — centenas de desafios, do Fácil ao Lenda
 • Desafio diário — um quebra-cabeça novo todo dia, mantenha sua sequência
 • Contra o tempo — limpe o máximo de tabuleiros em 60 segundos
 • Modo Zen — sem corações, sem pressão
@@ -202,8 +202,8 @@ Arrow Escape é um jogo de lógica calmo e inteligente, fácil de aprender e dif
 ★ SEMPRE TEM NOVIDADE
 • Recompensas diárias por 7 dias
 • 37 conquistas para desbloquear
-• 8 estilos de seta: Neon, Doce, Corda, Contas, Pixel, Real…
-• 4 temas de cores, incluindo o modo escuro
+• 12 estilos de seta: Neon, Doce, Giz, Degradê, Pixel, Real…
+• 8 temas de cores, incluindo o modo escuro
 • Dicas e um raio para quando você travar
 
 ★ JOGUE ONDE QUISER
@@ -230,13 +230,13 @@ Arrow Escape ist ein ruhiges, cleveres Logikrätsel – schnell gelernt und schw
 
 ★ DAS MACHT ES BESONDERS
 • Unendlich viele Level in Kapiteln, die immer raffinierter werden
-• 21 schöne Brettformen: Herz, Stern, Katze, Baum, Blume, Mondsichel und mehr
+• 32 schöne Brettformen: Herz, Stern, Katze, Baum, Blume, Mondsichel und mehr
 • Schlösser & Schlüssel: Manche Pfeile bleiben gesperrt, bis der Schlüsselpfeil gleicher Farbe weg ist
 • Wegvorschau: Halte einen Pfeil gedrückt, um seinen Weg vorher zu sehen
 • Goldene Pfeile und schnelle Kombos bringen Münzen
 
 ★ 4 SPIELMODI
-• Level – Hunderte Rätsel von leicht bis Experte
+• Level – Hunderte Rätsel von Leicht bis Legende
 • Tagesrätsel – jeden Tag ein neues Rätsel, halte deine Serie
 • Zeitrennen – leere in 60 Sekunden so viele Bretter wie möglich
 • Zen-Modus – keine Herzen, kein Druck
@@ -244,8 +244,8 @@ Arrow Escape ist ein ruhiges, cleveres Logikrätsel – schnell gelernt und schw
 ★ IMMER WAS NEUES
 • Tägliche Belohnungen über 7 Tage
 • 37 Erfolge zum Freischalten
-• 8 Pfeil-Stile: Neon, Bonbon, Seil, Perlen, Pixel, Royal…
-• 4 Farbthemen, inklusive Dunkelmodus
+• 12 Pfeil-Stile: Neon, Bonbon, Kreide, Verlauf, Pixel, Royal…
+• 8 Farbthemen, inklusive Dunkelmodus
 • Tipps und ein Blitz, wenn du feststeckst
 
 ★ ÜBERALL SPIELEN
@@ -272,13 +272,13 @@ Arrow Escape è un rompicapo logico rilassante e intelligente, facile da imparar
 
 ★ COSA LO RENDE SPECIALE
 • Livelli infiniti, divisi in capitoli, sempre più ingegnosi
-• 21 forme di griglia: cuore, stella, gatto, albero, fiore, luna e altre
+• 32 forme di griglia: cuore, stella, gatto, albero, fiore, luna e altre
 • Lucchetti e chiavi: alcune frecce restano bloccate finché non esce la freccia chiave dello stesso colore
 • Anteprima del percorso: tieni premuta una freccia per vedere dove andrà
 • Frecce dorate e combo veloci che fanno guadagnare monete
 
 ★ 4 MODALITÀ DI GIOCO
-• Livelli — centinaia di puzzle, da facile a esperto
+• Livelli — centinaia di puzzle, da Facile a Leggenda
 • Sfida del giorno — un nuovo puzzle ogni giorno, mantieni la serie
 • Contro il tempo — libera più griglie possibile in 60 secondi
 • Modalità Zen — niente cuori, niente stress
@@ -286,8 +286,8 @@ Arrow Escape è un rompicapo logico rilassante e intelligente, facile da imparar
 ★ SEMPRE QUALCOSA DI NUOVO
 • Ricompense giornaliere per 7 giorni
 • 37 obiettivi da sbloccare
-• 8 stili di frecce: Neon, Caramella, Corda, Perline, Pixel, Reale…
-• 4 temi di colore, inclusa la modalità scura
+• 12 stili di frecce: Neon, Caramella, Gesso, Sfumato, Pixel, Reale…
+• 8 temi di colore, inclusa la modalità scura
 • Suggerimenti e un fulmine quando sei bloccato
 
 ★ GIOCA OVUNQUE
@@ -314,13 +314,13 @@ Arrow Escape sakin ve zekice bir mantık bulmacası: öğrenmesi kolay, bırakma
 
 ★ ONU ÖZEL YAPAN NE?
 • Bölümlere ayrılmış, gittikçe zekileşen sonsuz seviye
-• 21 güzel tahta şekli: kalp, yıldız, kedi, ağaç, çiçek, hilal ve daha fazlası
+• 32 güzel tahta şekli: kalp, yıldız, kedi, ağaç, çiçek, hilal ve daha fazlası
 • Kilitler ve anahtarlar: bazı oklar, aynı renkteki anahtar ok çıkana kadar kilitli kalır
 • Yol önizleme: bir oku hareket ettirmeden önce nereye gideceğini görmek için basılı tut
 • Altın oklar ve hızlı kombolarla altın kazan
 
 ★ 4 OYUN MODU
-• Seviyeler — kolaydan uzmana yüzlerce bulmaca
+• Seviyeler — kolaydan efsaneye yüzlerce bulmaca
 • Günlük bulmaca — her gün yeni bir bulmaca, serini koru
 • Zamana karşı — 60 saniyede olabildiğince çok tahta temizle
 • Zen modu — can yok, baskı yok
@@ -328,8 +328,8 @@ Arrow Escape sakin ve zekice bir mantık bulmacası: öğrenmesi kolay, bırakma
 ★ HER ZAMAN YENİ BİR ŞEY
 • 7 günlük takvimle günlük ödüller
 • Açılacak 37 başarım
-• 8 ok stili: Neon, Şeker, Halat, Boncuk, Piksel, Kraliyet…
-• Karanlık mod dahil 4 renk teması
+• 12 ok stili: Neon, Şeker, Tebeşir, Geçişli, Piksel, Kraliyet…
+• Karanlık mod dahil 8 renk teması
 • Takıldığında ipuçları ve yıldırım
 
 ★ HER YERDE OYNA
@@ -356,13 +356,13 @@ Arrow Escape — спокойная и умная логическая голо�
 
 ★ ЧЕМ ОНА ОСОБЕННАЯ
 • Бесконечные уровни, разбитые на главы и становящиеся всё хитрее
-• 21 красивая форма поля: сердце, звезда, кот, ёлка, цветок, полумесяц и другие
+• 32 красивые формы поля: сердце, звезда, кот, ёлка, цветок, полумесяц и другие
 • Замки и ключи: некоторые стрелки заперты, пока не уйдёт стрелка-ключ того же цвета
 • Предпросмотр пути: удерживай стрелку, чтобы увидеть, куда она поедет
 • Золотые стрелки и быстрые комбо приносят монеты
 
 ★ 4 РЕЖИМА ИГРЫ
-• Уровни — сотни головоломок, от лёгких до экспертных
+• Уровни — сотни головоломок, от лёгких до легендарных
 • Задача дня — новая головоломка каждый день, не прерывай серию
 • На время — очисти как можно больше полей за 60 секунд
 • Дзен-режим — без сердец и без спешки
@@ -370,8 +370,8 @@ Arrow Escape — спокойная и умная логическая голо�
 ★ ВСЕГДА ЕСТЬ ЧТО-ТО НОВОЕ
 • Ежедневные награды по 7-дневному календарю
 • 37 достижений
-• 8 стилей стрелок: Неон, Леденец, Канат, Бусины, Пиксели, Королевский…
-• 4 цветовые темы, включая тёмную
+• 12 стилей стрелок: Неон, Леденец, Мел, Градиент, Пиксели, Королевский…
+• 8 цветовых тем, включая тёмную
 • Подсказки и молния, если застрял
 
 ★ ИГРАЙ ГДЕ УГОДНО
@@ -398,13 +398,13 @@ Arrow Escape adalah teka-teki logika yang santai dan cerdas: mudah dipelajari, s
 
 ★ YANG MEMBUATNYA ISTIMEWA
 • Level tanpa batas, dibagi per bab, makin lama makin cerdik
-• 21 bentuk papan yang indah: hati, bintang, kucing, pohon, bunga, bulan sabit, dan lainnya
+• 32 bentuk papan yang indah: hati, bintang, kucing, pohon, bunga, bulan sabit, dan lainnya
 • Gembok & kunci: beberapa panah tetap terkunci sampai panah kunci dengan warna yang sama keluar
 • Pratinjau jalur: tekan lama sebuah panah untuk melihat ke mana ia akan pergi
 • Panah emas dan kombo cepat yang memberi koin
 
 ★ 4 MODE PERMAINAN
-• Level — ratusan teka-teki, dari mudah sampai ahli
+• Level — ratusan teka-teki, dari mudah sampai legenda
 • Tantangan harian — teka-teki baru setiap hari, jaga rekor beruntunmu
 • Lawan waktu — bersihkan papan sebanyak mungkin dalam 60 detik
 • Mode Zen — tanpa nyawa, tanpa tekanan
@@ -412,8 +412,8 @@ Arrow Escape adalah teka-teki logika yang santai dan cerdas: mudah dipelajari, s
 ★ SELALU ADA YANG BARU
 • Hadiah harian selama 7 hari
 • 37 pencapaian untuk dibuka
-• 8 gaya panah: Neon, Permen, Tali, Manik-manik, Piksel, Bangsawan…
-• 4 tema warna, termasuk mode gelap
+• 12 gaya panah: Neon, Permen, Kapur, Gradasi, Piksel, Bangsawan…
+• 8 tema warna, termasuk mode gelap
 • Petunjuk dan petir saat kamu buntu
 
 ★ MAIN DI MANA SAJA
