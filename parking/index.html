@@ -117,6 +117,12 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 @media (max-height:500px){#sGarage h2{font-size:18px;margin-bottom:2px}#sGarage .carsel{margin:0 0 4px}#sGarage .ib{width:38px;height:38px}
   .cname{font-size:18px}.cstats{gap:2px 10px;margin-bottom:4px}#sGarage .sw{gap:8px;margin:4px 0}#sGarage .sw button{width:32px;height:32px}
   #sGarage .btn{padding:8px;margin-top:6px}#sGarage .panel{padding:12px 16px}}
+#coinChip{position:fixed;top:calc(12px + env(safe-area-inset-top));inset-inline-start:calc(12px + env(safe-area-inset-left));z-index:21;font-size:16px;color:#ffd36b}
+.earn{font-size:24px;font-weight:900;color:#ffd36b;margin:2px 0 4px;direction:ltr}
+#bBuy{margin:0 0 8px;padding:9px}
+#bBuy.poor{filter:grayscale(.7) brightness(.8)}
+.lock.shake{animation:shk .4s}
+@keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 .sw{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:8px 0 6px}
 .sw button{width:44px;height:44px;border-radius:50%;border:3px solid rgba(255,255,255,.25);box-shadow:inset 0 -6px 10px rgba(0,0,0,.35)}
 .sw button.on{border-color:var(--acc);transform:scale(1.12)}
@@ -212,6 +218,7 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <h2 data-i18n="garage"></h2>
     <div class="carsel" dir="ltr"><button class="ib glass" id="cPrev">◀</button><div><div class="cname" id="cName"></div><div class="lock" id="cLock"></div></div><button class="ib glass" id="cNext">▶</button></div>
     <div class="cstats" id="cStats"></div>
+    <button class="btn pri hide" id="bBuy"></button>
     <div class="mut" data-i18n="pickColor"></div>
     <div class="sw" id="swatches"></div>
     <button class="btn pri" data-back data-i18n="done"></button>
@@ -245,12 +252,14 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <h2 id="resTitle"></h2>
     <div class="stars" id="resStars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
     <div class="stats"><div><small data-i18n="time"></small><span id="resTime"></span></div><div><small data-i18n="hits"></small><span id="resHits"></span></div></div>
+    <div class="earn" id="resCoins"></div>
     <div class="mut" id="resNote"></div>
     <button class="btn pri" id="bNext" data-i18n="next"></button>
     <div class="row2"><button class="btn" id="bRetry" data-i18n="retry"></button><button class="btn" id="bResLevels" data-i18n="levelsBtn"></button></div>
   </div>
 </div>
 
+<div id="coinChip" class="chip glass hide">🪙 <span id="coinVal">0</span></div>
 <div id="loading"><div style="text-align:center"><div class="logo"><div class="l1">PARKING<sup>3D</sup></div></div><div class="spin"></div></div></div>
 
 <script type="module">
@@ -270,6 +279,10 @@ try {
   if (s) Object.assign(save, s);
 } catch (_) {}
 const persist = () => { try { localStorage.setItem(SKEY, JSON.stringify(save)); } catch (_) {} };
+// First run with coins: pay out 50 per star already earned and keep the cars that used to be free
+if (typeof save.coins !== 'number') save.coins = save.stars.reduce((a, b) => a + (b || 0), 0) * 50;
+if (!Array.isArray(save.owned)) save.owned = [...new Set([0, 1, save.car || 0])];
+persist();
 
 /* ---------- Translations ---------- */
 const I18N = {
@@ -284,9 +297,9 @@ const I18N = {
     winAll: 'أكملت كل المستويات! 🏆', win: 'ركن ممتاز! 🎉', fail: 'تضررت السيارة! 💥', perfect: 'أداء مثالي!',
     tip3: p => `للنجوم الثلاث: بدون اصطدام وفي أقل من ${p} ثانية`, failNote: n => `أكثر من ${n} اصطدامات. حاول مرة أخرى بهدوء.`,
     hold: 'اثبت… ✋', holdRev: 'اركن بالرجوع (R)', holdAlign: 'استقم داخل المربع', holdStop: 'توقف!',
-    confirmReset: 'مسح كل النجوم والمستويات المفتوحة؟',
-    cars: ['سيدان', 'هاتشباك', 'دفع رباعي', 'بيك أب', 'رياضية'], speed: 'السرعة', accel: 'التسارع', handling: 'المناورة', size: 'الحجم',
-    needStars: (n, have) => `🔒 تحتاج ${n} ⭐ لفتحها (معك ${have})`,
+    confirmReset: 'مسح كل النجوم والمستويات والعملات والسيارات المشتراة؟',
+    cars: ['سيدان', 'هاتشباك', 'دفع رباعي', 'بيك أب', 'رياضية', 'فان', 'كلاسيكية'], speed: 'السرعة', accel: 'التسارع', handling: 'المناورة', size: 'الحجم',
+    buy: p => `شراء 🪙 ${p}`, notEnough: n => `تحتاج ${n} 🪙 إضافية. العب المستويات لتجمعها!`, earned: n => `+${n} 🪙`,
     levels: [
       ['البداية', 'تقدّم واركن داخل المربع الأخضر'], ['بين سيارتين', 'انعطف وادخل بين السيارتين'],
       ['بالرجوع', 'اركن بالرجوع إلى الخلف (R)'], ['ركن موازٍ', 'اركن بجانب الرصيف بين السيارتين'],
@@ -306,9 +319,9 @@ const I18N = {
     winAll: 'All levels complete! 🏆', win: 'Perfectly parked! 🎉', fail: 'Car too damaged! 💥', perfect: 'Flawless!',
     tip3: p => `For three stars: no hits and under ${p} seconds`, failNote: n => `More than ${n} hits. Try again, slowly.`,
     hold: 'Hold still… ✋', holdRev: 'Back in (R)', holdAlign: 'Straighten up in the box', holdStop: 'Stop!',
-    confirmReset: 'Erase all stars and unlocked levels?',
-    cars: ['Sedan', 'Hatchback', 'SUV', 'Pickup', 'Sports'], speed: 'Speed', accel: 'Acceleration', handling: 'Handling', size: 'Size',
-    needStars: (n, have) => `🔒 Needs ${n} ⭐ to unlock (you have ${have})`,
+    confirmReset: 'Erase all stars, levels, coins and bought cars?',
+    cars: ['Sedan', 'Hatchback', 'SUV', 'Pickup', 'Sports', 'Van', 'Classic'], speed: 'Speed', accel: 'Acceleration', handling: 'Handling', size: 'Size',
+    buy: p => `Buy 🪙 ${p}`, notEnough: n => `You need ${n} more 🪙. Play levels to earn them!`, earned: n => `+${n} 🪙`,
     levels: [
       ['First Steps', 'Drive forward into the green box'], ['Between Two Cars', 'Turn in between the two cars'],
       ['Reverse In', 'Back into the spot (R)'], ['Parallel Parking', 'Park by the kerb between the cars'],
@@ -543,29 +556,39 @@ function merge(parts, withColor = false) {
 /* ---------- Car models (front towards +z). The side profile is extruded across the width. ---------- */
 // top: outline from the front bottom over the roofline to the rear bottom; ['q', cx, cy, x, y] is a curve
 const MODELS = [
-  { id: 'sedan', L: 4.5, W: 1.84, wr: .36, zf: 1.38, zr: -1.38, bottom: .28, maxF: 9, acc: 4.5, steer: .66, stars: 0,
+  { id: 'sedan', L: 4.5, W: 1.84, wr: .36, zf: 1.38, zr: -1.38, bottom: .28, maxF: 9, acc: 4.5, steer: .66, price: 0,
     top: [[2.2, .28], ['q', 2.3, .32, 2.28, .55], ['q', 2.26, .8, 2.0, .85], [1.15, .97], [-1.4, .99], [-1.95, .96], ['q', -2.26, .92, -2.27, .6], ['q', -2.28, .32, -2.2, .28]],
     cabin: [[-1.42, .95], [-.8, 1.38], [.32, 1.4], [1.12, .95]], roof: [[-.86, 1.35], [.38, 1.37], [.33, 1.45], [-.78, 1.44]],
     pillar: -.18, belt: .99, roofY: 1.38, mirror: .92, headY: .72, tailY: .8, plateF: .46, plateR: .64 },
-  { id: 'hatch', L: 3.9, W: 1.76, wr: .34, zf: 1.2, zr: -1.25, bottom: .27, maxF: 8.5, acc: 4.6, steer: .74, stars: 0,
+  { id: 'hatch', L: 3.9, W: 1.76, wr: .34, zf: 1.2, zr: -1.25, bottom: .27, maxF: 8.5, acc: 4.6, steer: .74, price: 0,
     top: [[1.9, .27], ['q', 1.98, .3, 1.97, .52], ['q', 1.95, .76, 1.72, .82], [1.0, .95], [-1.82, .99], ['q', -1.96, .97, -1.96, .7], ['q', -1.97, .32, -1.9, .27]],
     cabin: [[-1.84, .95], [-1.74, 1.42], [.22, 1.44], [.98, .94]], roof: [[-1.77, 1.39], [.25, 1.41], [.2, 1.48], [-1.72, 1.47]],
     pillar: -.35, belt: .99, roofY: 1.42, mirror: .82, headY: .7, tailY: .86, plateF: .44, plateR: .6 },
-  { id: 'suv', L: 4.7, W: 1.96, wr: .42, zf: 1.45, zr: -1.45, bottom: .42, maxF: 8.5, acc: 4, steer: .62, stars: 0,
+  { id: 'suv', L: 4.7, W: 1.96, wr: .42, zf: 1.45, zr: -1.45, bottom: .42, maxF: 8.5, acc: 4, steer: .62, price: 400,
     top: [[2.3, .42], ['q', 2.4, .48, 2.38, .75], ['q', 2.36, 1.02, 2.15, 1.06], [1.3, 1.16], [-2.2, 1.2], ['q', -2.36, 1.18, -2.36, .9], ['q', -2.38, .46, -2.3, .42]],
     cabin: [[-2.2, 1.16], [-2.12, 1.82], [.5, 1.84], [1.28, 1.15]], roof: [[-2.14, 1.79], [.53, 1.81], [.48, 1.88], [-2.08, 1.87]],
     pillar: -.4, belt: 1.2, roofY: 1.82, mirror: 1.1, headY: .9, tailY: 1.02, plateF: .62, plateR: .78,
     trimExtra: [[.72, 1.94, -.8, .06, .06, 2.4], [-.72, 1.94, -.8, .06, .06, 2.4]] },
-  { id: 'pickup', L: 5.2, W: 1.96, wr: .42, zf: 1.75, zr: -1.6, bottom: .42, maxF: 8, acc: 3.8, steer: .58, stars: 0,
+  { id: 'pickup', L: 5.2, W: 1.96, wr: .42, zf: 1.75, zr: -1.6, bottom: .42, maxF: 8, acc: 3.8, steer: .58, price: 600,
     top: [[2.55, .42], ['q', 2.64, .5, 2.62, .8], ['q', 2.6, 1.08, 2.4, 1.12], [1.5, 1.2], [-2.5, 1.24], ['q', -2.6, 1.22, -2.6, .9], ['q', -2.62, .46, -2.55, .42]],
     cabin: [[-.62, 1.2], [-.56, 1.86], [.72, 1.87], [1.48, 1.19]], roof: [[-.6, 1.83], [.75, 1.84], [.7, 1.91], [-.55, 1.9]],
     belt: 1.22, roofY: 1.86, mirror: 1.3, headY: .9, tailY: 1.0, plateF: .62, plateR: .72,
     trimExtra: [[0, 1.27, -1.58, 1.72, .04, 1.85]] },
-  { id: 'sports', L: 4.4, W: 1.9, wr: .35, zf: 1.4, zr: -1.35, bottom: .22, maxF: 11, acc: 6, steer: .68, stars: 10,
+  { id: 'sports', L: 4.4, W: 1.9, wr: .35, zf: 1.4, zr: -1.35, bottom: .22, maxF: 11, acc: 6, steer: .68, price: 2000,
     top: [[2.15, .22], ['q', 2.26, .26, 2.24, .42], ['q', 2.22, .58, 2.0, .62], [.75, .82], [-1.55, .9], [-2.0, .88], ['q', -2.22, .86, -2.22, .55], ['q', -2.23, .26, -2.15, .22]],
     cabin: [[-1.5, .86], [-.78, 1.2], [.02, 1.22], [.78, .8]], roof: [[-.82, 1.17], [.05, 1.19], [0, 1.26], [-.76, 1.25]],
     belt: .88, roofY: 1.2, mirror: .72, headY: .5, tailY: .7, plateF: .32, plateR: .5,
     paintExtra: [[0, 1.08, -1.95, 1.7, .05, .32]], trimExtra: [[.55, .97, -1.95, .06, .18, .12], [-.55, .97, -1.95, .06, .18, .12]] },
+  { id: 'van', L: 4.9, W: 1.95, wr: .38, zf: 1.6, zr: -1.55, bottom: .36, maxF: 8, acc: 3.8, steer: .6, price: 500,
+    top: [[2.4, .36], ['q', 2.5, .42, 2.48, .7], ['q', 2.46, .95, 2.25, 1.0], [1.75, 1.12], [-2.4, 1.15], ['q', -2.47, 1.1, -2.47, .8], ['q', -2.48, .4, -2.4, .36]],
+    cabin: [[-2.38, 1.12], [-2.36, 1.98], [.95, 2.0], [1.7, 1.12]], roof: [[-2.37, 1.95], [.98, 1.97], [.93, 2.05], [-2.32, 2.04]],
+    pillar: -.3, belt: 1.15, roofY: 1.98, mirror: 1.5, headY: .82, tailY: 1.0, plateF: .55, plateR: .7,
+    paintExtra: [[0, 1.56, -1.25, 1.67, .84, .1], [0, 1.56, .45, 1.67, .84, .1]] },
+  { id: 'classic', L: 4.7, W: 1.86, wr: .36, zf: 1.45, zr: -1.5, bottom: .3, maxF: 9.5, acc: 4.2, steer: .62, price: 1200,
+    top: [[2.3, .3], ['q', 2.37, .35, 2.36, .6], [2.25, .78], [.75, .86], [-1.3, .88], [-2.25, .86], ['q', -2.36, .84, -2.36, .6], ['q', -2.37, .34, -2.3, .3]],
+    cabin: [[-1.3, .86], [-.75, 1.3], [.2, 1.31], [.72, .85]], roof: [[-.78, 1.27], [.23, 1.28], [.18, 1.36], [-.72, 1.35]],
+    belt: .88, roofY: 1.3, mirror: .65, headY: .66, tailY: .7, plateF: .42, plateR: .55,
+    chromeExtra: [[0, .44, 2.36, 1.9, .13, .12], [0, .44, -2.36, 1.9, .13, .12], [.94, .7, .1, .03, .04, 3.6], [-.94, .7, .1, .03, .04, 3.6]] },
 ];
 
 function extrude(shape, depth, bevel) {
@@ -628,7 +651,8 @@ function buildModel(md) {
     tail: merge([box([tx, md.tailY, -L / 2 + .01, .46, .12, .08]), box([-tx, md.tailY, -L / 2 + .01, .46, .12, .08])]),
     rev: merge([box([.3, md.tailY, -L / 2, .14, .08, .07]), box([-.3, md.tailY, -L / 2, .14, .08, .07])]),
     black: merge([...trim, ...WPOS.map(([x, z]) => ({ g: WHEEL.black, m: mat(x, wr, z, 0, 0, 0, k, k, k) }))]),
-    chrome: merge(WPOS.map(([x, z]) => ({ g: WHEEL.chrome, m: mat(x, wr, z, 0, 0, 0, k, k, k) }))),
+    chrome: merge([...(md.chromeExtra || []).map(box), ...WPOS.map(([x, z]) => ({ g: WHEEL.chrome, m: mat(x, wr, z, 0, 0, 0, k, k, k) }))]),
+    chromeBody: md.chromeExtra ? merge(md.chromeExtra.map(box)) : null,
     WPOS,
   };
 }
@@ -642,6 +666,7 @@ function makePlayer(md) {
   const add = (g, m, cast = true) => { const o = new THREE.Mesh(g, m); o.castShadow = cast; o.receiveShadow = true; chassis.add(o); return o; };
   add(G.paint, paint); add(G.cabin, M.glass); add(G.trim, M.trim); add(G.plate, M.plate, false);
   add(G.head, M.head, false); add(G.tail, tail, false); add(G.rev, rev, false);
+  if (G.chromeBody) add(G.chromeBody, M.chrome);
   const front = [], spin = [], k = md.wr / .36;
   for (const [x, z] of G.WPOS) {
     const pivot = new THREE.Group(), s = new THREE.Group();
@@ -680,7 +705,7 @@ function solid(x, z, hw, hl, rot, h, material, y0 = 0) {
 function line(x, z, len, rot, material = M.line, w = .13) { put(material, PLANE, mat(x, .012, z, 0, rot, 0, w, 1, len)); }
 
 const PARKED = [0x3b6fb6, 0xeeeeee, 0x2a9d8f, 0xd9b44a, 0x1f2933, 0x8d99ae, 0xb23a48, 0x5b4a8a, 0x0e0e10, 0xb9bec4, 0x6b8f71, 0xc7c2b6];
-const PARKED_MODELS = [0, 0, 0, 1, 1, 2, 2, 3, 4], SHORT_MODELS = [0, 0, 1];
+const PARKED_MODELS = [0, 0, 0, 1, 1, 2, 2, 3, 4, 5, 5, 6], SHORT_MODELS = [0, 0, 1];
 function parked(x, z, rot, short = false) {
   const pool = short ? SHORT_MODELS : PARKED_MODELS, md = MODELS[pool[Math.floor(rand() * pool.length)]], G = md.geo;
   const m = mat(x, 0, z, 0, rot);
@@ -1018,6 +1043,8 @@ const camPos = new THREE.Vector3(), camLook = new THREE.Vector3();
 const SCREENS = ['sMain', 'sLevels', 'sGarage', 'sSettings', 'sPause', 'sResult'];
 function show(id) {
   for (const s of SCREENS) $('#' + s).classList.toggle('hide', s !== id);
+  $('#coinChip').classList.toggle('hide', !['sMain', 'sLevels', 'sGarage'].includes(id));
+  updateCoins();
   $('#hud').classList.toggle('hide', !(state === 'play' || state === 'win' || state === 'fail') || id !== null);
 }
 function goMenu(id) {
@@ -1063,15 +1090,18 @@ function startLevel(i) {
 }
 function pause() { if (state !== 'play') return; state = 'pause'; backTo = 'sPause'; show('sPause'); }
 function resume() { state = 'play'; show(null); }
+function updateCoins() { $('#coinVal').textContent = save.coins; }
 function updateDamage() { $$('#dmg i').forEach((el, k) => el.classList.toggle('on', k < hits)); }
 function finish(won) {
   state = won ? 'win' : 'fail';
   $('#hold').classList.add('hide');
   const L = LEVELS[cur], last = cur === LEVELS.length - 1;
-  let stars = 0;
+  let stars = 0, reward = 0;
   if (won) {
     stars = 3 - (hits > 0 ? 1 : 0) - (hits > 2 || time > L.par * 1.5 ? 1 : 0);
     stars = Math.max(1, stars);
+    reward = 30 + stars * 20 + (save.stars[cur] ? 0 : 100); // first clear of a level pays a bonus
+    save.coins += reward;
     save.stars[cur] = Math.max(save.stars[cur] || 0, stars);
     save.unlocked = Math.max(save.unlocked, Math.min(cur + 2, LEVELS.length));
     persist();
@@ -1086,6 +1116,8 @@ function finish(won) {
   $('#resHits').textContent = hits;
   $('#resNote').textContent = won ? (stars < 3 ? t.tip3(L.par) : t.perfect) : t.failNote(MAX_HITS - 1);
   $('#bNext').classList.toggle('hide', !won || last);
+  $('#resCoins').classList.toggle('hide', !won);
+  $('#resCoins').textContent = t.earned(0);
   const spans = $$('#resStars span');
   spans.forEach(s => s.classList.remove('on'));
   $('#resStars').classList.toggle('hide', !won);
@@ -1093,6 +1125,11 @@ function finish(won) {
     if (state !== 'win' && state !== 'fail') return;
     show('sResult');
     spans.forEach((s, k) => setTimeout(() => { if (k < stars) { s.classList.add('on'); tone(880 + k * 220, .15, 'triangle', .1); } }, 250 + k * 280));
+    if (reward) setTimeout(() => {
+      const t0 = performance.now();
+      const step = () => { const f = Math.min(1, (performance.now() - t0) / 700); $('#resCoins').textContent = t.earned(Math.round(reward * f)); if (f < 1) requestAnimationFrame(step); };
+      step(); tone(1320, .12, 'triangle', .08);
+    }, 1200);
   }, 1300);
 }
 function toggleCam() { camMode = (camMode + 1) % 3; camYaw = camPitch = 0; updateCam(0, true); }
@@ -1117,7 +1154,7 @@ $('#bRetry').onclick = () => startLevel(cur);
 $('#bResLevels').onclick = () => goMenu('sLevels');
 $('#bReset').onclick = () => {
   if (!confirm(tr().confirmReset)) return;
-  save.unlocked = 1; save.stars = []; persist();
+  save.unlocked = 1; save.stars = []; save.coins = 0; save.owned = [0, 1]; save.car = 0; persist(); setPlayerModel(0);
 };
 
 // Garage colours
@@ -1129,12 +1166,15 @@ COLORS.forEach((c, i) => {
 });
 // Car choice: browse every model, keep only unlocked ones
 let garageIdx = 0;
-const totalStars = () => save.stars.reduce((a, b) => a + (b || 0), 0);
-const carLocked = i => totalStars() < MODELS[i].stars;
+const carLocked = i => !save.owned.includes(i);
 function renderGarage() {
   const md = MODELS[garageIdx], t = tr();
   $('#cName').textContent = t.cars[garageIdx];
-  $('#cLock').textContent = carLocked(garageIdx) ? t.needStars(md.stars, totalStars()) : '';
+  const locked = carLocked(garageIdx);
+  $('#cLock').textContent = locked ? `🪙 ${md.price}` : '';
+  $('#bBuy').classList.toggle('hide', !locked);
+  $('#bBuy').classList.toggle('poor', locked && save.coins < md.price);
+  $('#bBuy').textContent = t.buy(md.price);
   const rows = [[t.speed, md.maxF / 11], [t.accel, md.acc / 6], [t.handling, md.steer / .74], [t.size, md.L / 5.2]];
   $('#cStats').innerHTML = rows.map(([n, v]) => `<span>${n}</span><div class="bar"><i style="width:${Math.round(v * 100)}%"></i></div>`).join('');
 }
@@ -1146,6 +1186,18 @@ function leaveGarage() {
   if (!carLocked(garageIdx)) { save.car = garageIdx; persist(); }
   else setPlayerModel(save.car);
 }
+$('#bBuy').onclick = () => {
+  const md = MODELS[garageIdx], t = tr();
+  if (save.coins < md.price) {
+    $('#cLock').textContent = t.notEnough(md.price - save.coins);
+    $('#cLock').classList.remove('shake'); void $('#cLock').offsetWidth; $('#cLock').classList.add('shake');
+    tone(180, .2, 'square', .08);
+    return;
+  }
+  save.coins -= md.price; save.owned.push(garageIdx); save.car = garageIdx; persist();
+  [660, 880, 1320].forEach((f, i) => tone(f, .2, 'triangle', .12, i * .1));
+  burst(); updateCoins(); renderGarage();
+};
 $('#cPrev').onclick = () => browseCar(-1);
 $('#cNext').onclick = () => browseCar(1);
 function applyColor() {
