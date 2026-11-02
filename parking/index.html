@@ -120,6 +120,13 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 #coinChip{position:fixed;top:calc(12px + env(safe-area-inset-top));inset-inline-start:calc(12px + env(safe-area-inset-left));z-index:21;font-size:16px;color:#ffd36b}
 .earn{font-size:24px;font-weight:900;color:#ffd36b;margin:2px 0 4px;direction:ltr}
 #bBuy{margin:0 0 8px;padding:9px}
+.btn.ad{background:linear-gradient(180deg,#34d399,#059669);border:0;box-shadow:0 4px 0 #04603f;padding:10px}
+#bFreeCoins{margin:0 0 8px}
+#toast{position:fixed;left:50%;bottom:calc(30% + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:rgba(12,18,32,.92);color:#fff;
+  padding:10px 18px;border-radius:14px;font-weight:800;max-width:86vw;text-align:center;opacity:0;transition:opacity .3s;pointer-events:none}
+#toast.show{opacity:1}
+#adfake{position:fixed;inset:0;z-index:70;background:#111;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:system-ui,sans-serif}
+#adfake button{background:#fff;color:#111;border-radius:50%;width:44px;height:44px;font-size:20px}
 #bBuy.poor{filter:grayscale(.7) brightness(.8)}
 .lock.shake{animation:shk .4s}
 @keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
@@ -219,6 +226,7 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <div class="carsel" dir="ltr"><button class="ib glass" id="cPrev">◀</button><div><div class="cname" id="cName"></div><div class="lock" id="cLock"></div></div><button class="ib glass" id="cNext">▶</button></div>
     <div class="cstats" id="cStats"></div>
     <button class="btn pri hide" id="bBuy"></button>
+    <button class="btn ad hide" id="bFreeCoins" data-i18n="adFree"></button>
     <div class="mut" data-i18n="pickColor"></div>
     <div class="sw" id="swatches"></div>
     <button class="btn pri" data-back data-i18n="done"></button>
@@ -233,6 +241,8 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <div class="set"><span data-i18n="graphics"></span><div class="seg" data-opt="quality"><button data-v="high" data-i18n="high"></button><button data-v="low" data-i18n="low"></button></div></div>
     <div class="set"><span data-i18n="sound"></span><div class="seg" data-opt="sound"><button data-v="on" data-i18n="on"></button><button data-v="off" data-i18n="off"></button></div></div>
     <div class="how" data-i18n-html="how"></div>
+    <a class="btn" id="lPrivacy" href="https://lhamami12.github.io/parking/privacy.html" target="_blank" rel="noopener" style="font-size:14px;padding:8px;text-decoration:none" data-i18n="privacy"></a>
+    <button class="btn hide" id="bAdPriv" style="font-size:14px;padding:8px" data-i18n="adPriv"></button>
     <button class="btn" id="bReset" style="font-size:14px;padding:8px" data-i18n="reset"></button>
     <button class="btn pri" data-back data-i18n="done"></button>
   </div>
@@ -252,13 +262,16 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <h2 id="resTitle"></h2>
     <div class="stars" id="resStars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
     <div class="stats"><div><small data-i18n="time"></small><span id="resTime"></span></div><div><small data-i18n="hits"></small><span id="resHits"></span></div></div>
-    <div class="earn" id="resCoins"></div>
+    <div class="earn" id="resCoins" dir="ltr"></div>
+    <button class="btn ad hide" id="bDouble" data-i18n="adDouble"></button>
+    <button class="btn ad hide" id="bContinue" data-i18n="adContinue"></button>
     <div class="mut" id="resNote"></div>
     <button class="btn pri" id="bNext" data-i18n="next"></button>
     <div class="row2"><button class="btn" id="bRetry" data-i18n="retry"></button><button class="btn" id="bResLevels" data-i18n="levelsBtn"></button></div>
   </div>
 </div>
 
+<div id="toast"></div>
 <div id="coinChip" class="chip glass hide">🪙 <span id="coinVal">0</span></div>
 <div id="loading"><div style="text-align:center"><div class="logo"><div class="l1">PARKING<sup>3D</sup></div></div><div class="spin"></div></div></div>
 
@@ -300,6 +313,8 @@ const I18N = {
     confirmReset: 'مسح كل النجوم والمستويات والعملات والسيارات المشتراة؟',
     cars: ['سيدان', 'هاتشباك', 'دفع رباعي', 'بيك أب', 'رياضية', 'فان', 'كلاسيكية'], speed: 'السرعة', accel: 'التسارع', handling: 'المناورة', size: 'الحجم',
     buy: p => `شراء 🪙 ${p}`, notEnough: n => `تحتاج ${n} 🪙 إضافية. العب المستويات لتجمعها!`, earned: n => `+${n} 🪙`,
+    adDouble: '🎬 ضاعف العملات', adContinue: '🎬 أكمل المستوى', adFree: '🎬 +100 🪙 مجاناً',
+    adFail: 'لا يوجد إعلان الآن، حاول بعد قليل', privacy: 'سياسة الخصوصية', adPriv: 'خيارات الخصوصية للإعلانات',
     levels: [
       ['البداية', 'تقدّم واركن داخل المربع الأخضر'], ['بين سيارتين', 'انعطف وادخل بين السيارتين'],
       ['بالرجوع', 'اركن بالرجوع إلى الخلف (R)'], ['ركن موازٍ', 'اركن بجانب الرصيف بين السيارتين'],
@@ -322,6 +337,8 @@ const I18N = {
     confirmReset: 'Erase all stars, levels, coins and bought cars?',
     cars: ['Sedan', 'Hatchback', 'SUV', 'Pickup', 'Sports', 'Van', 'Classic'], speed: 'Speed', accel: 'Acceleration', handling: 'Handling', size: 'Size',
     buy: p => `Buy 🪙 ${p}`, notEnough: n => `You need ${n} more 🪙. Play levels to earn them!`, earned: n => `+${n} 🪙`,
+    adDouble: '🎬 Double coins', adContinue: '🎬 Continue level', adFree: '🎬 +100 🪙 free',
+    adFail: 'No ad available right now, try again soon', privacy: 'Privacy policy', adPriv: 'Ad privacy options',
     levels: [
       ['First Steps', 'Drive forward into the green box'], ['Between Two Cars', 'Turn in between the two cars'],
       ['Reverse In', 'Back into the spot (R)'], ['Parallel Parking', 'Park by the kerb between the cars'],
@@ -1036,8 +1053,99 @@ function crash() {
 }
 document.addEventListener('click', e => { if (e.target.closest('.btn,.ib,.lv,.seg button,.sw button')) { ensureAudio(); tone(760, .04, 'triangle', .06); } });
 
+/* ---------- Ads (AdMob through the Capacitor plugin, only inside the Android app) ---------- */
+// Google's test units (marked "Test Ad", no earnings) are used until ADS_LIVE is true.
+// Keep test ads during testing; for the production release put the real unit IDs in AD_LIVE,
+// set ADS_LIVE = true and put the real AdMob app ID in
+// parking-app/android/app/src/main/res/values/strings.xml (admob_app_id).
+const ADS_LIVE = false;
+const AD_TEST = { interstitial: 'ca-app-pub-3940256099942544/1033173712', rewarded: 'ca-app-pub-3940256099942544/5224354917' };
+const AD_LIVE = { interstitial: 'ca-app-pub-XXXXXXXXXXXXXXXX/NNNNNNNNNN', rewarded: 'ca-app-pub-XXXXXXXXXXXXXXXX/NNNNNNNNNN' };
+// A live unit that was never filled in falls back to the test unit instead of failing silently.
+const AD_UNITS = ADS_LIVE && !/X|N{4}/.test(AD_LIVE.interstitial + AD_LIVE.rewarded) ? AD_LIVE : AD_TEST;
+const NATIVE = window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform() ? window.Capacitor.Plugins : null;
+const audioPause = () => { try { ac && ac.suspend(); } catch (_) {} };
+const audioResume = () => { try { ac && !muted() && ac.resume(); } catch (_) {} };
+const Ads = {
+  native: null, test: /[?&]ads=test/.test(location.search), busy: false, last: Date.now(), results: 0,
+  async init() {
+    const P = NATIVE && NATIVE.AdMob;
+    if (!P) return refreshAdButtons();
+    try {
+      await P.initialize({});
+      try { const c = await P.requestConsentInfo(); if (c.isConsentFormAvailable && c.status === 'REQUIRED') await P.showConsentForm(); } catch (_) {}
+      this.native = P; this.load('i'); this.load('r');
+      try { const c = await P.requestConsentInfo(); if (c.privacyOptionsRequirementStatus === 'REQUIRED') $('#bAdPriv').classList.remove('hide'); } catch (_) {}
+    } catch (_) {}
+    refreshAdButtons();
+  },
+  ok() { return !!this.native || this.test; },
+  load(k) {
+    const P = this.native;
+    if (P) (k === 'i' ? P.prepareInterstitial({ adId: AD_UNITS.interstitial }) : P.prepareRewardVideoAd({ adId: AD_UNITS.rewarded })).catch(() => {});
+  },
+  // Between levels only: never in the first two levels, at most once every 3 results and 2.5 minutes
+  async interstitial() {
+    this.results++;
+    if (!this.ok() || this.busy || cur < 2 || this.results < 3 || Date.now() - this.last < 150000) return;
+    this.busy = true; audioPause();
+    try {
+      if (this.native) {
+        const P = this.native;
+        await new Promise(async ok => {
+          let h1, h2;
+          const end = () => { h1 && h1.remove(); h2 && h2.remove(); ok(); };
+          h1 = await P.addListener('interstitialAdDismissed', end);
+          h2 = await P.addListener('interstitialAdFailedToShow', end);
+          setTimeout(end, 90000);
+          P.showInterstitial().catch(end);
+        });
+        this.load('i');
+      } else await fakeAd(false);
+    } catch (_) {}
+    audioResume(); this.busy = false; this.results = 0; this.last = Date.now();
+  },
+  // Resolves true only when the player earned the reward
+  rewarded() {
+    return new Promise(async done => {
+      if (!this.ok() || this.busy) return done(false);
+      this.busy = true; audioPause();
+      const fin = v => { this.busy = false; audioResume(); if (v) { this.last = Date.now(); this.results = 0; } done(v); };
+      if (!this.native) { fin(await fakeAd(true)); return; }
+      const P = this.native, hs = [];
+      let got = false, ended = false;
+      const end = () => { if (ended) return; ended = true; hs.forEach(h => h && h.remove && h.remove()); this.load('r'); setTimeout(() => fin(got), 300); };
+      try {
+        hs.push(await P.addListener('onRewardedVideoAdReward', () => { got = true; }));
+        hs.push(await P.addListener('onRewardedVideoAdDismissed', end));
+        hs.push(await P.addListener('onRewardedVideoAdFailedToShow', end));
+        const r = await P.showRewardVideoAd();
+        if (r && r.amount != null) got = true;
+      } catch (_) { end(); }
+    });
+  },
+};
+// Stand-in ad used only in the browser with ?ads=test, to try the ad flows without a phone
+function fakeAd(rewarded) {
+  return new Promise(res => {
+    const d = document.createElement('div');
+    d.id = 'adfake';
+    let n = 3;
+    d.innerHTML = `<div style="opacity:.6;font-size:13px">TEST AD · ${rewarded ? 'rewarded' : 'interstitial'}</div><div id="adN" style="font-size:42px;font-weight:700">${n}</div><button style="visibility:hidden">✕</button>`;
+    document.body.appendChild(d);
+    const iv = setInterval(() => {
+      d.querySelector('#adN').textContent = --n;
+      if (n <= 0) { clearInterval(iv); const b = d.querySelector('button'); b.style.visibility = 'visible'; b.onclick = () => { d.remove(); res(true); }; }
+    }, 1000);
+  });
+}
+function refreshAdButtons() { $('#bFreeCoins').classList.toggle('hide', !Ads.ok()); }
+let toastT = 0;
+function toast(msg) { const el = $('#toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2600); }
+
 /* ---------- Game state & screens ---------- */
 let state = 'menu', cur = 0, time = 0, hits = 0, hold = 0, hitCd = 0, shake = 0, camMode = 0, portrait = false, orbit = 0;
+let lastReward = 0, continued = false;
 let menuView = 'main', backTo = 'sMain', beepT = 0, sensorD = Infinity, brakeLit = false, throttle = 0, bannerT = 0;
 const camPos = new THREE.Vector3(), camLook = new THREE.Vector3();
 const SCREENS = ['sMain', 'sLevels', 'sGarage', 'sSettings', 'sPause', 'sResult'];
@@ -1075,7 +1183,7 @@ function placePlayer(i) {
 function startLevel(i) {
   cur = i; state = 'play';
   buildLevel(i); placePlayer(i);
-  time = 0; hits = 0; hold = 0; hitCd = 0; shake = 0; camYaw = camPitch = 0; wheelAngle = 0;
+  time = 0; hits = 0; hold = 0; hitCd = 0; shake = 0; continued = false; camYaw = camPitch = 0; wheelAngle = 0;
   setGear('D');
   $('#cLvl').textContent = `${i + 1}/${LEVELS.length}`;
   updateDamage();
@@ -1097,11 +1205,12 @@ function finish(won) {
   $('#hold').classList.add('hide');
   const L = LEVELS[cur], last = cur === LEVELS.length - 1;
   let stars = 0, reward = 0;
+  lastReward = 0;
   if (won) {
     stars = 3 - (hits > 0 ? 1 : 0) - (hits > 2 || time > L.par * 1.5 ? 1 : 0);
     stars = Math.max(1, stars);
     reward = 30 + stars * 20 + (save.stars[cur] ? 0 : 100); // first clear of a level pays a bonus
-    save.coins += reward;
+    save.coins += reward; lastReward = reward;
     save.stars[cur] = Math.max(save.stars[cur] || 0, stars);
     save.unlocked = Math.max(save.unlocked, Math.min(cur + 2, LEVELS.length));
     persist();
@@ -1117,6 +1226,8 @@ function finish(won) {
   $('#resNote').textContent = won ? (stars < 3 ? t.tip3(L.par) : t.perfect) : t.failNote(MAX_HITS - 1);
   $('#bNext').classList.toggle('hide', !won || last);
   $('#resCoins').classList.toggle('hide', !won);
+  $('#bDouble').classList.toggle('hide', !won || !Ads.ok());
+  $('#bContinue').classList.toggle('hide', won || !Ads.ok() || continued);
   $('#resCoins').textContent = t.earned(0);
   const spans = $$('#resStars span');
   spans.forEach(s => s.classList.remove('on'));
@@ -1149,9 +1260,29 @@ $('#bResume').onclick = resume;
 $('#bPRestart').onclick = () => startLevel(cur);
 $('#bPSettings').onclick = () => { backTo = 'sPause'; show('sSettings'); syncSettings(); };
 $('#bPLevels').onclick = () => goMenu('sLevels');
-$('#bNext').onclick = () => startLevel(Math.min(cur + 1, LEVELS.length - 1));
-$('#bRetry').onclick = () => startLevel(cur);
-$('#bResLevels').onclick = () => goMenu('sLevels');
+// Leaving a result screen is the only moment an interstitial may appear
+const afterAd = fn => async () => { await Ads.interstitial(); fn(); };
+$('#bNext').onclick = afterAd(() => startLevel(Math.min(cur + 1, LEVELS.length - 1)));
+$('#bRetry').onclick = afterAd(() => startLevel(cur));
+$('#bResLevels').onclick = afterAd(() => goMenu('sLevels'));
+$('#bDouble').onclick = async () => {
+  if (!await Ads.rewarded()) return toast(tr().adFail);
+  save.coins += lastReward; persist();
+  $('#resCoins').textContent = tr().earned(lastReward * 2);
+  $('#bDouble').classList.add('hide');
+  tone(1320, .15, 'triangle', .1);
+};
+$('#bContinue').onclick = async () => {
+  if (!await Ads.rewarded()) return toast(tr().adFail);
+  continued = true; hits = MAX_HITS - 2; hitCd = 1; car.v = 0;
+  updateDamage(); state = 'play'; show(null);
+};
+$('#bFreeCoins').onclick = async () => {
+  if (!await Ads.rewarded()) return toast(tr().adFail);
+  save.coins += 100; persist(); updateCoins(); renderGarage();
+  [880, 1320].forEach((f, i) => tone(f, .15, 'triangle', .1, i * .1));
+};
+$('#bAdPriv').onclick = () => { if (Ads.native) Ads.native.showPrivacyOptionsForm().catch(() => {}); };
 $('#bReset').onclick = () => {
   if (!confirm(tr().confirmReset)) return;
   save.unlocked = 1; save.stars = []; save.coins = 0; save.owned = [0, 1]; save.car = 0; persist(); setPlayerModel(0);
@@ -1435,7 +1566,10 @@ function loop(now) {
   }
   drawConfetti(dt);
   renderer.render(scene, camera);
-  if (firstFrame) { firstFrame = false; const l = $('#loading'); l.style.opacity = 0; setTimeout(() => l.remove(), 500); }
+  if (firstFrame) {
+    firstFrame = false; const l = $('#loading'); l.style.opacity = 0; setTimeout(() => l.remove(), 500);
+    if (NATIVE && NATIVE.SplashScreen) NATIVE.SplashScreen.hide().catch(() => {});
+  }
   requestAnimationFrame(loop);
 }
 
@@ -1449,7 +1583,18 @@ buildLevel(0); placePlayer(0);
 show('sMain');
 updateCam(0, true);
 requestAnimationFrame(loop);
-window.game = { info: renderer.info, car, startLevel, finish, get state() { return state; }, get spot() { return spot; }, get hits() { return hits; } };
+Ads.init();
+// Android back button: pause while driving, otherwise step back through the menus
+if (NATIVE && NATIVE.App) NATIVE.App.addListener('backButton', () => {
+  if (Ads.busy) return;
+  const open = SCREENS.find(id => !$('#' + id).classList.contains('hide'));
+  if (state === 'play') pause();
+  else if (open === 'sPause') resume();
+  else if (open === 'sMain') NATIVE.App.exitApp();
+  else if (open === 'sResult') goMenu('sLevels');
+  else if (open) $(`#${open} [data-back]`).click();
+});
+window.game = { info: renderer.info, ads: Ads, car, startLevel, finish, get state() { return state; }, get spot() { return spot; }, get hits() { return hits; } };
 </script>
 </body>
 </html>
