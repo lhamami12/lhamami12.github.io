@@ -101,7 +101,8 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 .btn.pri{background:linear-gradient(180deg,#ffc933,#fb8500);color:#241500;border:0;box-shadow:0 5px 0 #9a4f00;font-size:21px}
 .btn:active{transform:translateY(2px)}
 .row2{display:flex;gap:10px}.row2 .btn{flex:1}
-.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px}
+.levels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:6px}
+@media (max-width:380px){.panel{padding:16px 12px}}
 .lv{border-radius:14px;padding:8px 2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-weight:900;font-size:22px;line-height:1.1}
 .lv small{display:block;font-size:10px;color:var(--mut);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px}
 .lv .st{display:block;font-size:11px;color:var(--acc);letter-spacing:1px}
