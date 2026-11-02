@@ -1,8 +1,9 @@
 # Parking 3D — Google Play listing
 
 Images:
-- Icon (512×512) and feature graphic (1024×500): Canva design “Parking 3D Google Play banner”
-  (page 2 = icon, page 3 = feature graphic, page 1 = alternative banner).
+- Icon: `icon-512.png` (512×512). Feature graphic: `feature-graphic.png` (1024×500),
+  or `feature-graphic-alt.png` for the night garage version. Sources from the Canva design
+  “Parking 3D Google Play banner” are in `../assets/canva/`.
 - Screenshots (1080×1920): `screenshots/ar/` and `screenshots/en/`, regenerate with
   `node store/make-screenshots.cjs` (needs a local server on :8765 at the repo root and Playwright).
 
