@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="description" content="Parking 3D — لعبة ركن سيارات ثلاثية الأبعاد: مقود، دواسات، حساسات ركن و10 مستويات.">
+<meta name="description" content="Parking 3D — a 3D car parking game: steering wheel, pedals, parking sensors and 10 levels. / لعبة ركن سيارات ثلاثية الأبعاد.">
 <title>Parking 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,12 +87,14 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 .screen.main{align-items:flex-end;background:linear-gradient(transparent 45%,rgba(5,10,20,.75))}
 .screen.main .panel{margin:0 auto;background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 @media (orientation:landscape){.screen.main{align-items:center;justify-content:flex-start;background:linear-gradient(-90deg,rgba(5,10,20,.8),transparent 60%)}
+  [dir=ltr] .screen.main{background:linear-gradient(90deg,rgba(5,10,20,.8),transparent 60%)}
   .screen.main .panel{margin:0;max-width:340px}}
 .logo{direction:ltr;margin-bottom:6px}
 .logo .l1{font-size:46px;font-weight:900;letter-spacing:3px;line-height:1.05;background:linear-gradient(#fff 20%,#ffd36b 60%,#fb8500);
   -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 rgba(0,0,0,.45))}
 .logo .l1 sup{font-size:20px;letter-spacing:0}
-.logo .l2{font-size:20px;font-weight:800;color:#e2e8f0;direction:rtl;text-shadow:0 2px 6px #000}
+.logo .l2{font-size:20px;font-weight:800;color:#e2e8f0;text-shadow:0 2px 6px #000}
+#bLang{position:fixed;top:calc(12px + env(safe-area-inset-top));inset-inline-end:calc(12px + env(safe-area-inset-right));width:auto;padding:0 14px;font-weight:900;font-size:15px;z-index:21}
 h2{margin:0 0 12px;font-size:24px;font-weight:900}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:16px;font-weight:900;font-size:18px;margin-top:10px;
   background:rgba(255,255,255,.1);border:1px solid var(--line);color:#fff}
@@ -131,18 +133,18 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 <canvas id="fx"></canvas>
 
 <div id="hud" class="hide" dir="ltr">
-  <div class="tl"><button class="ib glass" id="bPause" aria-label="إيقاف مؤقت">❚❚</button></div>
+  <div class="tl"><button class="ib glass" id="bPause" aria-label="Pause">❚❚</button></div>
   <div class="chips">
     <div class="chip glass" id="cLvl">1/10</div>
     <div class="chip glass">⏱ <span id="time">0.0</span></div>
     <div class="chip glass"><span>🔧</span><div class="dmg" id="dmg"><i></i><i></i><i></i><i></i><i></i></div></div>
   </div>
-  <div class="tr"><button class="ib glass" id="bCam" aria-label="الكاميرا">🎥</button></div>
-  <div id="hold" class="glass hide" dir="rtl">
+  <div class="tr"><button class="ib glass" id="bCam" aria-label="Camera">🎥</button></div>
+  <div id="hold" class="glass hide">
     <svg viewBox="0 0 40 40"><circle class="bg" cx="20" cy="20" r="16"/><circle id="ring" cx="20" cy="20" r="16"/></svg>
     <span id="holdLbl"></span>
   </div>
-  <div id="banner" class="glass" dir="rtl"><div class="n" id="bnN"></div><div class="t" id="bnT"></div><div class="h" id="bnH"></div><div class="p" id="bnP"></div></div>
+  <div id="banner" class="glass"><div class="n" id="bnN"></div><div class="t" id="bnT"></div><div class="h" id="bnH"></div><div class="p" id="bnP"></div></div>
   <div id="speedo" class="glass"><b id="kmh">0</b><small>km/h</small><span class="g" id="gearLbl">D</span>
     <div class="sensor" id="sensor"><i></i><i></i><i></i><i></i><i></i></div></div>
 
@@ -166,8 +168,8 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     </div>
     <div class="cluster">
       <div class="gear glass"><button id="gD" class="on">D</button><button id="gR" class="r">R</button></div>
-      <button class="pedal brake hold" data-k="brake" aria-label="فرامل"><span>فرامل</span></button>
-      <button class="pedal gasp hold" data-k="gas" aria-label="بنزين"><span>بنزين</span></button>
+      <button class="pedal brake hold" data-k="brake" aria-label="Brake"><span data-i18n="brake"></span></button>
+      <button class="pedal gasp hold" data-k="gas" aria-label="Gas"><span data-i18n="gas"></span></button>
     </div>
   </div>
 
@@ -179,53 +181,51 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 <div id="flash"></div>
 
 <div id="sMain" class="screen main">
+  <button class="ib glass" id="bLang"></button>
   <div class="panel glass">
-    <div class="logo"><div class="l1">PARKING<sup>3D</sup></div><div class="l2">ركن السيارات</div></div>
-    <button class="btn pri" id="bPlay">▶ العب</button>
-    <div class="row2"><button class="btn" id="bGarage">🚗 المرآب</button><button class="btn" id="bSettings">⚙ الإعدادات</button></div>
+    <div class="logo"><div class="l1">PARKING<sup>3D</sup></div><div class="l2" data-i18n="sub"></div></div>
+    <button class="btn pri" id="bPlay" data-i18n="play"></button>
+    <div class="row2"><button class="btn" id="bGarage" data-i18n="garage"></button><button class="btn" id="bSettings" data-i18n="settings"></button></div>
   </div>
 </div>
 
 <div id="sLevels" class="screen dim hide">
   <div class="panel glass">
-    <h2>اختر المستوى</h2>
+    <h2 data-i18n="chooseLevel"></h2>
     <div class="total" id="totalStars"></div>
     <div class="levels" id="levels"></div>
-    <button class="btn" data-back>→ رجوع</button>
+    <button class="btn" data-back data-i18n="back"></button>
   </div>
 </div>
 
 <div id="sGarage" class="screen main hide">
   <div class="panel glass">
-    <h2>🚗 المرآب</h2>
-    <div class="mut">اختر لون سيارتك</div>
+    <h2 data-i18n="garage"></h2>
+    <div class="mut" data-i18n="pickColor"></div>
     <div class="sw" id="swatches"></div>
-    <button class="btn pri" data-back>✓ تم</button>
+    <button class="btn pri" data-back data-i18n="done"></button>
   </div>
 </div>
 
 <div id="sSettings" class="screen dim hide">
   <div class="panel glass">
-    <h2>⚙ الإعدادات</h2>
-    <div class="set"><span>التحكم</span><div class="seg" data-opt="controls"><button data-v="wheel">🎡 مقود</button><button data-v="arrows">◀▶ أزرار</button></div></div>
-    <div class="set"><span>الرسومات</span><div class="seg" data-opt="quality"><button data-v="high">عالية</button><button data-v="low">منخفضة</button></div></div>
-    <div class="set"><span>الصوت</span><div class="seg" data-opt="sound"><button data-v="on">تشغيل</button><button data-v="off">إيقاف</button></div></div>
-    <div class="how">
-      🎡 <b>المقود:</b> اسحبه بإصبعك لتدور. <b>D</b> للأمام و<b>R</b> للخلف، ثم اضغط دواسة البنزين.<br>
-      👆 اسحب على الشاشة لتدوير الكاميرا حول السيارة.<br>
-      ⌨️ الحاسوب: الأسهم أو WASD، المسافة للفرامل، C للكاميرا، P للإيقاف.
-    </div>
-    <button class="btn" id="bReset" style="font-size:14px;padding:8px">مسح التقدم</button>
-    <button class="btn pri" data-back>✓ تم</button>
+    <h2 data-i18n="settings"></h2>
+    <div class="set"><span data-i18n="language"></span><div class="seg" data-opt="lang"><button data-v="ar">العربية</button><button data-v="en">English</button></div></div>
+    <div class="set"><span data-i18n="controls"></span><div class="seg" data-opt="controls"><button data-v="wheel" data-i18n="wheel"></button><button data-v="arrows" data-i18n="arrows"></button></div></div>
+    <div class="set"><span data-i18n="graphics"></span><div class="seg" data-opt="quality"><button data-v="high" data-i18n="high"></button><button data-v="low" data-i18n="low"></button></div></div>
+    <div class="set"><span data-i18n="sound"></span><div class="seg" data-opt="sound"><button data-v="on" data-i18n="on"></button><button data-v="off" data-i18n="off"></button></div></div>
+    <div class="how" data-i18n-html="how"></div>
+    <button class="btn" id="bReset" style="font-size:14px;padding:8px" data-i18n="reset"></button>
+    <button class="btn pri" data-back data-i18n="done"></button>
   </div>
 </div>
 
 <div id="sPause" class="screen dim hide">
   <div class="panel glass">
-    <h2>متوقف مؤقتاً</h2>
-    <button class="btn pri" id="bResume">▶ متابعة</button>
-    <button class="btn" id="bPRestart">↻ إعادة المستوى</button>
-    <div class="row2"><button class="btn" id="bPSettings">⚙ الإعدادات</button><button class="btn" id="bPLevels">☰ المستويات</button></div>
+    <h2 data-i18n="paused"></h2>
+    <button class="btn pri" id="bResume" data-i18n="resume"></button>
+    <button class="btn" id="bPRestart" data-i18n="restart"></button>
+    <div class="row2"><button class="btn" id="bPSettings" data-i18n="settings"></button><button class="btn" id="bPLevels" data-i18n="levelsBtn"></button></div>
   </div>
 </div>
 
@@ -233,10 +233,10 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
   <div class="panel glass">
     <h2 id="resTitle"></h2>
     <div class="stars" id="resStars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
-    <div class="stats"><div><small>الوقت</small><span id="resTime"></span></div><div><small>الاصطدامات</small><span id="resHits"></span></div></div>
+    <div class="stats"><div><small data-i18n="time"></small><span id="resTime"></span></div><div><small data-i18n="hits"></small><span id="resHits"></span></div></div>
     <div class="mut" id="resNote"></div>
-    <button class="btn pri" id="bNext">المستوى التالي ←</button>
-    <div class="row2"><button class="btn" id="bRetry">↻ إعادة</button><button class="btn" id="bResLevels">☰ المستويات</button></div>
+    <button class="btn pri" id="bNext" data-i18n="next"></button>
+    <div class="row2"><button class="btn" id="bRetry" data-i18n="retry"></button><button class="btn" id="bResLevels" data-i18n="levelsBtn"></button></div>
   </div>
 </div>
 
@@ -259,6 +259,62 @@ try {
   if (s) Object.assign(save, s);
 } catch (_) {}
 const persist = () => { try { localStorage.setItem(SKEY, JSON.stringify(save)); } catch (_) {} };
+
+/* ---------- Translations ---------- */
+const I18N = {
+  ar: {
+    sub: 'ركن السيارات', play: '▶ العب', garage: '🚗 المرآب', settings: '⚙ الإعدادات', chooseLevel: 'اختر المستوى', back: '→ رجوع',
+    pickColor: 'اختر لون سيارتك', done: '✓ تم', language: 'اللغة', controls: 'التحكم', wheel: '🎡 مقود', arrows: '◀▶ أزرار',
+    graphics: 'الرسومات', high: 'عالية', low: 'منخفضة', sound: 'الصوت', on: 'تشغيل', off: 'إيقاف', reset: 'مسح التقدم',
+    how: '🎡 <b>المقود:</b> اسحبه بإصبعك لتدور. <b>D</b> للأمام و<b>R</b> للخلف، ثم اضغط دواسة البنزين.<br>👆 اسحب على الشاشة لتدوير الكاميرا حول السيارة.<br>⌨️ الحاسوب: الأسهم أو WASD، المسافة للفرامل، C للكاميرا، P للإيقاف.',
+    paused: 'متوقف مؤقتاً', resume: '▶ متابعة', restart: '↻ إعادة المستوى', levelsBtn: '☰ المستويات', time: 'الوقت', hits: 'الاصطدامات',
+    next: 'المستوى التالي ←', retry: '↻ إعادة', brake: 'فرامل', gas: 'بنزين', langBtn: 'English',
+    level: n => `المستوى ${n}`, par: p => `⭐⭐⭐ بدون اصطدام وفي أقل من ${p} ثانية`, sec: t => `${t} ث`,
+    winAll: 'أكملت كل المستويات! 🏆', win: 'ركن ممتاز! 🎉', fail: 'تضررت السيارة! 💥', perfect: 'أداء مثالي!',
+    tip3: p => `للنجوم الثلاث: بدون اصطدام وفي أقل من ${p} ثانية`, failNote: n => `أكثر من ${n} اصطدامات. حاول مرة أخرى بهدوء.`,
+    hold: 'اثبت… ✋', holdRev: 'اركن بالرجوع (R)', holdAlign: 'استقم داخل المربع', holdStop: 'توقف!',
+    confirmReset: 'مسح كل النجوم والمستويات المفتوحة؟',
+    levels: [
+      ['البداية', 'تقدّم واركن داخل المربع الأخضر'], ['بين سيارتين', 'انعطف وادخل بين السيارتين'],
+      ['بالرجوع', 'اركن بالرجوع إلى الخلف (R)'], ['ركن موازٍ', 'اركن بجانب الرصيف بين السيارتين'],
+      ['الأقماع', 'تفادَ الأقماع ثم اركن'], ['ركن مائل', 'ادخل المكان المائل بزاوية'],
+      ['الموقف الضيق', 'ممر ضيق: اركن بالرجوع (R)'], ['موازٍ صعب', 'مكان قصير وممر ضيق'],
+      ['المرآب', 'احذر الأعمدة! اركن بالرجوع (R)'], ['التحدي الأخير', 'أقماع، أعمدة ومكان ضيق بالرجوع'],
+    ],
+  },
+  en: {
+    sub: 'Car Parking', play: '▶ Play', garage: '🚗 Garage', settings: '⚙ Settings', chooseLevel: 'Choose a level', back: '← Back',
+    pickColor: 'Pick your car colour', done: '✓ Done', language: 'Language', controls: 'Controls', wheel: '🎡 Wheel', arrows: '◀▶ Buttons',
+    graphics: 'Graphics', high: 'High', low: 'Low', sound: 'Sound', on: 'On', off: 'Off', reset: 'Reset progress',
+    how: '🎡 <b>Wheel:</b> drag it with your finger to steer. <b>D</b> drives forward, <b>R</b> reverses, then press the gas pedal.<br>👆 Drag on the screen to look around the car.<br>⌨️ Computer: arrows or WASD, Space to brake, C for camera, P to pause.',
+    paused: 'Paused', resume: '▶ Resume', restart: '↻ Restart level', levelsBtn: '☰ Levels', time: 'Time', hits: 'Hits',
+    next: 'Next level →', retry: '↻ Retry', brake: 'BRAKE', gas: 'GAS', langBtn: 'العربية',
+    level: n => `LEVEL ${n}`, par: p => `⭐⭐⭐ No hits and under ${p} seconds`, sec: t => `${t} s`,
+    winAll: 'All levels complete! 🏆', win: 'Perfectly parked! 🎉', fail: 'Car too damaged! 💥', perfect: 'Flawless!',
+    tip3: p => `For three stars: no hits and under ${p} seconds`, failNote: n => `More than ${n} hits. Try again, slowly.`,
+    hold: 'Hold still… ✋', holdRev: 'Back in (R)', holdAlign: 'Straighten up in the box', holdStop: 'Stop!',
+    confirmReset: 'Erase all stars and unlocked levels?',
+    levels: [
+      ['First Steps', 'Drive forward into the green box'], ['Between Two Cars', 'Turn in between the two cars'],
+      ['Reverse In', 'Back into the spot (R)'], ['Parallel Parking', 'Park by the kerb between the cars'],
+      ['Cone Slalom', 'Weave through the cones, then park'], ['Angled Bay', 'Drive into the angled bay'],
+      ['Tight Lot', 'Narrow aisle: back in (R)'], ['Hard Parallel', 'Short gap and a narrow lane'],
+      ['The Garage', 'Mind the pillars! Back in (R)'], ['Final Challenge', 'Cones, pillars and a tight reverse'],
+    ],
+  },
+};
+if (!I18N[save.lang]) save.lang = (navigator.language || '').toLowerCase().startsWith('ar') ? 'ar' : 'en';
+const tr = () => I18N[save.lang];
+function applyLang() {
+  const t = tr(), dir = save.lang === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.lang = save.lang;
+  document.documentElement.dir = dir;
+  $('#hold').dir = $('#banner').dir = dir;
+  $$('[data-i18n]').forEach(el => { el.textContent = t[el.dataset.i18n]; });
+  $$('[data-i18n-html]').forEach(el => { el.innerHTML = t[el.dataset.i18nHtml]; });
+  $('#bLang').textContent = t.langBtn;
+  if (!$('#sLevels').classList.contains('hide')) renderLevels();
+}
 
 /* ---------- Renderer, scene, sky, lights ---------- */
 const renderer = new THREE.WebGLRenderer({ canvas: $('#c'), antialias: true, powerPreference: 'high-performance' });
@@ -648,44 +704,44 @@ function row({ ox, oz, rot = 0, n, sp = 3, depth = 5.5, skew = 0, occ = [], targ
 }
 
 const LEVELS = [
-  { name: 'البداية', hint: 'تقدّم واركن داخل المربع الأخضر', par: 20, b: [-12, 12, -8, 14], start: [0, -4, 0],
+  { par: 20, b: [-12, 12, -8, 14], start: [0, -4, 0],
     build() { row({ ox: -6, oz: 10, n: 5, occ: [0, 4], target: 2 }); } },
-  { name: 'بين سيارتين', hint: 'انعطف وادخل بين السيارتين', par: 25, b: [-12, 12, -6, 14], start: [-8, -1, PI / 2],
+  { par: 25, b: [-12, 12, -6, 14], start: [-8, -1, PI / 2],
     build() { row({ ox: -6, oz: 10, n: 5, occ: [0, 1, 2, 4], target: 3 }); } },
-  { name: 'بالرجوع', hint: 'اركن بالرجوع إلى الخلف (R)', par: 35, b: [-12, 12, -8, 14], start: [-8, 0, PI / 2],
+  { par: 35, b: [-12, 12, -8, 14], start: [-8, 0, PI / 2],
     build() { row({ ox: -6, oz: 10, n: 5, occ: [0, 1, 3, 4], target: 2, dir: 'reverse' }); } },
-  { name: 'ركن موازٍ', hint: 'اركن بجانب الرصيف بين السيارتين', par: 35, b: [-6.6, 5, -18, 18], start: [0, -13, 0],
+  { par: 35, b: [-6.6, 5, -18, 18], start: [0, -13, 0],
     build() {
       line(-4, 0, 36, 0);
       for (const z of [-14, -8.5, -3, 8.5, 14]) parked(-5.35, z, rand() < .5 ? 0 : PI);
       setSpot(-5.25, 2.75, 1.2, 3.4, 0);
     } },
-  { name: 'الأقماع', hint: 'تفادَ الأقماع ثم اركن', par: 40, b: [-10, 10, -16, 18.5], start: [0, -13, 0],
+  { par: 40, b: [-10, 10, -16, 18.5], start: [0, -13, 0],
     build() {
       for (let z = -10; z <= 8; z += 2.5) { cone(-4.5, z); cone(4.5, z); }
       cone(-1.5, -5); cone(1.5, 0); cone(-1.5, 5);
       row({ ox: -6, oz: 14, n: 5, occ: [0, 2, 3, 4], target: 1 });
     } },
-  { name: 'ركن مائل', hint: 'ادخل المكان المائل بزاوية', par: 30, b: [-15, 15, -8, 14], start: [-12, -3, PI / 2],
+  { par: 30, b: [-15, 15, -8, 14], start: [-12, -3, PI / 2],
     build() { row({ ox: -10, oz: 9, n: 7, sp: 3.4, skew: .55, occ: [0, 1, 2, 3, 5, 6], target: 4 }); } },
-  { name: 'الموقف الضيق', hint: 'ممر ضيق: اركن بالرجوع (R)', par: 45, b: [-16, 16, -10.5, 10.5], start: [-14, 0, PI / 2],
+  { par: 45, b: [-16, 16, -10.5, 10.5], start: [-14, 0, PI / 2],
     build() {
       row({ ox: -9, oz: 6, n: 7, occ: [0, 1, 2, 3, 4, 6], target: 5, dir: 'reverse' });
       row({ ox: 9, oz: -6, rot: PI, n: 7, occ: [0, 1, 2, 3, 4, 5, 6] });
     } },
-  { name: 'موازٍ صعب', hint: 'مكان قصير وممر ضيق', par: 45, b: [-6.6, 6, -20, 20], start: [0, -16, 0],
+  { par: 45, b: [-6.6, 6, -20, 20], start: [0, -16, 0],
     build() {
       line(-4, 0, 40, 0);
       for (const z of [-15, -9.5, -4.2, 6.3, 11.8, 17]) parked(-5.35, z, rand() < .5 ? 0 : PI);
       for (let z = -18; z <= 18; z += 4) cone(2, z);
       setSpot(-5.25, 1.05, 1.2, 2.85, 0);
     } },
-  { name: 'المرآب', hint: 'احذر الأعمدة! اركن بالرجوع (R)', par: 50, indoor: true, b: [-15, 15, -12, 12], start: [-13, 0, PI / 2],
+  { par: 50, indoor: true, b: [-15, 15, -12, 12], start: [-13, 0, PI / 2],
     build() {
       row({ ox: -9, oz: 6.5, n: 7, occ: [0, 1, 3, 5, 6], target: 4, dir: 'reverse', pillars: [1, 3, 5, 7] });
       row({ ox: 9, oz: -6.5, rot: PI, n: 7, occ: [0, 2, 3, 4, 6], pillars: [0, 2, 4, 6] });
     } },
-  { name: 'التحدي الأخير', hint: 'أقماع، أعمدة ومكان ضيق بالرجوع', par: 60, b: [-12, 12, -18, 16], start: [0, -15, 0],
+  { par: 60, b: [-12, 12, -18, 16], start: [0, -15, 0],
     build() {
       for (let z = -12; z <= 2; z += 2.5) { cone(-4, z); cone(4, z); }
       cone(-1.3, -8); cone(1.3, -3.5); cone(-1.3, 1);
@@ -924,7 +980,7 @@ function renderLevels() {
     const b = document.createElement('button');
     b.className = 'lv' + (i === save.unlocked - 1 ? ' cur' : '');
     b.disabled = locked;
-    b.innerHTML = `${locked ? '🔒' : i + 1}<small>${L.name}</small><span class="st">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</span>`;
+    b.innerHTML = `${locked ? '🔒' : i + 1}<small>${tr().levels[i][0]}</small><span class="st">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</span>`;
     b.onclick = () => startLevel(i);
     g.appendChild(b);
   });
@@ -945,8 +1001,9 @@ function startLevel(i) {
   show(null);
   updateCam(0, true);
   const L = LEVELS[i];
-  $('#bnN').textContent = `المستوى ${i + 1}`; $('#bnT').textContent = L.name; $('#bnH').textContent = L.hint;
-  $('#bnP').textContent = `⭐⭐⭐ بدون اصطدام وفي أقل من ${L.par} ثانية`;
+  const t = tr();
+  $('#bnN').textContent = t.level(i + 1); $('#bnT').textContent = t.levels[i][0]; $('#bnH').textContent = t.levels[i][1];
+  $('#bnP').textContent = t.par(L.par);
   $('#banner').classList.add('show'); bannerT = 3.2;
 }
 function pause() { if (state !== 'play') return; state = 'pause'; backTo = 'sPause'; show('sPause'); }
@@ -968,10 +1025,11 @@ function finish(won) {
   } else {
     tone(300, .3, 'sawtooth', .1); tone(200, .5, 'sawtooth', .1, .25);
   }
-  $('#resTitle').textContent = won ? (last ? 'أكملت كل المستويات! 🏆' : 'ركن ممتاز! 🎉') : 'تضررت السيارة! 💥';
-  $('#resTime').textContent = `${time.toFixed(1)} ث`;
+  const t = tr();
+  $('#resTitle').textContent = won ? (last ? t.winAll : t.win) : t.fail;
+  $('#resTime').textContent = t.sec(time.toFixed(1));
   $('#resHits').textContent = hits;
-  $('#resNote').textContent = won ? (stars < 3 ? `للنجوم الثلاث: بدون اصطدام وفي أقل من ${L.par} ثانية` : 'أداء مثالي!') : `أكثر من ${MAX_HITS - 1} اصطدامات. حاول مرة أخرى بهدوء.`;
+  $('#resNote').textContent = won ? (stars < 3 ? t.tip3(L.par) : t.perfect) : t.failNote(MAX_HITS - 1);
   $('#bNext').classList.toggle('hide', !won || last);
   const spans = $$('#resStars span');
   spans.forEach(s => s.classList.remove('on'));
@@ -985,6 +1043,7 @@ function finish(won) {
 function toggleCam() { camMode = (camMode + 1) % 3; camYaw = camPitch = 0; updateCam(0, true); }
 
 $('#bPlay').onclick = () => goMenu('sLevels');
+$('#bLang').onclick = () => { save.lang = save.lang === 'ar' ? 'en' : 'ar'; persist(); applyLang(); syncSettings(); };
 $('#bGarage').onclick = () => goMenu('sGarage');
 $('#bSettings').onclick = () => { backTo = 'sMain'; show('sSettings'); syncSettings(); };
 $$('[data-back]').forEach(b => b.onclick = () => {
@@ -1001,7 +1060,7 @@ $('#bNext').onclick = () => startLevel(Math.min(cur + 1, LEVELS.length - 1));
 $('#bRetry').onclick = () => startLevel(cur);
 $('#bResLevels').onclick = () => goMenu('sLevels');
 $('#bReset').onclick = () => {
-  if (!confirm('مسح كل النجوم والمستويات المفتوحة؟')) return;
+  if (!confirm(tr().confirmReset)) return;
   save.unlocked = 1; save.stars = []; persist();
 };
 
@@ -1025,7 +1084,7 @@ function syncSettings() {
   });
 }
 $$('.seg').forEach(s => s.querySelectorAll('button').forEach(b => b.onclick = () => {
-  save[s.dataset.opt] = b.dataset.v; persist(); syncSettings(); applySettings();
+  save[s.dataset.opt] = b.dataset.v; persist(); syncSettings(); applySettings(); applyLang();
 }));
 function applySettings() {
   const arrows = save.controls === 'arrows';
@@ -1106,7 +1165,8 @@ function checkSpot(dt) {
   hold = ok ? hold + dt : 0;
   $('#hold').classList.toggle('hide', !inside);
   if (inside) {
-    $('#holdLbl').textContent = ok ? 'اثبت… ✋' : spot.dir === 'reverse' && fwd ? 'اركن بالرجوع (R)' : !dirOK ? 'استقم داخل المربع' : 'توقف!';
+    const t = tr();
+    $('#holdLbl').textContent = ok ? t.hold : spot.dir === 'reverse' && fwd ? t.holdRev : !dirOK ? t.holdAlign : t.holdStop;
     $('#ring').style.strokeDashoffset = 100.5 * (1 - Math.min(1, hold / 1.2));
   }
   const t = performance.now() / 1000;
@@ -1130,7 +1190,7 @@ function updateCam(dt, snap) {
   const tp = new THREE.Vector3(), tl = new THREE.Vector3();
   if (state === 'menu') {
     const garage = menuView === 'garage', r = garage ? 6.2 : 8.5;
-    const ox = portrait ? 0 : (garage ? 1.2 : -1.6);
+    const ox = portrait ? 0 : (save.lang === 'ar' ? 1 : -1) * (garage ? 1.2 : 1.6);
     tp.set(car.x + Math.cos(orbit) * r, garage ? 2.2 : 3, car.z + Math.sin(orbit) * r);
     tl.set(car.x, portrait ? -.9 : garage ? .4 : 1, car.z);
     // shift the look target sideways so the car sits beside the menu panel
@@ -1250,6 +1310,7 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
+applyLang();
 applyColor();
 applySettings();
 syncSettings();
