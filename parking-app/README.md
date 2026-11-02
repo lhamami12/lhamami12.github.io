@@ -14,10 +14,11 @@
 4. افتح الـzip واضغط على `app-debug.apk` لتثبيته (اسمح بـ«تثبيت تطبيقات من مصادر غير معروفة»).
 
 **ملف النشر الموقّع (AAB) لـ Google Play:**
-السرّ `KEYSTORE_PASSWORD` نفسه المستعمل لتطبيق Arrow Escape يكفي (إن كان موجودًا في
-**Settings ← Secrets and variables ← Actions**). في أول بناء موقّع يُنشأ مفتاح رفع خاص بهذا التطبيق
-ويُحفظ **مشفّرًا** في `parking-app/signing/upload-keystore.jks.enc`، ثم حمّل `parking-3d-release`:
+يُوقَّع تلقائيًا بنفس مفتاح الرفع الذي يستعمله Bonbon Pop وArrow Escape، أي الأسرار الأربعة الموجودة في
+**Settings ← Secrets and variables ← Actions**: `ANDROID_KEYSTORE_BASE64` و`ANDROID_KEYSTORE_PASSWORD`
+و`ANDROID_KEY_ALIAS` و`ANDROID_KEY_PASSWORD`. حمّل `parking-3d-release` من صفحة البناء:
 فيه `app-release.aab` (ارفعه إلى Google Play) و`app-release.apk`.
+لإعطاء هذا التطبيق مفتاحًا خاصًا به، أضف نفس الأسرار الأربعة مع البادئة `PARKING_` (مثل `PARKING_KEYSTORE_BASE64`).
 
 > عند رفع أول AAB في Play Console فعّل **Play App Signing** (يكون مفعّلًا افتراضيًا).
 > رقم النسخة (`versionCode`) يزيد تلقائيًا مع كل بناء.
