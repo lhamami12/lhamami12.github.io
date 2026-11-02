@@ -4,6 +4,6 @@
     <string name="title_activity_main">Arrow Escape</string>
     <string name="package_name">com.arrowescape.jeux</string>
     <string name="custom_url_scheme">com.arrowescape.jeux</string>
-    <!-- Google's TEST AdMob app ID. Replace it with your own AdMob app ID (ca-app-pub-XXXX~YYYY) before publishing. -->
-    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <!-- AdMob app ID for Arrow Escape (live). For a test-only build, use Google's test ID ca-app-pub-3940256099942544~3347511713. -->
+    <string name="admob_app_id">ca-app-pub-3524601599534787~5888714867</string>
 </resources>
