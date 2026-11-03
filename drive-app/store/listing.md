@@ -1,0 +1,104 @@
+# City Driver 3D — Google Play listing
+
+Images:
+- Icon: `icon-512.png` (512×512). Feature graphic: `feature-graphic.png` (1024×500).
+  Both are drawn from the game itself: `node scripts/make-art.cjs`.
+- Screenshots (1080×1920, JPEG): `screenshots/ar/`, `screenshots/en/`, `screenshots/fr/`,
+  regenerate with `node store/make-screenshots.cjs` (needs a local server on :8765 at the repo root and Playwright).
+
+Category: **Game → Racing** (or Simulation). Tags: driving, traffic, parking, car.
+Ads: **Yes**. Target audience: **13+**. Privacy policy: `https://lhamami12.github.io/drive/privacy.html`
+
+## العربية (ar)
+
+**اسم التطبيق** (30 حرفًا كحد أقصى):
+City Driver 3D: قيادة بالمدينة
+
+**الوصف القصير** (80 حرفًا كحد أقصى):
+قُد في زحمة المدينة، احترم الإشارات، تجاوز السيارات واركن في 20 مهمة!
+
+**الوصف الكامل:**
+هل أنت سائق محترف؟ 🚗 أثبت ذلك في **City Driver 3D**، لعبة قيادة ثلاثية الأبعاد في شوارع مدينة مزدحمة!
+
+🎡 **تحكم مثل السيارة الحقيقية**
+مقود تديره بإصبعك، دواسة بنزين وفرامل، ناقل حركة للأمام والخلف، ومنبّه يجعل السيارة أمامك تفسح لك الطريق. أو اختر الأزرار البسيطة من الإعدادات.
+
+🚦 **مدينة حيّة**
+إشارات مرور حقيقية، تقاطعات وسيارات تعبر، حافلات بطيئة، وسيارات قادمة في الاتجاه المعاكس… التجاوز ممكن لكنه خطير!
+
+🏁 **20 مهمة بخمسة أنواع**
+⏱ سباق مع الوقت • 🚗 تجاوز السيارات • 🚦 احترم القانون (السرعة والضوء الأحمر) • 🅿️ وصول وركن بجانب الرصيف • ⛽ وفّر الوقود
+
+🌇 **نهار، غروب وليل**
+القيادة ليلًا بالأضواء الأمامية بين نوافذ العمارات المضيئة.
+
+🚙 **7 سيارات و10 ألوان**
+سيدان، هاتشباك، دفع رباعي، بيك أب، رياضية، فان وكلاسيكية. اجمع العملات لتشتريها.
+
+🎥 **3 كاميرات** منها القيادة من داخل السيارة.
+
+🌍 بالعربية والإنجليزية والفرنسية، وتعمل على الهواتف الضعيفة (رسومات منخفضة).
+
+حمّل City Driver 3D الآن وأصبح ملك الطريق! 🏆
+
+## English (en)
+
+**App name** (max 30):
+City Driver 3D: Traffic Drive
+
+**Short description** (max 80):
+Drive through city traffic, obey the lights, overtake and park in 20 missions!
+
+**Full description:**
+Think you're a great driver? 🚗 Prove it in **City Driver 3D**, a 3D driving game on busy city streets!
+
+🎡 **Drive like a real car**
+A steering wheel you turn with your finger, gas and brake pedals, a D / R gear stick and a horn that makes the car ahead move over. Prefer it simple? Switch to buttons in the settings.
+
+🚦 **A living city**
+Real traffic lights, crossroads with crossing cars, slow buses and oncoming traffic… overtaking is possible, but risky!
+
+🏁 **20 missions, 5 kinds**
+⏱ Beat the clock • 🚗 Overtake • 🚦 Follow the rules (speed limit and red lights) • 🅿️ Drive & park by the kerb • ⛽ Save fuel
+
+🌇 **Day, sunset and night**
+Drive at night with your headlights between the lit-up buildings.
+
+🚙 **7 cars and 10 colours**
+Sedan, hatchback, SUV, pickup, sports car, van and classic. Earn coins to buy them.
+
+🎥 **3 cameras**, including a driver's seat view.
+
+🌍 In English, Arabic and French, and runs on low-end phones too (low graphics option).
+
+Download City Driver 3D and rule the road! 🏆
+
+## Français (fr)
+
+**Nom de l'application** (30 max) :
+City Driver 3D : Conduite
+
+**Description courte** (80 max) :
+Roule en ville, respecte les feux, double et gare-toi dans 20 missions !
+
+**Description complète :**
+Tu es un bon conducteur ? 🚗 Prouve-le dans **City Driver 3D**, un jeu de conduite en 3D dans les rues animées d'une grande ville !
+
+🎡 **Conduis comme une vraie voiture**
+Un volant à tourner du doigt, accélérateur et frein, levier D / R et un klaxon qui fait se ranger la voiture devant toi. Tu préfères simple ? Choisis les boutons dans les réglages.
+
+🚦 **Une ville vivante**
+De vrais feux tricolores, des carrefours avec des voitures qui traversent, des bus lents et des voitures en face… doubler est possible, mais risqué !
+
+🏁 **20 missions, 5 types**
+⏱ Contre la montre • 🚗 Dépassements • 🚦 Code de la route (limitation et feux rouges) • 🅿️ Rouler et se garer • ⛽ Économie de carburant
+
+🌇 **Jour, coucher de soleil et nuit**
+
+🚙 **7 voitures et 10 couleurs** à débloquer avec tes pièces.
+
+🎥 **3 caméras**, dont la vue conducteur.
+
+🌍 En français, arabe et anglais, et fonctionne même sur les petits téléphones.
+
+Télécharge City Driver 3D et deviens le roi de la route ! 🏆
