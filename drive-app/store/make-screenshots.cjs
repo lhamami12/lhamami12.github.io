@@ -5,9 +5,9 @@ const { join } = require('path');
 const fs = require('fs');
 
 const CAP = {
-  ar: ['قُد في زحمة المدينة', 'توقف عند الضوء الأحمر', 'نهار، غروب وليل', 'القيادة من داخل السيارة', 'اركن في المكان الصحيح', '20 مهمة متنوعة', '7 سيارات تفتحها بالعملات'],
-  en: ['Drive through city traffic', 'Stop at the red lights', 'Day, sunset and night', 'Drive from the seat', 'Park in the right bay', '20 varied missions', '7 cars to unlock'],
-  fr: ['Roule dans la circulation', 'Arrête-toi au feu rouge', 'Jour, coucher de soleil, nuit', 'Vue depuis le siège', 'Gare-toi au bon endroit', '20 missions variées', '7 voitures à débloquer'],
+  ar: ['قُد في زحمة المدينة', 'توقف عند الضوء الأحمر', 'نهار، غروب وليل', 'القيادة من داخل السيارة', 'اركن في المكان الصحيح', '20 مهمة متنوعة', '8 سيارات منها سوبركار'],
+  en: ['Drive through city traffic', 'Stop at the red lights', 'Day, sunset and night', 'Drive from the seat', 'Park in the right bay', '20 varied missions', '8 cars, including a supercar'],
+  fr: ['Roule dans la circulation', 'Arrête-toi au feu rouge', 'Jour, coucher de soleil, nuit', 'Vue depuis le siège', 'Gare-toi au bon endroit', '20 missions variées', '8 voitures, dont une supercar'],
 };
 (async () => {
   const b = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
@@ -16,7 +16,7 @@ const CAP = {
     fs.mkdirSync(dir, { recursive: true });
     const p = await b.newPage({ viewport: { width: 360, height: 640 }, deviceScaleFactor: 3 });
     await p.goto('http://localhost:8765/drive/');
-    await p.evaluate(l => localStorage.setItem('citydriver3d-v1', JSON.stringify({ unlocked: 12, stars: [3, 3, 2, 3, 3, 2, 1, 3, 2, 3, 2], car: 4, color: 0, coins: 1850, owned: [0, 1, 4], lang: l })), lang);
+    await p.evaluate(l => localStorage.setItem('citydriver3d-v1', JSON.stringify({ unlocked: 12, stars: [3, 3, 2, 3, 3, 2, 1, 3, 2, 3, 2], car: 7, color: 0, livery: 3, coins: 1850, owned: [0, 1, 4, 7], lang: l })), lang);
     await p.reload(); await p.waitForTimeout(2500);
     const shot = async i => {
       await p.evaluate(t => {

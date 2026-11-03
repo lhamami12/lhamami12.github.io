@@ -17,9 +17,10 @@ async function render(b, w, h, arg) {
   return 'data:image/png;base64,' + buf.toString('base64');
 }
 // Hides the menus, puts the sports car on the avenue and places the camera
-const pose = ([tod, model, color, cam, look, fov, z]) => {
+const pose = ([tod, model, livery, cam, look, fov, z]) => {
   document.querySelectorAll('.screen,#coinChip,#loading').forEach(e => e.style.display = 'none');
-  game.setTOD(tod); game.setPlayerModel(model); game.P().paint.color.setHex(color);
+  game.setTOD(tod); game.setPlayerModel(model);
+  const P = game.P(); P.paint.color.setHex(livery[0]); P.stripe.color.setHex(livery[1]); P.accent.color.setHex(livery[2]);
   Object.assign(game.car, { x: -1.75, z, th: 0, v: 0 });
   game.holdCam(true); game.freeze();
   game.P().root.traverse(o => { if (o.isSpotLight) o.intensity = 0; });
@@ -36,8 +37,8 @@ async function compose(b, w, h, html, file, transparent = false) {
 
 (async () => {
   const b = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
-  const sq = await render(b, 1024, 1024, ['sunset', 4, 0xe63946, [3.6, 1.5, 7.4], [-.7, .55, .3], 40, 60]);
-  const wide = await render(b, 1024, 500, ['sunset', 4, 0xe63946, [4.6, 1.3, 7.2], [-1.8, 1.2, 0], 40, 60]);
+  const sq = await render(b, 1024, 1024, ['sunset', 7, [0xc8101e, 0x141414, 0x141414], [3.4, 1.35, 7.2], [-.6, .5, .1], 40, 60]);
+  const wide = await render(b, 1024, 500, ['sunset', 7, [0xd9dde2, 0x1a1a1d, 0xe11d2a], [4.6, 1.3, 7.2], [-1.8, 1.1, 0], 40, 60]);
   const badge = s => `<div style="position:absolute;top:${s * .07}px;right:${s * .07}px;padding:${s * .012}px ${s * .03}px;border-radius:${s * .03}px;background:linear-gradient(#ffc933,#fb8500);font:900 ${s * .075}px Cairo,Arial Black,sans-serif;color:#241500;box-shadow:0 ${s * .01}px 0 #9a4f00">3D</div>`;
   const art = s => `<div style="position:relative;width:${s}px;height:${s}px;background:url(${sq}) center/cover">
     <div style="position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(5,10,20,.35))"></div>${badge(s)}</div>`;
