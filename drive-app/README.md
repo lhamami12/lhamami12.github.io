@@ -16,9 +16,8 @@
 4. افتح الـzip واضغط على `app-debug.apk` لتثبيته (اسمح بـ«تثبيت تطبيقات من مصادر غير معروفة»).
 
 **ملف النشر الموقّع (AAB) لـ Google Play:**
-السرّ `KEYSTORE_PASSWORD` نفسه المستعمل لتطبيق Arrow Escape يكفي (إن كان موجودًا في
-**Settings ← Secrets and variables ← Actions**). في أول بناء موقّع يُنشأ مفتاح رفع خاص بهذا التطبيق
-ويُحفظ **مشفّرًا** في `drive-app/signing/upload-keystore.jks.enc`، ثم حمّل `city-driver-3d-release`:
+يُوقَّع التطبيق بنفس مفتاح الرفع الخاص بـ **Bonbon Pop** و**Arrow Escape** (الأسرار الأربعة `ANDROID_KEYSTORE_BASE64`
+و`ANDROID_KEYSTORE_PASSWORD` و`ANDROID_KEY_ALIAS` و`ANDROID_KEY_PASSWORD`)، فلا تحتاج أي إعداد جديد. حمّل `city-driver-3d-release`:
 فيه `app-release.aab` (ارفعه إلى Google Play) و`app-release.apk`.
 
 > عند رفع أول AAB في Play Console فعّل **Play App Signing** (يكون مفعّلًا افتراضيًا).
