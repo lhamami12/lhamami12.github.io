@@ -32,8 +32,8 @@ City Driver 3D: قيادة بالمدينة
 🌇 **نهار، غروب وليل**
 القيادة ليلًا بالأضواء الأمامية بين نوافذ العمارات المضيئة.
 
-🚙 **7 سيارات و10 ألوان**
-سيدان، هاتشباك، دفع رباعي، بيك أب، رياضية، فان وكلاسيكية. اجمع العملات لتشتريها.
+🚙 **8 سيارات و10 ألوان**
+سيدان، هاتشباك، دفع رباعي، بيك أب، رياضية، فان، كلاسيكية، و**سوبركار** بجناح خلفي و5 ألوان سباق. اجمع العملات لتشتريها.
 
 🎥 **3 كاميرات** منها القيادة من داخل السيارة.
 
@@ -64,8 +64,8 @@ Real traffic lights, crossroads with crossing cars, slow buses and oncoming traf
 🌇 **Day, sunset and night**
 Drive at night with your headlights between the lit-up buildings.
 
-🚙 **7 cars and 10 colours**
-Sedan, hatchback, SUV, pickup, sports car, van and classic. Earn coins to buy them.
+🚙 **8 cars and 10 colours**
+Sedan, hatchback, SUV, pickup, sports car, van, classic and a **supercar** with a rear wing and 5 racing liveries. Earn coins to buy them.
 
 🎥 **3 cameras**, including a driver's seat view.
 
@@ -95,7 +95,7 @@ De vrais feux tricolores, des carrefours avec des voitures qui traversent, des b
 
 🌇 **Jour, coucher de soleil et nuit**
 
-🚙 **7 voitures et 10 couleurs** à débloquer avec tes pièces.
+🚙 **8 voitures et 10 couleurs** à débloquer avec tes pièces, dont une **supercar** avec aileron et 5 livrées de course.
 
 🎥 **3 caméras**, dont la vue conducteur.
 

@@ -347,7 +347,7 @@ const I18N = {
     redLight: '🚦 تجاوزت الضوء الأحمر!', speeding: l => `🚔 السرعة أكثر من ${l} كم/س!`, passed: n => `تجاوز! ${n}`, goParking: '🅿️ اركن في المكان الأخضر', lowFuel: '⛽ الوقود ينفد!',
     hold: 'اثبت… ✋', holdAlign: 'استقم داخل المربع', holdStop: 'توقف!', go: 'انطلق!',
     confirmReset: 'مسح كل النجوم والمهام والعملات والسيارات المشتراة؟',
-    cars: ['سيدان', 'هاتشباك', 'دفع رباعي', 'بيك أب', 'رياضية', 'فان', 'كلاسيكية'], speed: 'السرعة', accel: 'التسارع', handling: 'المناورة', size: 'الحجم',
+    cars: ['سيدان', 'هاتشباك', 'دفع رباعي', 'بيك أب', 'رياضية', 'فان', 'كلاسيكية', 'سوبركار'], speed: 'السرعة', accel: 'التسارع', handling: 'المناورة', size: 'الحجم',
     buy: p => `شراء 🪙 ${p}`, notEnough: n => `تحتاج ${n} 🪙 إضافية. أكمل المهام لتجمعها!`, earned: n => `+${n} 🪙`,
     adDouble: '🎬 ضاعف العملات', adContinue: '🎬 أكمل المهمة', adFree: '🎬 +100 🪙 مجاناً',
     adFail: 'لا يوجد إعلان الآن، حاول بعد قليل', privacy: 'سياسة الخصوصية', adPriv: 'خيارات الخصوصية للإعلانات',
@@ -376,7 +376,7 @@ const I18N = {
     redLight: '🚦 You ran a red light!', speeding: l => `🚔 Over ${l} km/h!`, passed: n => `Overtake! ${n}`, goParking: '🅿️ Park in the green bay', lowFuel: '⛽ Fuel is running low!',
     hold: 'Hold still… ✋', holdAlign: 'Straighten up in the box', holdStop: 'Stop!', go: 'GO!',
     confirmReset: 'Erase all stars, missions, coins and bought cars?',
-    cars: ['Sedan', 'Hatchback', 'SUV', 'Pickup', 'Sports', 'Van', 'Classic'], speed: 'Speed', accel: 'Acceleration', handling: 'Handling', size: 'Size',
+    cars: ['Sedan', 'Hatchback', 'SUV', 'Pickup', 'Sports', 'Van', 'Classic', 'Supercar'], speed: 'Speed', accel: 'Acceleration', handling: 'Handling', size: 'Size',
     buy: p => `Buy 🪙 ${p}`, notEnough: n => `You need ${n} more 🪙. Finish missions to earn them!`, earned: n => `+${n} 🪙`,
     adDouble: '🎬 Double coins', adContinue: '🎬 Continue mission', adFree: '🎬 +100 🪙 free',
     adFail: 'No ad available right now, try again soon', privacy: 'Privacy policy', adPriv: 'Ad privacy options',
@@ -405,7 +405,7 @@ const I18N = {
     redLight: '🚦 Feu rouge grillé !', speeding: l => `🚔 Plus de ${l} km/h !`, passed: n => `Dépassement ! ${n}`, goParking: '🅿️ Gare-toi dans la place verte', lowFuel: '⛽ Réserve de carburant !',
     hold: 'Ne bouge plus… ✋', holdAlign: 'Mets-toi droit dans la case', holdStop: 'Arrête-toi !', go: 'PARTEZ !',
     confirmReset: 'Effacer étoiles, missions, pièces et voitures achetées ?',
-    cars: ['Berline', 'Citadine', 'SUV', 'Pick-up', 'Sportive', 'Van', 'Classique'], speed: 'Vitesse', accel: 'Accélération', handling: 'Maniabilité', size: 'Taille',
+    cars: ['Berline', 'Citadine', 'SUV', 'Pick-up', 'Sportive', 'Van', 'Classique', 'Supercar'], speed: 'Vitesse', accel: 'Accélération', handling: 'Maniabilité', size: 'Taille',
     buy: p => `Acheter 🪙 ${p}`, notEnough: n => `Il te manque ${n} 🪙. Termine des missions !`, earned: n => `+${n} 🪙`,
     adDouble: '🎬 Doubler les pièces', adContinue: '🎬 Continuer la mission', adFree: '🎬 +100 🪙 gratuites',
     adFail: 'Pas de pub disponible, réessaie bientôt', privacy: 'Politique de confidentialité', adPriv: 'Confidentialité des pubs',
@@ -675,6 +675,15 @@ const MODELS = [
     cabin: [[-1.3, .86], [-.75, 1.3], [.2, 1.31], [.72, .85]], roof: [[-.78, 1.27], [.23, 1.28], [.18, 1.36], [-.72, 1.35]],
     belt: .88, roofY: 1.3, mirror: .65, headY: .66, tailY: .7, plateF: .42, plateR: .55,
     chromeExtra: [[0, .44, 2.36, 1.9, .13, .12], [0, .44, -2.36, 1.9, .13, .12], [.94, .7, .1, .03, .04, 3.6], [-.94, .7, .1, .03, .04, 3.6]] },
+  // Supercar: low wedge body, twin racing stripes, big rear wing. Liveries: [body, stripes, accents]
+  { id: 'super', L: 4.7, W: 2.02, wr: .37, zf: 1.5, zr: -1.45, bottom: .15, maxF: 12, acc: 6.8, steer: .7, price: 3000,
+    top: [[2.3, .15], ['q', 2.42, .18, 2.4, .34], ['q', 2.28, .52, 1.75, .6], [.95, .76], [-.9, .9], [-1.95, .92], ['q', -2.36, .92, -2.36, .6], ['q', -2.37, .2, -2.26, .15]],
+    cabin: [[-1.05, .86], [-.48, 1.14], [.22, 1.16], [1.0, .76]], roof: [[-.52, 1.11], [.25, 1.13], [.2, 1.19], [-.47, 1.18]],
+    belt: .84, roofY: 1.16, mirror: .62, headY: .5, tailY: .74, plateF: .28, plateR: .5, stripes: [-.16, .16],
+    trimExtra: [[0, .13, 2.3, 1.96, .04, .34], [1.0, .2, 0, .06, .1, 2.3], [-1.0, .2, 0, .06, .1, 2.3], [1.01, .55, -.7, .04, .22, .9], [-1.01, .55, -.7, .04, .22, .9],
+      [0, 1.33, -2.1, 1.96, .05, .44], [.42, 1.11, -2.0, .06, .42, .22], [-.42, 1.11, -2.0, .06, .42, .22], [0, .22, -2.33, 1.6, .14, .12]],
+    accent: [[.99, 1.29, -2.1, .04, .26, .56], [-.99, 1.29, -2.1, .04, .26, .56], [0, .15, 2.48, 1.9, .025, .05], [1.035, .16, 0, .02, .035, 2.3], [-1.035, .16, 0, .02, .035, 2.3], [0, 1.36, -2.33, 1.96, .02, .04]],
+    liveries: [[0xd9dde2, 0x1a1a1d, 0xe11d2a], [0x0f7f7a, 0x14181b, 0xc6f432], [0x2b2e33, 0xf5b301, 0xf5b301], [0xc8101e, 0x141414, 0x141414], [0x1f56c9, 0x15171a, 0xff6a13]] },
 ];
 
 function extrude(shape, depth, bevel) {
@@ -730,7 +739,13 @@ function buildModel(md) {
   ];
   const hx = W / 2 - .32, tx = W / 2 - .3;
   const k = wr / .36, WPOS = [[W / 2 - .12, zf], [-W / 2 + .12, zf], [W / 2 - .12, zr], [-W / 2 + .12, zr]];
+  // racing stripes: thin slices of the body and roof, a hair bigger so they sit on the paint
+  let stripe = null;
+  if (md.stripes) stripe = merge(md.stripes.flatMap(x => [
+    { g: extrude(b, .06, .08).scale(1, 1.012, 1.005).translate(x, 0, 0), m: I },
+    { g: extrude(poly(md.roof), .06, .05).scale(1, 1.02, 1.01).translate(x, 0, 0), m: I }]));
   return {
+    stripe, accent: md.accent ? merge(md.accent.map(box)) : null,
     paint: merge(paint), cabin: extrude(poly(md.cabin), W - .46, .06), trim: merge(trim),
     plate: merge([box([0, md.plateF, L / 2 + .05, .52, .12, .02]), box([0, md.plateR, -L / 2 + .04, .52, .12, .02])]),
     head: merge([box([hx, md.headY, L / 2 - .03, .44, .12, .1]), box([-hx, md.headY, L / 2 - .03, .44, .12, .1])]),
@@ -753,6 +768,10 @@ function makePlayer(md) {
   add(G.paint, paint); add(G.cabin, M.glass); add(G.trim, M.trim); add(G.plate, M.plate, false);
   add(G.head, M.head, false); add(G.tail, tail, false); add(G.rev, rev, false);
   if (G.chromeBody) add(G.chromeBody, M.chrome);
+  const stripe = new THREE.MeshPhysicalMaterial({ color: 0x111111, metalness: .4, roughness: .3, clearcoat: 1, clearcoatRoughness: .05 });
+  const accent = std({ color: 0xe11d2a, metalness: .3, roughness: .35 });
+  if (G.stripe) add(G.stripe, stripe);
+  if (G.accent) add(G.accent, accent);
   const front = [], spin = [], k = md.wr / .36;
   for (const [x, z] of G.WPOS) {
     const pivot = new THREE.Group(), s = new THREE.Group();
@@ -761,7 +780,7 @@ function makePlayer(md) {
     pivot.add(s); root.add(pivot); spin.push(s);
     if (z > 0) front.push(pivot);
   }
-  return { root, chassis, front, spin, paint, tail, rev };
+  return { root, chassis, front, spin, paint, stripe, accent, tail, rev };
 }
 
 
@@ -801,13 +820,14 @@ const CIRCLE = new THREE.CircleGeometry(.45, 24);
 SHARED.add(DISC); SHARED.add(CIRCLE);
 
 // A bus for the traffic only (not in the garage)
-const NCARS = 7;
+const NCARS = 8;
 MODELS.push({ id: 'bus', L: 10.6, W: 2.5, wr: .5, zf: 3.7, zr: -3.2, bottom: .42, maxF: 8, acc: 3, steer: .5, price: 0,
   top: [[5.25, .42], ['q', 5.32, .5, 5.32, .9], [5.3, 1.62], [-5.3, 1.62], [-5.32, .9], ['q', -5.32, .5, -5.25, .42]],
   cabin: [[-5.22, 1.55], [-5.22, 2.95], [5.2, 2.95], [5.3, 1.55]], roof: [[-5.25, 2.9], [5.25, 2.9], [5.22, 3.12], [-5.22, 3.12]],
   belt: 1.62, roofY: 2.95, mirror: 4.9, headY: .8, tailY: 1.0, plateF: .55, plateR: .7,
   paintExtra: [-4.7, -2.4, -.1, 2.2, 4.75].map(z => [0, 2.25, z, 2.2, 1.4, .18]) });
-MODELS[7].geo = buildModel(MODELS[7]);
+const BUS = MODELS.length - 1;
+MODELS[BUS].geo = buildModel(MODELS[BUS]);
 
 /* ---------- Time of day ---------- */
 const TOD = {
@@ -1083,10 +1103,10 @@ let traffic = [], overtakes = 0;
 const tPos = c => c.ax === 'z' ? [c.lane, c.s] : [c.s, c.lane];
 function spawn(ax, lane, d, s, cross) {
   const outer = ax === 'z' && Math.abs(lane) > 3;
-  const mi = outer && rand() < .14 ? 7 : TMODELS[Math.floor(Math.random() * TMODELS.length)], md = MODELS[mi];
-  const hex = mi === 7 ? [0xf2b705, 0xf3f4f6, 0x1d4ed8][Math.floor(Math.random() * 3)] : TPAINT[Math.floor(Math.random() * TPAINT.length)];
+  const mi = outer && rand() < .14 ? BUS : TMODELS[Math.floor(Math.random() * TMODELS.length)], md = MODELS[mi];
+  const hex = mi === BUS ? [0xf2b705, 0xf3f4f6, 0x1d4ed8][Math.floor(Math.random() * 3)] : TPAINT[Math.floor(Math.random() * TPAINT.length)];
   // our side: slow outer lane, quicker inner lane, so there is always something to overtake
-  const base = mi === 7 ? 6.5 : ax === 'x' ? 9 : d > 0 ? (outer ? 7 : 10.5) : 10;
+  const base = mi === BUS ? 6.5 : ax === 'x' ? 9 : d > 0 ? (outer ? 7 : 10.5) : 10;
   const vt = Math.min(base + Math.random() * 3, LV && LV.limit ? LV.limit / 3.6 - .8 : 99);
   const c = { ax, lane, d, s, v: vt * .8, vt, mi, hw: md.W / 2, hl: md.L / 2, g: tMesh(mi, hex), lc: null, stun: 0, cross, seen: false, counted: false, lat: 0 };
   traffic.push(c);
@@ -1199,7 +1219,7 @@ function honk() {
     const g = (c.s - car.z) - c.hl - HL;
     if (g > 0 && g < bg) { bg = g; best = c; }
   }
-  if (!best || best.mi === 7) return;
+  if (!best || best.mi === BUS) return;
   const ol = otherLane(best);
   if (ol !== null && !laneBusy('z', ol, best.s, 9, best) && Math.abs(car.x - ol) > HW + best.hw) best.lc = ol;
 }
@@ -1243,7 +1263,7 @@ function setPlayerModel(i) {
   P.root.add(headLight, headLight.target);
   scene.add(P.root);
   HW = md.W / 2; HL = md.L / 2; WB = md.zf - md.zr; WR = md.wr; VMAX = md.maxF * 3.1; ACCF = md.acc * 1.25; MAXSTEER = md.steer;
-  P.paint.color.setHex(COLORS[save.color] ?? COLORS[0]);
+  paintCar();
 }
 const car = { x: -1.75, z: 0, th: 0, v: 0, steer: 0, pitch: 0, roll: 0 };
 const MAXR = 5, ACC_R = 3.5, BRAKE = 11, STEER_RATE = 2.6, MAX_HITS = 3;
@@ -1650,13 +1670,27 @@ $('#bReset').onclick = () => {
   if (!confirm(tr().confirmReset)) return;
   save.unlocked = 1; save.stars = []; save.coins = 0; save.owned = [0, 1]; save.car = 0; persist(); setPlayerModel(0);
 };
-// Garage colours
-COLORS.forEach((c, i) => {
-  const b = document.createElement('button');
-  b.style.background = '#' + c.toString(16).padStart(6, '0');
-  b.onclick = () => { save.color = i; persist(); applyColor(); };
-  $('#swatches').appendChild(b);
-});
+// Garage colours: plain colours, or the liveries of the supercar
+const hexs = c => '#' + c.toString(16).padStart(6, '0');
+let swatchFor;
+function buildSwatches() {
+  const lv = MD.liveries || null;
+  if (swatchFor === lv) return;
+  swatchFor = lv;
+  const box = $('#swatches'); box.innerHTML = '';
+  (lv || COLORS).forEach((c, i) => {
+    const b = document.createElement('button');
+    b.style.background = lv ? `linear-gradient(135deg,${hexs(c[0])} 0 52%,${hexs(c[1])} 52% 74%,${hexs(c[2])} 74%)` : hexs(c);
+    b.onclick = () => { if (lv) save.livery = i; else save.color = i; persist(); applyColor(); };
+    box.appendChild(b);
+  });
+}
+function paintCar() {
+  if (MD.liveries) {
+    const L = MD.liveries[save.livery] || MD.liveries[0];
+    P.paint.color.setHex(L[0]); P.stripe.color.setHex(L[1]); P.accent.color.setHex(L[2]);
+  } else P.paint.color.setHex(COLORS[save.color] ?? COLORS[0]);
+}
 // Car choice: browse every model, keep only unlocked ones
 let garageIdx = 0;
 const carLocked = i => !save.owned.includes(i);
@@ -1668,16 +1702,17 @@ function renderGarage() {
   $('#bBuy').classList.toggle('hide', !locked);
   $('#bBuy').classList.toggle('poor', locked && save.coins < md.price);
   $('#bBuy').textContent = t.buy(md.price);
-  const rows = [[t.speed, md.maxF / 11], [t.accel, md.acc / 6], [t.handling, md.steer / .74], [t.size, md.L / 5.2]];
+  const rows = [[t.speed, md.maxF / 12], [t.accel, md.acc / 6.8], [t.handling, md.steer / .74], [t.size, md.L / 5.2]];
   $('#cStats').innerHTML = rows.map(([n, v]) => `<span>${n}</span><div class="bar"><i style="width:${Math.round(v * 100)}%"></i></div>`).join('');
 }
 function browseCar(d) {
   garageIdx = (garageIdx + d + NCARS) % NCARS;
-  setPlayerModel(garageIdx); renderGarage();
+  setPlayerModel(garageIdx); renderGarage(); applyColor();
 }
 function leaveGarage() {
   if (!carLocked(garageIdx)) { save.car = garageIdx; persist(); }
   else setPlayerModel(save.car);
+  applyColor();
 }
 $('#bBuy').onclick = () => {
   const md = MODELS[garageIdx], t = tr();
@@ -1694,8 +1729,9 @@ $('#bBuy').onclick = () => {
 $('#cPrev').onclick = () => browseCar(-1);
 $('#cNext').onclick = () => browseCar(1);
 function applyColor() {
-  P.paint.color.setHex(COLORS[save.color] ?? COLORS[0]);
-  $$('#swatches button').forEach((b, i) => b.classList.toggle('on', i === save.color));
+  paintCar(); buildSwatches();
+  const k = MD.liveries ? (save.livery || 0) : save.color;
+  $$('#swatches button').forEach((b, i) => b.classList.toggle('on', i === k));
 }
 
 // Settings
