@@ -143,6 +143,11 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 #bBuy{margin:0 0 8px;padding:9px}
 .btn.ad{background:linear-gradient(180deg,#34d399,#059669);border:0;box-shadow:0 4px 0 #04603f;padding:10px}
 #bFreeCoins{margin:0 0 8px}
+#bEndless{background:linear-gradient(180deg,#38bdf8,#1d4ed8);border:0;box-shadow:0 4px 0 #1e3a8a}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:4px 0 10px;direction:ltr}
+.days div{border-radius:12px;padding:6px 1px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:800;font-size:11px;line-height:1.3}
+.days b{display:block;font-size:15px;color:#ffd36b}
+.days .done{opacity:.45}.days .today{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset;background:rgba(255,183,3,.16);transform:scale(1.06)}
 #toast{position:fixed;left:50%;bottom:calc(32% + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:rgba(12,18,32,.92);color:#fff;
   padding:10px 18px;border-radius:14px;font-weight:800;max-width:86vw;text-align:center;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.show{opacity:1}
@@ -235,6 +240,7 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
   <div class="panel glass">
     <div class="logo"><div class="l1">CITY DRIVER<sup>3D</sup></div><div class="l2" data-i18n="sub"></div></div>
     <button class="btn pri" id="bPlay" data-i18n="play"></button>
+    <button class="btn" id="bEndless"></button>
     <div class="row2"><button class="btn" id="bGarage" data-i18n="garage"></button><button class="btn" id="bSettings" data-i18n="settings"></button></div>
   </div>
 </div>
@@ -273,6 +279,16 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <button class="btn hide" id="bAdPriv" style="font-size:14px;padding:8px" data-i18n="adPriv"></button>
     <button class="btn" id="bReset" style="font-size:14px;padding:8px" data-i18n="reset"></button>
     <button class="btn pri" data-back data-i18n="done"></button>
+  </div>
+</div>
+
+<div id="sDaily" class="screen dim hide">
+  <div class="panel glass">
+    <h2 data-i18n="daily"></h2>
+    <div class="days" id="days"></div>
+    <div class="mut" data-i18n="dailyNote"></div>
+    <button class="btn pri" id="bClaim"></button>
+    <button class="btn ad hide" id="bClaim2"></button>
   </div>
 </div>
 
@@ -331,15 +347,16 @@ const I18N = {
     paused: 'متوقف مؤقتاً', resume: '▶ متابعة', restart: '↻ إعادة المهمة', levelsBtn: '☰ المهام', time: 'الوقت', hits: 'الاصطدامات',
     next: 'المهمة التالية ←', retry: '↻ إعادة', brake: 'فرامل', gas: 'بنزين',
     level: n => `المهمة ${n}`, sec: t => `${t} ث`, m: d => `${d} م`,
-    types: { reach: 'سباق مع الوقت', overtake: 'تجاوز', rules: 'احترم القانون', park: 'وصول وركن', fuel: 'وفّر الوقود' },
+    types: { reach: 'سباق مع الوقت', overtake: 'تجاوز', rules: 'احترم القانون', park: 'وصول وركن', fuel: 'وفّر الوقود' , endless: 'قيادة بلا نهاية' },
     goals: {
       reach: L => `اقطع ${L.dist} م في أقل من ${L.time} ثانية`,
       overtake: L => `تجاوز ${L.n} سيارة في ${L.time} ثانية`,
       rules: L => `اقطع ${L.dist} م: لا تتجاوز ${L.limit} كم/س ولا الضوء الأحمر`,
       park: L => `اقطع ${L.dist} م ثم اركن في المكان الأخضر`,
       fuel: L => `اقطع ${L.dist} م قبل أن ينفد الوقود`,
+      endless: L => 'قُد أبعد ما يمكن: 3 اصطدامات وتنتهي الجولة',
     },
-    tips: { reach: 'تجاوز السيارات البطيئة بحذر', overtake: 'السيارات المعاكسة خطيرة!', rules: 'المخالفة الثالثة = خسارة', park: 'خفّف السرعة قبل الوصول', fuel: 'لا تضغط البنزين بقوة، واستعمل الاندفاع' },
+    tips: { reach: 'تجاوز السيارات البطيئة بحذر', overtake: 'السيارات المعاكسة خطيرة!', rules: 'المخالفة الثالثة = خسارة', park: 'خفّف السرعة قبل الوصول', fuel: 'لا تضغط البنزين بقوة، واستعمل الاندفاع' , endless: 'كل تجاوز = +25 نقطة، والزحمة تزداد مع المسافة' },
     winAll: 'أكملت كل المهام! 🏆', win: 'مهمة ناجحة! 🎉', perfect: 'أداء مثالي!',
     failHits: 'تضررت السيارة! 💥', failTime: 'انتهى الوقت! ⏱', failFuel: 'نفد الوقود! ⛽', failRules: 'مخالفات كثيرة! 🚔',
     noteHits: 'قُد بهدوء وحافظ على المسافة.', noteTime: 'استعمل المسارين وتجاوز السيارات البطيئة.', noteFuel: 'اترك البنزين قبل الفرامل لتوفّر الوقود.', noteRules: 'انتبه للإشارات وحدود السرعة.',
@@ -349,7 +366,9 @@ const I18N = {
     confirmReset: 'مسح كل النجوم والمهام والعملات والسيارات المشتراة؟',
     cars: ['سيدان', 'هاتشباك', 'دفع رباعي', 'بيك أب', 'رياضية', 'فان', 'كلاسيكية', 'سوبركار'], speed: 'السرعة', accel: 'التسارع', handling: 'المناورة', size: 'الحجم',
     buy: p => `شراء 🪙 ${p}`, notEnough: n => `تحتاج ${n} 🪙 إضافية. أكمل المهام لتجمعها!`, earned: n => `+${n} 🪙`,
-    adDouble: '🎬 ضاعف العملات', adContinue: '🎬 أكمل المهمة', adFree: '🎬 +100 🪙 مجاناً',
+    endless: '∞ بلا نهاية', score: 'النقاط', distance: 'المسافة', bestL: 'أفضل نتيجة', runOver: 'انتهت الجولة! 🏁', newBest: 'رقم قياسي جديد! 🏆', noteBest: n => `أفضل نتيجة لك: ${n}`,
+    daily: '🎁 المكافأة اليومية', day: n => `اليوم ${n}`, claim: n => `استلم 🪙 ${n}`, claim2: n => `🎬 استلم 🪙 ${n} (×2)`, dailyNote: 'عد كل يوم لتكبر المكافأة!',
+    adDouble: '🎬 ضاعف العملات', adContinue: '🎬 أكمل المهمة', adRevive: '🎬 أكمل الجولة', adFree: '🎬 +100 🪙 مجاناً',
     adFail: 'لا يوجد إعلان الآن، حاول بعد قليل', privacy: 'سياسة الخصوصية', adPriv: 'خيارات الخصوصية للإعلانات',
   },
   en: {
@@ -360,15 +379,16 @@ const I18N = {
     paused: 'Paused', resume: '▶ Resume', restart: '↻ Restart mission', levelsBtn: '☰ Missions', time: 'Time', hits: 'Hits',
     next: 'Next mission →', retry: '↻ Retry', brake: 'BRAKE', gas: 'GAS',
     level: n => `MISSION ${n}`, sec: t => `${t} s`, m: d => `${d} m`,
-    types: { reach: 'Beat the clock', overtake: 'Overtake', rules: 'Follow the rules', park: 'Drive & park', fuel: 'Save fuel' },
+    types: { reach: 'Beat the clock', overtake: 'Overtake', rules: 'Follow the rules', park: 'Drive & park', fuel: 'Save fuel' , endless: 'Endless drive' },
     goals: {
       reach: L => `Drive ${L.dist} m in under ${L.time} seconds`,
       overtake: L => `Overtake ${L.n} cars in ${L.time} seconds`,
       rules: L => `Drive ${L.dist} m: max ${L.limit} km/h, no red lights`,
       park: L => `Drive ${L.dist} m, then park in the green bay`,
       fuel: L => `Drive ${L.dist} m before the fuel runs out`,
+      endless: L => 'Drive as far as you can: 3 hits and the run is over',
     },
-    tips: { reach: 'Overtake the slow cars carefully', overtake: 'Oncoming cars are dangerous!', rules: 'Third offence = fail', park: 'Slow down before you arrive', fuel: 'Go easy on the gas and coast' },
+    tips: { reach: 'Overtake the slow cars carefully', overtake: 'Oncoming cars are dangerous!', rules: 'Third offence = fail', park: 'Slow down before you arrive', fuel: 'Go easy on the gas and coast' , endless: 'Each overtake = +25 points, and traffic grows with distance' },
     winAll: 'All missions complete! 🏆', win: 'Mission complete! 🎉', perfect: 'Flawless!',
     failHits: 'Car wrecked! 💥', failTime: 'Out of time! ⏱', failFuel: 'Out of fuel! ⛽', failRules: 'Too many offences! 🚔',
     noteHits: 'Drive calmly and keep your distance.', noteTime: 'Use both lanes and pass the slow cars.', noteFuel: 'Lift off the gas early instead of braking.', noteRules: 'Watch the lights and the speed limit.',
@@ -378,7 +398,9 @@ const I18N = {
     confirmReset: 'Erase all stars, missions, coins and bought cars?',
     cars: ['Sedan', 'Hatchback', 'SUV', 'Pickup', 'Sports', 'Van', 'Classic', 'Supercar'], speed: 'Speed', accel: 'Acceleration', handling: 'Handling', size: 'Size',
     buy: p => `Buy 🪙 ${p}`, notEnough: n => `You need ${n} more 🪙. Finish missions to earn them!`, earned: n => `+${n} 🪙`,
-    adDouble: '🎬 Double coins', adContinue: '🎬 Continue mission', adFree: '🎬 +100 🪙 free',
+    endless: '∞ Endless', score: 'Score', distance: 'Distance', bestL: 'Best', runOver: 'Run over! 🏁', newBest: 'New record! 🏆', noteBest: n => `Your best: ${n}`,
+    daily: '🎁 Daily reward', day: n => `Day ${n}`, claim: n => `Claim 🪙 ${n}`, claim2: n => `🎬 Claim 🪙 ${n} (×2)`, dailyNote: 'Come back every day for bigger rewards!',
+    adDouble: '🎬 Double coins', adContinue: '🎬 Continue mission', adRevive: '🎬 Continue the run', adFree: '🎬 +100 🪙 free',
     adFail: 'No ad available right now, try again soon', privacy: 'Privacy policy', adPriv: 'Ad privacy options',
   },
   fr: {
@@ -389,15 +411,16 @@ const I18N = {
     paused: 'Pause', resume: '▶ Reprendre', restart: '↻ Recommencer', levelsBtn: '☰ Missions', time: 'Temps', hits: 'Chocs',
     next: 'Mission suivante →', retry: '↻ Rejouer', brake: 'FREIN', gas: 'GAZ',
     level: n => `MISSION ${n}`, sec: t => `${t} s`, m: d => `${d} m`,
-    types: { reach: 'Contre la montre', overtake: 'Dépassements', rules: 'Code de la route', park: 'Rouler et se garer', fuel: 'Économie de carburant' },
+    types: { reach: 'Contre la montre', overtake: 'Dépassements', rules: 'Code de la route', park: 'Rouler et se garer', fuel: 'Économie de carburant' , endless: 'Route sans fin' },
     goals: {
       reach: L => `Parcours ${L.dist} m en moins de ${L.time} secondes`,
       overtake: L => `Double ${L.n} voitures en ${L.time} secondes`,
       rules: L => `Parcours ${L.dist} m : max ${L.limit} km/h, pas de feu rouge`,
       park: L => `Parcours ${L.dist} m puis gare-toi dans la place verte`,
       fuel: L => `Parcours ${L.dist} m avant la panne sèche`,
+      endless: L => 'Va le plus loin possible : 3 chocs et c’est fini',
     },
-    tips: { reach: 'Double prudemment les voitures lentes', overtake: 'Attention aux voitures d’en face !', rules: '3e infraction = échec', park: 'Ralentis avant d’arriver', fuel: 'Doucement sur l’accélérateur, laisse rouler' },
+    tips: { reach: 'Double prudemment les voitures lentes', overtake: 'Attention aux voitures d’en face !', rules: '3e infraction = échec', park: 'Ralentis avant d’arriver', fuel: 'Doucement sur l’accélérateur, laisse rouler' , endless: 'Chaque dépassement = +25 points, et le trafic augmente' },
     winAll: 'Toutes les missions réussies ! 🏆', win: 'Mission réussie ! 🎉', perfect: 'Parfait !',
     failHits: 'Voiture détruite ! 💥', failTime: 'Temps écoulé ! ⏱', failFuel: 'Panne sèche ! ⛽', failRules: 'Trop d’infractions ! 🚔',
     noteHits: 'Conduis calmement et garde tes distances.', noteTime: 'Utilise les deux voies et double les lents.', noteFuel: 'Lâche l’accélérateur tôt au lieu de freiner.', noteRules: 'Surveille les feux et la limitation.',
@@ -407,7 +430,9 @@ const I18N = {
     confirmReset: 'Effacer étoiles, missions, pièces et voitures achetées ?',
     cars: ['Berline', 'Citadine', 'SUV', 'Pick-up', 'Sportive', 'Van', 'Classique', 'Supercar'], speed: 'Vitesse', accel: 'Accélération', handling: 'Maniabilité', size: 'Taille',
     buy: p => `Acheter 🪙 ${p}`, notEnough: n => `Il te manque ${n} 🪙. Termine des missions !`, earned: n => `+${n} 🪙`,
-    adDouble: '🎬 Doubler les pièces', adContinue: '🎬 Continuer la mission', adFree: '🎬 +100 🪙 gratuites',
+    endless: '∞ Infini', score: 'Score', distance: 'Distance', bestL: 'Record', runOver: 'Fin de la course ! 🏁', newBest: 'Nouveau record ! 🏆', noteBest: n => `Ton record : ${n}`,
+    daily: '🎁 Cadeau du jour', day: n => `Jour ${n}`, claim: n => `Récupérer 🪙 ${n}`, claim2: n => `🎬 Récupérer 🪙 ${n} (×2)`, dailyNote: 'Reviens chaque jour pour gagner plus !',
+    adDouble: '🎬 Doubler les pièces', adContinue: '🎬 Continuer la mission', adRevive: '🎬 Continuer la course', adFree: '🎬 +100 🪙 gratuites',
     adFail: 'Pas de pub disponible, réessaie bientôt', privacy: 'Politique de confidentialité', adPriv: 'Confidentialité des pubs',
   },
 };
@@ -422,6 +447,8 @@ function applyLang() {
   $$('[data-i18n]').forEach(el => { el.textContent = t[el.dataset.i18n]; });
   $$('[data-i18n-html]').forEach(el => { el.innerHTML = t[el.dataset.i18nHtml]; });
   $('#bLang').textContent = LANG_LBL[LANG_NEXT[save.lang]];
+  endlessLabel();
+  if (!$('#sDaily').classList.contains('hide')) renderDaily();
   if (!$('#sLevels').classList.contains('hide')) renderLevels();
   if (!$('#sGarage').classList.contains('hide')) renderGarage();
 }
@@ -997,29 +1024,13 @@ function clearWorld() {
   for (const ch of [...world.children]) world.remove(ch);
   obstacles = []; spot = null; arrow = null; buckets = new Map();
 }
-function buildWorld(L, seed) {
-  clearWorld();
-  LV = L;
-  rand = seeded(seed);
-  FIN = L.type === 'overtake' ? Infinity : L.dist;
-  const len = L.type === 'overtake' ? L.time * 32 + 300 : L.dist;
-  Z1 = len + 160;
-  const park = L.type === 'park';
-  // crossroads every 120-180 m, none near the start or the finish
-  INTS = [];
-  for (let z = 95 + rand() * 40; z < (park ? len - 70 : len - 35) || (!isFinite(FIN) && z < Z1 - 40); z += 120 + rand() * 60) INTS.push({ z, off: rand() * CYC });
-  if (isFinite(FIN) && !park) INTS = INTS.filter(I => Math.abs(I.z - FIN) > 30);
-  const mid = (Z0 + Z1) / 2, L2 = Z1 - Z0;
-  put(M.ground, PLANE, mat(0, -.02, mid, 0, 0, 0, 420, 1, L2 + 400), { uv: [52, (L2 + 400) / 8] });
-  put(M.asphalt, PLANE, mat(0, 0, mid, 0, 0, 0, ROAD * 2 + .6, 1, L2), { uv: [(ROAD * 2 + .6) / 8, L2 / 8] });
-
-  // the start: a barrier behind the car
-  solid(0, -14, 7.2, .25, 0, 1.1, M.barrier);
-  put(M.metal, BOX, mat(0, .2, -14, 0, 0, 0, 14.4, .4, .3));
-
+// Ground, avenue, crossroads and buildings between a and b
+function buildRange(a0, a1, ints, bay, open) {
+  const g0 = a0 === Z0 ? a0 - 200 : a0, g1 = open ? a1 : a1 + 200;
+  put(M.ground, PLANE, mat(0, -.02, (g0 + g1) / 2, 0, 0, 0, 420, 1, g1 - g0), { uv: [52, (g1 - g0) / 8] });
+  put(M.asphalt, PLANE, mat(0, 0, (a0 + a1) / 2, 0, 0, 0, ROAD * 2 + .6, 1, a1 - a0), { uv: [(ROAD * 2 + .6) / 8, (a1 - a0) / 8] });
   // stretches of avenue between crossroads
-  const cuts = [Z0, ...INTS.flatMap(I => [I.z - 11, I.z + 11]), Z1];
-  const bay = park ? [FIN - 22, FIN + 22] : null;
+  const cuts = [a0, ...ints.flatMap(I => [I.z - 11, I.z + 11]), a1];
   for (let k = 0; k < cuts.length; k += 2) {
     const a = cuts[k], b = cuts[k + 1], m = (a + b) / 2, n = b - a;
     if (n < 2) continue;
@@ -1045,7 +1056,46 @@ function buildWorld(L, seed) {
       for (let z = a + rand() * 10; z < b - 15; z += 22 + rand() * 14) building(s * (40 + rand() * 15), z + 10, 18, 18, 30 + rand() * 45, 0);
     }
   }
-  for (const I of INTS) buildIntersection(I);
+  for (const I of ints) buildIntersection(I);
+}
+// Endless mode: add 600 m of city ahead and drop what is far behind
+function extendWorld() {
+  const a = Z1, b = Z1 + 600, fresh = [];
+  for (let z = (INTS.length ? INTS[INTS.length - 1].z : a) + 120 + rand() * 60; z < b - 40; z += 120 + rand() * 60) if (z > a + 30) fresh.push({ z, off: rand() * CYC });
+  buildRange(a, b, fresh, null, true);
+  flush();
+  INTS.push(...fresh);
+  Z1 = b;
+  const back = car.z - 160;
+  for (const o of [...world.children]) {
+    if (!o.geometry) continue;
+    if (!o.geometry.boundingSphere) o.geometry.computeBoundingSphere();
+    const bs = o.geometry.boundingSphere;
+    if (o.position.z + bs.center.z + bs.radius < back) {
+      world.remove(o);
+      if (!SHARED.has(o.geometry)) o.geometry.dispose();
+    }
+  }
+  obstacles = obstacles.filter(o => o.z + o.hl + o.hw > back);
+  INTS = INTS.filter(I => I.z > car.z - 80);
+}
+function buildWorld(L, seed) {
+  clearWorld();
+  LV = L;
+  rand = seeded(seed);
+  FIN = L.type === 'overtake' || L.type === 'endless' ? Infinity : L.dist;
+  const len = L.type === 'overtake' ? L.time * 32 + 300 : L.dist;
+  Z1 = len + 160;
+  const park = L.type === 'park';
+  // crossroads every 120-180 m, none near the start or the finish
+  INTS = [];
+  for (let z = 95 + rand() * 40; z < (park ? len - 70 : len - 35) || (!isFinite(FIN) && z < Z1 - 40); z += 120 + rand() * 60) INTS.push({ z, off: rand() * CYC });
+  if (isFinite(FIN) && !park) INTS = INTS.filter(I => Math.abs(I.z - FIN) > 30);
+  // the start: a barrier behind the car
+  solid(0, -14, 7.2, .25, 0, 1.1, M.barrier);
+  put(M.metal, BOX, mat(0, .2, -14, 0, 0, 0, 14.4, .4, .3));
+  const bay = park ? [FIN - 22, FIN + 22] : null;
+  buildRange(Z0, Z1, INTS, bay, L.type === 'endless');
 
   if (bay) {
     const [p, q] = bay;
@@ -1119,11 +1169,12 @@ function laneBusy(ax, lane, s, gap, skip) {
   return false;
 }
 const inCross = z => INTS.some(I => Math.abs(I.z - z) < 13);
+const trafficGap = () => LV.type === 'endless' ? Math.max(26, LV.traffic - Math.max(0, car.z) / 70) : LV.traffic;
 function fillTraffic(first) {
   if (!LV) return;
   const ahead = car.z + 240;
   for (const ln of MAIN_LANES) {
-    const sp = LV.traffic * (ln.d > 0 && LV.type !== 'overtake' ? 1.5 : 1); // our side is a bit lighter than the oncoming side
+    const sp = trafficGap() * (ln.d > 0 && LV.type !== 'overtake' ? 1.5 : 1); // our side is a bit lighter than the oncoming side
     let far = -Infinity;
     for (const c of traffic) if (c.ax === 'z' && Math.abs(c.lane - ln.x) < 1.6) far = Math.max(far, c.s);
     let s = first ? car.z + 26 + Math.random() * sp * .8 : Math.max(far + sp * (.6 + Math.random() * .8), car.z + 170);
@@ -1140,7 +1191,7 @@ function fillTraffic(first) {
     if (I.z < car.z - 30 || I.z > car.z + 170) continue;
     I.nt = (I.nt || 0) - frameDt;
     if (I.nt > 0) continue;
-    I.nt = 2 + Math.random() * LV.traffic / 12;
+    I.nt = 2 + Math.random() * trafficGap() / 12;
     const d = Math.random() < .5 ? 1 : -1, lane = I.z + d * 1.75, s0 = -d * 78;
     let q = 0;
     for (const c of traffic) if (c.cross && Math.abs(c.lane - lane) < .5) q++;
@@ -1248,7 +1299,10 @@ const LEVELS = [
   { type: 'park', dist: 1000, gap: 7.4, traffic: 34, tod: 'night' },
   { type: 'reach', dist: 2000, time: 200, traffic: 28, tod: 'night' },
 ];
-const ICON = { reach: '⏱', overtake: '🚗', rules: '🚦', park: '🅿️', fuel: '⛽' };
+const ICON = { reach: '⏱', overtake: '🚗', rules: '🚦', park: '🅿️', fuel: '⛽', endless: '📏' };
+const ENDLESS = { type: 'endless', dist: 900, traffic: 70, tod: 'day' };
+const lv = () => cur < 0 ? ENDLESS : LEVELS[cur];
+const scoreNow = () => Math.max(0, Math.floor(car.z)) + overtakes * 25;
 const MENU_LEVEL = { type: 'reach', dist: 900, traffic: 55, tod: 'day' };
 const timed = L => L.type === 'reach' || L.type === 'overtake';
 const parOf = L => timed(L) ? L.time * .8 : L.dist / 10 + (L.type === 'park' ? 20 : 0);
@@ -1437,7 +1491,7 @@ const Ads = {
   // Between levels only: never in the first two levels, at most once every 3 results and 2.5 minutes
   async interstitial() {
     this.results++;
-    if (!this.ok() || this.busy || cur < 2 || this.results < 3 || Date.now() - this.last < 150000) return;
+    if (!this.ok() || this.busy || (cur >= 0 && cur < 2) || this.results < 3 || Date.now() - this.last < 150000) return;
     this.busy = true; audioPause();
     try {
       if (this.native) {
@@ -1489,7 +1543,7 @@ function fakeAd(rewarded) {
     }, 1000);
   });
 }
-function refreshAdButtons() { $('#bFreeCoins').classList.toggle('hide', !Ads.ok()); }
+function refreshAdButtons() { $('#bFreeCoins').classList.toggle('hide', !Ads.ok()); $('#bClaim2').classList.toggle('hide', !Ads.ok()); }
 let toastT = 0;
 function toast(msg, bad = false) { const el = $('#toast'); el.textContent = msg; el.classList.toggle('bad', bad); el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2600); }
 
@@ -1499,10 +1553,11 @@ let state = 'menu', cur = 0, time = 0, hits = 0, viol = 0, fuel = 100, extra = 0
 let lastReward = 0, continued = false, startT = 0, simT = 0, frameDt = 0, overT = 0, violCd = 0, warned = {}, failWhy = '';
 let menuView = 'main', backTo = 'sMain', beepT = 0, sensorD = Infinity, brakeLit = false, throttle = 0, bannerT = 0;
 const camPos = new THREE.Vector3(), camLook = new THREE.Vector3();
-const SCREENS = ['sMain', 'sLevels', 'sGarage', 'sSettings', 'sPause', 'sResult'];
+const SCREENS = ['sMain', 'sLevels', 'sGarage', 'sSettings', 'sPause', 'sResult', 'sDaily'];
 function show(id) {
   for (const s of SCREENS) $('#' + s).classList.toggle('hide', s !== id);
-  $('#coinChip').classList.toggle('hide', !['sMain', 'sLevels', 'sGarage'].includes(id));
+  $('#coinChip').classList.toggle('hide', !['sMain', 'sLevels', 'sGarage', 'sDaily'].includes(id));
+  if (id === 'sMain') endlessLabel();
   updateCoins();
   $('#hud').classList.toggle('hide', !(state === 'play' || state === 'win' || state === 'fail') || id !== null);
 }
@@ -1538,15 +1593,19 @@ function renderLevels() {
 }
 function startLevel(i) {
   cur = i; state = 'play';
-  const L = LEVELS[i];
+  const L = lv();
+  if (i < 0) ENDLESS.tod = ['day', 'sunset', 'night'][Math.floor(Math.random() * 3)];
+  paid = 0;
   setTOD(L.tod);
-  buildWorld(L, 1000 + i * 77);
+  buildWorld(L, i < 0 ? Math.floor(Math.random() * 1e6) : 1000 + i * 77);
   Object.assign(car, { x: -1.75, z: 0, th: 0, v: 0, steer: 0, pitch: 0, roll: 0 });
   clearTraffic(); simT = 0; fillTraffic(true);
   time = 0; hits = 0; viol = 0; fuel = L.fuel || 100; extra = 0; overtakes = 0; hold = 0; hitCd = 0; shake = 0; overT = 0; violCd = 0; warned = {};
   continued = false; camYaw = camPitch = 0; wheelAngle = 0; startT = 2.6;
   setGear('D');
-  $('#cLvl').textContent = `${i + 1}/${LEVELS.length}`;
+  $('#cLvl').textContent = i < 0 ? '∞' : `${i + 1}/${LEVELS.length}`;
+  $('#prog').classList.toggle('hide', i < 0 && !save.best);
+  $('#prog b').textContent = i < 0 ? '🏆' : '🏁';
   $('#goalIco').textContent = ICON[L.type];
   $('#fuelBar').classList.toggle('hide', L.type !== 'fuel');
   $('#limit').classList.toggle('hide', L.type !== 'rules');
@@ -1557,12 +1616,12 @@ function startLevel(i) {
   show(null);
   updateCam(0, true);
   const t = tr();
-  $('#bnN').textContent = t.level(i + 1); $('#bnT').textContent = t.types[L.type]; $('#bnH').textContent = t.goals[L.type](L);
+  $('#bnN').textContent = i < 0 ? '∞' : t.level(i + 1); $('#bnT').textContent = t.types[L.type]; $('#bnH').textContent = t.goals[L.type](L);
   $('#bnP').textContent = t.tips[L.type];
   $('#banner').classList.add('show'); bannerT = 3.4;
   lastCount = -1;
 }
-function pause() { if (state !== 'play') return; state = 'pause'; backTo = 'sPause'; $('#pauseGoal').textContent = tr().goals[LEVELS[cur].type](LEVELS[cur]); show('sPause'); }
+function pause() { if (state !== 'play') return; state = 'pause'; backTo = 'sPause'; $('#pauseGoal').textContent = tr().goals[lv().type](lv()); show('sPause'); }
 function resume() { state = 'play'; show(null); }
 function updateCoins() { $('#coinVal').textContent = save.coins; }
 function updateDamage() { $$('#dmg i').forEach((el, k) => el.classList.toggle('on', k < hits)); }
@@ -1570,9 +1629,10 @@ function finish(won, why = '') {
   state = won ? 'win' : 'fail';
   failWhy = why;
   $('#hold').classList.add('hide'); $('#count').classList.add('hide');
-  const L = LEVELS[cur], last = cur === LEVELS.length - 1, t = tr();
+  const L = lv(), last = cur === LEVELS.length - 1, t = tr();
   let stars = 0, reward = 0;
   lastReward = 0;
+  if (L.type === 'endless') return endRun(t);
   if (won) {
     let minus = (hits > 0 ? 1 : 0) + (viol > 0 ? 1 : 0) + (time > parOf(L) ? 1 : 0) + (L.type === 'fuel' && fuel < 8 ? 1 : 0);
     stars = Math.max(1, 3 - minus);
@@ -1598,6 +1658,7 @@ function finish(won, why = '') {
   $('#resCoins').classList.toggle('hide', !won);
   $('#bDouble').classList.toggle('hide', !won || !Ads.ok());
   $('#bContinue').classList.toggle('hide', won || !Ads.ok() || continued);
+  $('#bContinue').textContent = t.adContinue;
   $('#resCoins').textContent = t.earned(0);
   const spans = $$('#resStars span');
   spans.forEach(s => s.classList.remove('on'));
@@ -1613,9 +1674,60 @@ function finish(won, why = '') {
     }, 1200);
   }, 1300);
 }
+// End of an endless run: score, record and coins (a continue only pays the extra distance)
+let paid = 0;
+function endRun(t) {
+  const score = scoreNow(), rec = score > (save.best || 0);
+  if (rec) save.best = score;
+  const reward = Math.floor(score / 15) - paid;
+  paid += reward;
+  save.coins += reward; lastReward = reward;
+  persist();
+  if (rec) { [523, 659, 784, 1046].forEach((f, i) => tone(f, .4, 'triangle', .14, i * .12)); setTimeout(burst, 500); }
+  else { tone(300, .3, 'sawtooth', .1); tone(200, .5, 'sawtooth', .1, .25); }
+  $('#resTitle').textContent = rec ? t.newBest : t.runOver;
+  const st = [[t.distance, t.m(Math.max(0, Math.floor(car.z)))], [t.overtaken, overtakes], [t.score, score], [t.bestL, save.best]];
+  $('#resStats').innerHTML = st.map(([a, b]) => `<div><small>${a}</small><span>${b}</span></div>`).join('');
+  $('#resNote').textContent = t.tips.endless;
+  $('#bNext').classList.add('hide'); $('#resStars').classList.add('hide');
+  $('#resCoins').classList.remove('hide'); $('#resCoins').textContent = t.earned(reward);
+  $('#bDouble').classList.toggle('hide', !Ads.ok() || !reward);
+  $('#bContinue').classList.toggle('hide', !Ads.ok() || continued);
+  $('#bContinue').textContent = t.adRevive;
+  setTimeout(() => { if (state === 'fail' || state === 'win') show('sResult'); }, 1300);
+}
+/* Daily reward: 7 days that grow, the streak restarts when a day is missed */
+const DAILY = [50, 80, 120, 160, 220, 300, 500];
+const dayKey = (d = new Date()) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+function dailyDay() {
+  const D = save.daily || {}, y = new Date(); y.setDate(y.getDate() - 1);
+  if (D.last === dayKey()) return -1; // already claimed today
+  return D.last === dayKey(y) ? (D.streak || 0) % 7 : 0;
+}
+function renderDaily() {
+  const t = tr(), k = dailyDay();
+  $('#days').innerHTML = DAILY.map((c, i) => `<div class="${i < k ? 'done' : i === k ? 'today' : ''}">${t.day(i + 1)}<b>${i < k ? '✓' : c}</b></div>`).join('');
+  $('#bClaim').textContent = t.claim(DAILY[k]);
+  $('#bClaim2').textContent = t.claim2(DAILY[k] * 2);
+  $('#bClaim2').classList.toggle('hide', !Ads.ok());
+}
+function maybeDaily() { if (state === 'menu' && dailyDay() >= 0) { renderDaily(); show('sDaily'); } }
+function claimDaily(mult) {
+  const k = dailyDay();
+  if (k < 0) return show('sMain');
+  save.coins += DAILY[k] * mult;
+  save.daily = { last: dayKey(), streak: k + 1 };
+  persist();
+  [660, 880, 1320].forEach((f, i) => tone(f, .2, 'triangle', .12, i * .1));
+  burst(); show('sMain');
+}
+$('#bClaim').onclick = () => claimDaily(1);
+$('#bClaim2').onclick = async () => { if (!await Ads.rewarded()) return toast(tr().adFail); claimDaily(2); };
 function toggleCam() { camMode = (camMode + 1) % 3; camYaw = camPitch = 0; updateCam(0, true); }
 
 $('#bPlay').onclick = () => goMenu('sLevels');
+$('#bEndless').onclick = () => startLevel(-1);
+function endlessLabel() { const t = tr(); $('#bEndless').textContent = save.best ? `${t.endless} · 🏆 ${save.best}` : t.endless; }
 $('#bLang').onclick = () => { save.lang = LANG_NEXT[save.lang]; persist(); applyLang(); syncSettings(); };
 $('#bGarage').onclick = () => { garageIdx = save.car; renderGarage(); goMenu('sGarage'); };
 $('#bSettings').onclick = () => { backTo = 'sMain'; show('sSettings'); syncSettings(); };
@@ -1779,7 +1891,7 @@ function physics(dt) {
   car.v = clamp(car.v, -MAXR, VMAX);
   brakeLit = brake || (gas && v0 * dir < -.05);
   throttle += ((gas ? 1 : 0) - throttle) * Math.min(1, dt * 5);
-  if (LEVELS[cur].type === 'fuel' && startT <= 0) fuel -= (.15 + (gas ? 1 : 0) * (.7 + Math.abs(car.v) * .024)) * dt;
+  if (lv().type === 'fuel' && startT <= 0) fuel -= (.15 + (gas ? 1 : 0) * (.7 + Math.abs(car.v) * .024)) * dt;
 
   // steering gets gentler with speed so lane changes stay smooth
   const maxSteer = MAXSTEER * Math.min(1, 3.6 / (Math.abs(car.v) + .01));
@@ -1845,16 +1957,16 @@ function bump(why) {
 function offence(msg) {
   viol++; violCd = 3;
   toast(msg, true); tone(660, .15, 'square', .08); tone(520, .2, 'square', .08, .16);
-  if (LEVELS[cur].type === 'rules' && viol >= 3) finish(false, 'rules');
+  if (lv().type === 'rules' && viol >= 3) finish(false, 'rules');
 }
 function onOvertake() {
-  const L = LEVELS[cur];
+  const L = lv();
   tone(990, .08, 'triangle', .07);
   if (L.type === 'overtake') { toast(tr().passed(`${overtakes}/${L.n}`)); if (overtakes >= L.n) finish(true); }
 }
 let prevFront = 0;
 function rules(dt) {
-  const L = LEVELS[cur], t = tr(), front = car.z + HL;
+  const L = lv(), t = tr(), front = car.z + HL;
   for (const I of INTS) {
     const stop = I.z - 10.6;
     if (prevFront < stop && front >= stop && car.v > 1 && mainPhase(I) === 'R' && redFor(I) > .5) offence(t.redLight);
@@ -1908,7 +2020,7 @@ function sensors(dt) {
 }
 // Win and lose conditions of each mission
 function mission(dt) {
-  const L = LEVELS[cur], t = tr();
+  const L = lv(), t = tr();
   if (startT > 0) return;
   time += dt;
   if (timed(L) && time >= L.time + extra) return finish(false, 'time');
@@ -1987,10 +2099,11 @@ function syncCar(dt) {
 
 let lastHud = '';
 function hud() {
-  const L = LEVELS[cur], t = tr(), kmh = Math.round(Math.abs(car.v) * 3.6);
+  const L = lv(), t = tr(), kmh = Math.round(Math.abs(car.v) * 3.6);
   const left = timed(L) ? Math.max(0, L.time + extra - time) : time;
   let goal, prog;
   if (L.type === 'overtake') { goal = `${overtakes}/${L.n}`; prog = overtakes / L.n; }
+  else if (L.type === 'endless') { const sc = scoreNow(); goal = `${sc}`; prog = save.best ? clamp(sc / save.best, 0, 1) : 0; }
   else {
     const rem = Math.max(0, Math.round(FIN - car.z - HL));
     goal = L.type === 'rules' ? `${viol}/3 · ${t.m(rem)}` : L.type === 'fuel' ? t.m(rem) : t.m(rem);
@@ -2062,6 +2175,7 @@ function horn(on) {
 function tick(dt) {
   clock += dt; frameDt = dt;
   const live = state !== 'pause';
+  if (LV && LV.type === 'endless' && state !== 'menu' && car.z > Z1 - 450) extendWorld();
   if (live) { simT += dt; fillTraffic(false); updateTraffic(dt, state === 'play'); updateSignals(); }
   if (state === 'play') {
     // fixed small physics steps so slow phones drive the same as fast ones
@@ -2117,6 +2231,7 @@ applySettings();
 syncSettings();
 enterMenuWorld();
 show('sMain');
+setTimeout(maybeDaily, 900);
 updateCam(0, true);
 requestAnimationFrame(loop);
 Ads.init();
@@ -2127,10 +2242,11 @@ if (NATIVE && NATIVE.App) NATIVE.App.addListener('backButton', () => {
   if (state === 'play') pause();
   else if (open === 'sPause') resume();
   else if (open === 'sMain') NATIVE.App.exitApp();
+  else if (open === 'sDaily') claimDaily(1);
   else if (open === 'sResult') goMenu('sLevels');
   else if (open) $(`#${open} [data-back]`).click();
 });
-window.game = { info: renderer.info, ads: Ads, car, startLevel, finish, LEVELS, get state() { return state; }, get traffic() { return traffic; }, get hits() { return hits; }, get fuel() { return fuel; }, get time() { return time; }, get overtakes() { return overtakes; }, get viol() { return viol; }, get INTS() { return INTS; }, setCam: m => { camMode = m; }, touch, keys,
+window.game = { info: renderer.info, ads: Ads, car, startLevel, claimDaily, get Z1() { return Z1; }, get worldSize() { return world.children.length; }, get obstacles() { return obstacles.length; }, finish, LEVELS, get state() { return state; }, get traffic() { return traffic; }, get hits() { return hits; }, get fuel() { return fuel; }, get time() { return time; }, get overtakes() { return overtakes; }, get viol() { return viol; }, get INTS() { return INTS; }, setCam: m => { camMode = m; }, touch, keys,
   // test hooks: run the game faster than real time, with a callback before each step
   step(sec, fn) { for (let t = 0; t < sec; t += 1 / 30) { fn && fn(); tick(1 / 30); } }, phase: I => mainPhase(I), setWheel: a => { wheelAngle = a; }, get HL() { return HL; }, hitLog,
   // used by the scripts that draw the icon and store images

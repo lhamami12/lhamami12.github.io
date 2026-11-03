@@ -35,6 +35,10 @@ City Driver 3D: قيادة بالمدينة
 🚙 **8 سيارات و10 ألوان**
 سيدان، هاتشباك، دفع رباعي، بيك أب، رياضية، فان، كلاسيكية، و**سوبركار** بجناح خلفي و5 ألوان سباق. اجمع العملات لتشتريها.
 
+∞ **وضع بلا نهاية**: قُد أبعد ما يمكن والزحمة تزداد، وحطّم رقمك القياسي.
+
+🎁 **مكافأة يومية** تكبر كل يوم تعود فيه.
+
 🎥 **3 كاميرات** منها القيادة من داخل السيارة.
 
 🌍 بالعربية والإنجليزية والفرنسية، وتعمل على الهواتف الضعيفة (رسومات منخفضة).
@@ -67,6 +71,10 @@ Drive at night with your headlights between the lit-up buildings.
 🚙 **8 cars and 10 colours**
 Sedan, hatchback, SUV, pickup, sports car, van, classic and a **supercar** with a rear wing and 5 racing liveries. Earn coins to buy them.
 
+∞ **Endless mode**: drive as far as you can while the traffic grows, and beat your record.
+
+🎁 **Daily reward** that grows every day you come back.
+
 🎥 **3 cameras**, including a driver's seat view.
 
 🌍 In English, Arabic and French, and runs on low-end phones too (low graphics option).
@@ -96,6 +104,10 @@ De vrais feux tricolores, des carrefours avec des voitures qui traversent, des b
 🌇 **Jour, coucher de soleil et nuit**
 
 🚙 **8 voitures et 10 couleurs** à débloquer avec tes pièces, dont une **supercar** avec aileron et 5 livrées de course.
+
+∞ **Mode infini** : va le plus loin possible pendant que le trafic augmente, et bats ton record.
+
+🎁 **Cadeau du jour** qui grandit chaque jour où tu reviens.
 
 🎥 **3 caméras**, dont la vue conducteur.
 
