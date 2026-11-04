@@ -5,9 +5,9 @@ const { join } = require('path');
 const fs = require('fs');
 
 const CAP = {
-  ar: ['قُد في زحمة المدينة', 'توقف عند الضوء الأحمر', 'نهار، غروب وليل', 'القيادة من داخل السيارة', 'اركن في المكان الصحيح', '20 مهمة متنوعة', '8 سيارات منها سوبركار'],
-  en: ['Drive through city traffic', 'Stop at the red lights', 'Day, sunset and night', 'Drive from the seat', 'Park in the right bay', '20 varied missions', '8 cars, including a supercar'],
-  fr: ['Roule dans la circulation', 'Arrête-toi au feu rouge', 'Jour, coucher de soleil, nuit', 'Vue depuis le siège', 'Gare-toi au bon endroit', '20 missions variées', '8 voitures, dont une supercar'],
+  ar: ['قُد في زحمة المدينة', 'توقف عند الضوء الأحمر', 'نهار، ليل ومطر', 'القيادة من داخل السيارة', 'اركن في المكان الصحيح', '40 مهمة متنوعة', '8 سيارات منها سوبركار', 'أوصل ركاب التاكسي'],
+  en: ['Drive through city traffic', 'Stop at the red lights', 'Day, night and rain', 'Drive from the seat', 'Park in the right bay', '40 varied missions', '8 cars, including a supercar', 'Drive a taxi'],
+  fr: ['Roule dans la circulation', 'Arrête-toi au feu rouge', 'Jour, nuit et pluie', 'Vue depuis le siège', 'Gare-toi au bon endroit', '40 missions variées', '8 voitures, dont une supercar', 'Conduis un taxi'],
 };
 (async () => {
   const b = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
@@ -48,7 +48,7 @@ const CAP = {
       game.step(3, () => { Object.assign(game.car, { z: I.z - 19, x: -1.75, v: 0, th: 0 }); });
     }, ints[1]);
     await shot(1);
-    await drive(9, 250, -5.25, 10, 0); await shot(2);
+    await drive(27, 250, -5.25, 10, 0); await shot(2);
     await drive(15, 400, -1.75, 12, 1); await shot(3);
     await p.evaluate(() => { game.startLevel(3); game.setCam(0); game.step(2.7); Object.assign(game.car, { z: 386, x: -6.6, th: -.32, v: 0 }); game.step(1, () => { game.car.v = 0; }); });
     await shot(4);
@@ -58,6 +58,14 @@ const CAP = {
     await shot(5);
     await p.evaluate(() => { document.querySelector('#sLevels [data-back]').click(); document.querySelector('#bGarage').click(); }); await p.waitForTimeout(2500);
     await shot(6);
+    // taxi: the passenger waves from the kerb ahead
+    await p.evaluate(() => {
+      game.startLevel(20); game.setCam(0); game.step(2.7);
+      const z = game.taxi.stops[0].pick;
+      Object.assign(game.car, { z: z - 12, x: -5.25, v: 0, th: 0 }); game.step(1, () => { game.car.v = 0; });
+      document.getElementById('toast').classList.remove('show');
+    });
+    await shot(7);
     await p.close();
   }
   await b.close();
