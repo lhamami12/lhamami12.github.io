@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="description" content="Parking 3D — a 3D car parking game: steering wheel, pedals, parking sensors and 30 levels. / لعبة ركن سيارات ثلاثية الأبعاد.">
+<meta name="description" content="Parking 3D — a 3D car parking game: steering wheel, pedals, parking sensors, 30 levels, rain and moving traffic. / لعبة ركن سيارات ثلاثية الأبعاد.">
 <title>Parking 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,6 +151,12 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 .lock.shake{animation:shk .4s}
 @keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 .sw{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:8px 0 6px}
+.sw button{position:relative}
+.sw .pr{position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);font-size:10px;font-weight:900;color:#ffd36b;white-space:nowrap;direction:ltr}
+.sw.priced{row-gap:22px;margin-bottom:18px}
+.sw button.none{background:#20252d!important;color:var(--mut);font-size:18px}
+.tabs{margin:6px auto 4px;width:max-content;max-width:100%;flex-wrap:wrap;justify-content:center}
+.btn.ch{background:linear-gradient(180deg,#a78bfa,#6d28d9);border:0;box-shadow:0 4px 0 #43198a}
 .sw button{width:44px;height:44px;border-radius:50%;border:3px solid rgba(255,255,255,.25);box-shadow:inset 0 -6px 10px rgba(0,0,0,.35)}
 .sw button.on{border-color:var(--acc);transform:scale(1.12)}
 .set{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-weight:800}
@@ -227,6 +233,7 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
   <div class="panel glass">
     <div class="logo"><div class="l1">PARKING<sup>3D</sup></div><div class="l2" data-i18n="sub"></div></div>
     <button class="btn pri" id="bPlay" data-i18n="play"></button>
+    <button class="btn ch" id="bChallenge"><span id="chLbl"></span><i class="dot hide" id="dCh"></i></button>
     <div class="row2"><button class="btn" id="bGarage" data-i18n="garage"></button><button class="btn" id="bSettings" data-i18n="settings"></button></div>
     <div class="row2"><button class="btn" id="bMissions"><span data-i18n="missions"></span><i class="dot hide" id="dMis"></i></button><button class="btn" id="bDaily"><span data-i18n="daily"></span><i class="dot hide" id="dDaily"></i></button></div>
   </div>
@@ -248,8 +255,11 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <div class="cstats" id="cStats"></div>
     <button class="btn pri hide" id="bBuy"></button>
     <button class="btn ad hide" id="bFreeCoins" data-i18n="adFree"></button>
-    <div class="mut" data-i18n="pickColor"></div>
+    <div class="seg tabs" id="custTabs"><button data-tab="swatches" class="on" data-i18n="colorTab"></button><button data-tab="swRims" data-i18n="rims"></button><button data-tab="swTint" data-i18n="tint"></button><button data-tab="swNeon" data-i18n="neon"></button></div>
     <div class="sw" id="swatches"></div>
+    <div class="sw priced hide" id="swRims"></div>
+    <div class="sw priced hide" id="swTint"></div>
+    <div class="sw priced hide" id="swNeon"></div>
     <button class="btn pri" data-back data-i18n="done"></button>
   </div>
 </div>
@@ -266,7 +276,7 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <button class="btn hide" id="bAdPriv" style="font-size:14px;padding:8px" data-i18n="adPriv"></button>
     <button class="btn" id="bReset" style="font-size:14px;padding:8px" data-i18n="reset"></button>
     <button class="btn pri" data-back data-i18n="done"></button>
-    <div class="ver">Parking 3D v1.1</div>
+    <div class="ver">Parking 3D v1.2</div>
   </div>
 </div>
 
@@ -342,6 +352,10 @@ if (!Array.isArray(save.owned)) save.owned = [...new Set([0, 1, save.car || 0])]
 if (!save.st) save.st = { wins: save.stars.filter(Boolean).length, perfect: save.stars.filter(v => v === 3).length, rev: 0, night: 0, bestRun: 0 };
 if (!save.ach) save.ach = {};
 if (!save.daily) save.daily = { last: '', day: 0, run: 0 };
+// v1.2: car customization and the daily challenge
+if (!save.custom) save.custom = { rim: 'chrome', tint: 'dark', neon: 'none' };
+if (!Array.isArray(save.items)) save.items = ['rim:chrome', 'tint:dark', 'neon:none'];
+if (!save.st.ch) save.st.ch = 0;
 persist();
 
 /* ---------- Translations ---------- */
@@ -366,6 +380,9 @@ const I18N = {
     adFail: 'لا يوجد إعلان الآن، حاول بعد قليل', privacy: 'سياسة الخصوصية', adPriv: 'خيارات الخصوصية للإعلانات',
     missions: '🏆 المهام', missionsSub: 'أنجز المهام واربح العملات', daily: '🎁 الهدية اليومية',
     dailySub: 'العب كل يوم لتكبر هديتك. إذا فوّت يوماً تبدأ من جديد.', day: n => `اليوم ${n}`,
+    challenge: '📅 تحدي اليوم', chReward: n => `🪙 ${n} للفوز بتحدي اليوم`, chDone: '✓ أكملت تحدي اليوم! تحدٍّ جديد غداً', chAgain: 'أكملته اليوم: العب للمتعة فقط',
+    modNight: '🌙 ليل', modRain: '🌧️ مطر: الطريق زلق!', modTraffic: '🚗 سيارات تتحرك',
+    colorTab: '🎨 اللون', rims: '🛞 الجنوط', tint: '🪟 الزجاج', neon: '✨ نيون', bought: '✓ اشتريت!',
     claim: 'استلم', claimX2: '🎬 استلم ×2', claimed: '✓ استلمت هدية اليوم، عُد غداً!', close: 'إغلاق',
     ach: {
       wins: n => n === 1 ? 'افز بأول مستوى' : `افز ${n} ${pl(n, 'مرة', 'مرات')}`,
@@ -374,6 +391,7 @@ const I18N = {
       night: n => `افز بـ ${n} ${pl(n, 'مستوى ليلي', 'مستويات ليلية')}`,
       stars: n => `اجمع ${n} نجمة`, levels: n => `أكمل ${n} مستوى`,
       cars: n => `امتلك ${n} ${pl(n, 'سيارة', 'سيارات')}`, days: n => `العب ${n} ${pl(n, 'يوم', 'أيام')} متتالية`,
+      challenges: n => `أكمل ${n} ${pl(n, 'تحدياً يومياً', 'تحديات يومية')}`, custom: n => `اشترِ ${n} ${pl(n, 'قطعة تزيين', 'قطع تزيين')}`,
     },
     levels: [
       ['البداية', 'تقدّم واركن داخل المربع الأخضر'], ['بين سيارتين', 'انعطف وادخل بين السيارتين'],
@@ -411,11 +429,15 @@ const I18N = {
     adFail: 'No ad available right now, try again soon', privacy: 'Privacy policy', adPriv: 'Ad privacy options',
     missions: '🏆 Missions', missionsSub: 'Complete missions to earn coins', daily: '🎁 Daily gift',
     dailySub: 'Play every day for bigger gifts. Miss a day and it starts over.', day: n => `Day ${n}`,
+    challenge: '📅 Daily challenge', chReward: n => `🪙 ${n} for winning today's challenge`, chDone: "✓ Today's challenge done! A new one tomorrow", chAgain: 'Already done today: just for fun',
+    modNight: '🌙 Night', modRain: '🌧️ Rain: slippery road!', modTraffic: '🚗 Moving cars',
+    colorTab: '🎨 Colour', rims: '🛞 Rims', tint: '🪟 Windows', neon: '✨ Neon', bought: '✓ Bought!',
     claim: 'Claim', claimX2: '🎬 Claim ×2', claimed: '✓ Claimed. Come back tomorrow!', close: 'Close',
     ach: {
       wins: n => n === 1 ? 'Win your first level' : `Win ${n} times`, perfect: n => `Get 3 stars ${n} times`,
       reverse: n => `Win ${n} reverse-parking levels`, night: n => `Win ${n} night levels`,
       stars: n => `Collect ${n} stars`, levels: n => `Clear ${n} levels`, cars: n => `Own ${n} cars`, days: n => `Play ${n} days in a row`,
+      challenges: n => `Complete ${n} daily challenges`, custom: n => `Buy ${n} customization items`,
     },
     levels: [
       ['First Steps', 'Drive forward into the green box'], ['Between Two Cars', 'Turn in between the two cars'],
@@ -453,11 +475,15 @@ const I18N = {
     adFail: 'Pas de pub disponible, réessaie bientôt', privacy: 'Politique de confidentialité', adPriv: 'Options de confidentialité des pubs',
     missions: '🏆 Missions', missionsSub: 'Accomplis des missions pour gagner des pièces', daily: '🎁 Cadeau du jour',
     dailySub: 'Joue chaque jour pour des cadeaux plus gros. Un jour manqué et tout recommence.', day: n => `Jour ${n}`,
+    challenge: '📅 Défi du jour', chReward: n => `🪙 ${n} si tu réussis le défi du jour`, chDone: '✓ Défi du jour réussi ! Un nouveau demain', chAgain: 'Déjà réussi aujourd’hui : juste pour le plaisir',
+    modNight: '🌙 Nuit', modRain: '🌧️ Pluie : route glissante !', modTraffic: '🚗 Voitures en mouvement',
+    colorTab: '🎨 Couleur', rims: '🛞 Jantes', tint: '🪟 Vitres', neon: '✨ Néon', bought: '✓ Acheté !',
     claim: 'Récupérer', claimX2: '🎬 Récupérer ×2', claimed: '✓ Récupéré. Reviens demain !', close: 'Fermer',
     ach: {
       wins: n => n === 1 ? 'Gagne ton premier niveau' : `Gagne ${n} fois`, perfect: n => `Obtiens 3 étoiles ${n} fois`,
       reverse: n => `Gagne ${n} niveaux en marche arrière`, night: n => `Gagne ${n} niveaux de nuit`,
       stars: n => `Récolte ${n} étoiles`, levels: n => `Termine ${n} niveaux`, cars: n => `Possède ${n} voitures`, days: n => `Joue ${n} jours d’affilée`,
+      challenges: n => `Réussis ${n} défis du jour`, custom: n => `Achète ${n} éléments de personnalisation`,
     },
     levels: [
       ['Premiers pas', 'Avance dans la case verte'], ['Entre deux voitures', 'Tourne et entre entre les deux voitures'],
@@ -528,6 +554,7 @@ scene.add(sky);
 const THEMES = {
   day: { top: 0x2c6cb6, hor: 0xd9eaf5, fog: 0xcfe2f0, sun: 2.6, sunCol: 0xfff1dc, hemi: .5, exp: 1.05, lamp: 1.2, head: 1.1 },
   night: { top: 0x030714, hor: 0x1c2a4a, fog: 0x0d1428, sun: .6, sunCol: 0xa9bcff, hemi: .3, exp: 1.35, lamp: 4, head: 3 },
+  rain: { top: 0x56606b, hor: 0x9fa8b1, fog: 0x8e979f, sun: 1.1, sunCol: 0xdfe6ee, hemi: .6, exp: 1.0, lamp: 2, head: 2 },
 };
 const ENV = {};
 // Image based lighting from the same sky, so paint and glass get reflections
@@ -539,6 +566,8 @@ const ENV = {};
   ENV.day = pm.fromScene(env, .02).texture;
   skyUniforms.top.value.setHex(THEMES.night.top); skyUniforms.hor.value.setHex(THEMES.night.hor);
   ENV.night = pm.fromScene(env, .02).texture;
+  skyUniforms.top.value.setHex(THEMES.rain.top); skyUniforms.hor.value.setHex(THEMES.rain.hor);
+  ENV.rain = pm.fromScene(env, .02).texture;
   skyUniforms.top.value.setHex(THEMES.day.top); skyUniforms.hor.value.setHex(THEMES.day.hor);
   scene.environment = ENV.day;
   pm.dispose();
@@ -667,6 +696,11 @@ const M = {
   head: std({ color: 0xffffff, emissive: 0xfff4d6, emissiveIntensity: 1.1 }),
   tail: std({ color: 0x7a0b0b, emissive: 0x5a0000, emissiveIntensity: .7, roughness: .3 }),
   spotLine: new THREE.MeshBasicMaterial({ color: 0x2cf08a }),
+  neonMap: canvasTex(128, 128, (g, w, h) => {
+    const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(.55, 'rgba(255,255,255,.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  }, false),
   glow: new THREE.MeshBasicMaterial({ map: canvasTex(128, 128, (g, w, h) => {
     const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
     gr.addColorStop(0, 'rgba(255,214,140,.9)'); gr.addColorStop(.45, 'rgba(255,190,110,.35)'); gr.addColorStop(1, 'rgba(255,170,90,0)');
@@ -688,10 +722,41 @@ const LEAVES = new THREE.IcosahedronGeometry(1, 0);
 const ARROW_G = new THREE.ConeGeometry(.45, .9, 4);
 const SHARED = new Set([BOX, PLANE, CYL, CONE_G, BAND, LEAVES, ARROW_G]);
 
-let NIGHT = false, themeNow = '';
-function setTheme(night) {
-  const k = night ? 'night' : 'day';
-  NIGHT = night;
+// Falling rain: short streaks in a box that follows the camera
+const RAIN_N = 1500;
+const rain = (() => {
+  const pos = new Float32Array(RAIN_N * 6);
+  for (let i = 0; i < RAIN_N; i++) {
+    const x = (R() - .5) * 50, y = R() * 22, z = (R() - .5) * 50;
+    pos.set([x, y, z, x + .06, y - .7, z], i * 6);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const l = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0xc4ced8, transparent: true, opacity: .45, depthWrite: false }));
+  l.frustumCulled = false; l.visible = false;
+  scene.add(l);
+  return l;
+})();
+function updateRain(dt) {
+  if (!rain.visible) return;
+  const a = rain.geometry.attributes.position, p = a.array, d = 26 * dt;
+  for (let i = 0; i < p.length; i += 6) {
+    p[i + 1] -= d; p[i + 4] -= d;
+    if (p[i + 4] < 0) { p[i + 1] += 22; p[i + 4] += 22; }
+  }
+  a.needsUpdate = true;
+  rain.position.set(camera.position.x, 0, camera.position.z);
+}
+
+let NIGHT = false, WET = false, themeNow = '';
+function setTheme(night, wet = false) {
+  const k = night ? 'night' : wet ? 'rain' : 'day';
+  NIGHT = night; WET = wet;
+  // wet ground shines; rain also closes in the fog
+  M.asphalt.roughness = wet ? .32 : .93; M.asphalt.envMapIntensity = wet ? 1 : .35;
+  M.pavement.roughness = wet ? .5 : .9;
+  scene.fog.near = wet ? 30 : 90; scene.fog.far = wet ? 150 : 260;
+  rain.visible = wet;
   if (k === themeNow) return;
   themeNow = k;
   const T = THEMES[k];
@@ -844,14 +909,15 @@ function makePlayer(md) {
   const paint = new THREE.MeshPhysicalMaterial({ color: 0xe63946, metalness: .55, roughness: .28, clearcoat: 1, clearcoatRoughness: .05 });
   const tail = M.tail.clone(), rev = std({ color: 0xdddddd, emissive: 0xffffff, emissiveIntensity: 0 });
   const add = (g, m, cast = true) => { const o = new THREE.Mesh(g, m); o.castShadow = cast; o.receiveShadow = true; chassis.add(o); return o; };
-  add(G.paint, paint); add(G.cabin, M.glass); add(G.trim, M.trim); add(G.plate, M.plate, false);
+  const glass = M.glass.clone(), rim = M.chrome.clone();
+  add(G.paint, paint); add(G.cabin, glass); add(G.trim, M.trim); add(G.plate, M.plate, false);
   add(G.head, M.head, false); add(G.tail, tail, false); add(G.rev, rev, false);
   if (G.chromeBody) add(G.chromeBody, M.chrome);
   const front = [], spin = [], k = md.wr / .36;
   for (const [x, z] of G.WPOS) {
     const pivot = new THREE.Group(), s = new THREE.Group();
     pivot.position.set(x, md.wr, z); s.scale.setScalar(k);
-    for (const [g, m] of [[WHEEL.black, M.trim], [WHEEL.chrome, M.chrome]]) { const o = new THREE.Mesh(g, m); o.castShadow = true; s.add(o); }
+    for (const [g, m] of [[WHEEL.black, M.trim], [WHEEL.chrome, rim]]) { const o = new THREE.Mesh(g, m); o.castShadow = true; s.add(o); }
     pivot.add(s); root.add(pivot); spin.push(s);
     if (z > 0) front.push(pivot);
   }
@@ -864,13 +930,45 @@ function makePlayer(md) {
     l.visible = false;
     root.add(l, l.target); heads.push(l);
   }
-  return { root, chassis, front, spin, paint, tail, rev, heads };
+  // underglow
+  const neon = new THREE.Mesh(PLANE, new THREE.MeshBasicMaterial({ map: M.neonMap, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  neon.scale.set(md.W + 1.6, 1, md.L + 1.6); neon.position.y = .03; neon.visible = false;
+  root.add(neon);
+  return { root, chassis, front, spin, paint, tail, rev, heads, glass, rim, neon };
 }
 
 /* ---------- Level building ---------- */
 const level = new THREE.Group();
 scene.add(level);
 let obstacles = [], spot = null, arrow = null, buckets = new Map(), rand = Math.random, bounds = [-10, 10, -10, 10];
+let movers = [], moverBoxes = [], curL = null;
+/* A car that drives back and forth along a line, waits at each end, and stops for the player */
+function mover(x1, z1, x2, z2, speed = 3) {
+  const md = MODELS[[0, 1, 2, 5][Math.floor(rand() * 4)]], G = md.geo, g = new THREE.Group();
+  const parts = [[G.paint, paintMat(PARKED[Math.floor(rand() * PARKED.length)])], [G.cabin, M.glass], [G.black, M.trim], [G.chrome, M.chrome],
+    [G.plate, M.plate], [G.rev, M.plate], [G.head, M.head], [G.tail, M.tail]];
+  for (const [geo, mt] of parts) { const o = new THREE.Mesh(geo, mt); o.castShadow = true; o.receiveShadow = true; g.add(o); }
+  level.add(g);
+  const th = Math.atan2(x2 - x1, z2 - z1);
+  const m = { g, x1, z1, x2, z2, speed, dir: 1, wait: 1.5, box: { x: x1, z: z1, hw: md.W / 2, hl: md.L / 2, rot: th } };
+  movers.push(m); moverBoxes.push(m.box);
+  g.position.set(x1, 0, z1); g.rotation.y = th;
+}
+function updateMovers(dt) {
+  const me = { x: car.x, z: car.z, hw: HW + .2, hl: HL + .2, rot: car.th };
+  for (const m of movers) {
+    if (m.wait > 0) { m.wait -= dt; continue; }
+    const b = m.box, tx = m.dir > 0 ? m.x2 : m.x1, tz = m.dir > 0 ? m.z2 : m.z1;
+    const dx = tx - b.x, dz = tz - b.z, d = Math.hypot(dx, dz);
+    if (d < .05) { m.dir = -m.dir; m.wait = 1.5; continue; }
+    // look ahead in the direction of travel and give way to the player
+    const ux = dx / d, uz = dz / d, ahead = { x: b.x + ux * (b.hl + 1.4), z: b.z + uz * (b.hl + 1.4), hw: b.hw + .3, hl: 1.4, rot: b.rot };
+    if (sat(ahead, me)) continue;
+    const step = Math.min(d, m.speed * dt);
+    b.x += ux * step; b.z += uz * step;
+    m.g.position.set(b.x, 0, b.z);
+  }
+}
 function seeded(s) { return () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
 function put(material, g, m, o = {}) {
@@ -1012,14 +1110,14 @@ const LEVELS = [
       row({ ox: -7.25, oz: 12, n: 6, sp: 2.9, occ: [0, 1, 2, 4, 5], target: 3, dir: 'reverse', pillars: [3, 4] });
     } },
   // ----- v1.1 -----
-  { par: 30, b: [-18, 18, -8, 14], start: [-15, -3, PI / 2],
+  { par: 30, b: [-18, 18, -8, 14], start: [-15, -3, PI / 2], traffic: [[12, 1, -12, 1, 3]],
     build() { row({ ox: -15, oz: 9, n: 11, occ: [0, 1, 2, 3, 4, 5, 6, 7, 9, 10], target: 8 }); } },
-  { par: 35, b: [-12, 12, -14, 14], start: [-9, 0, PI / 2],
+  { par: 35, b: [-12, 12, -14, 14], start: [-9, 0, PI / 2], traffic: [[9, -3, -9, -3, 2.5]],
     build() {
       row({ ox: -6, oz: 10, n: 5, occ: [0, 1, 3, 4], target: 2, dir: 'reverse' });
       row({ ox: 6, oz: -10, rot: PI, n: 5, occ: [0, 1, 2, 3, 4] });
     } },
-  { par: 40, b: [-6.6, 6.6, -20, 20], start: [0, -16, 0],
+  { rain: true, par: 40, b: [-6.6, 6.6, -20, 20], start: [0, -16, 0],
     build() {
       line(-4, 0, 40, 0); line(4, 0, 40, 0);
       for (const z of [-15, -9.5, -4, 8, 13.5]) parked(-5.35, z, rand() < .5 ? 0 : PI, true);
@@ -1034,7 +1132,7 @@ const LEVELS = [
     } },
   { night: true, par: 30, b: [-14, 14, -6, 14], start: [-11, 0, PI / 2],
     build() { row({ ox: -9, oz: 10, n: 7, occ: [0, 1, 2, 3, 5, 6], target: 4 }); } },
-  { par: 35, b: [-15, 15, -13, 13], start: [-12, 0, PI / 2],
+  { par: 35, b: [-15, 15, -13, 13], start: [-12, 0, PI / 2], traffic: [[9, -2, -9, -2, 2.5]],
     build() {
       row({ ox: -10, oz: 8, n: 7, sp: 3.4, skew: .55, occ: [0, 1, 3, 4, 5, 6], target: 2 });
       row({ ox: 10, oz: -8, rot: PI, n: 7, sp: 3.4, skew: .55, occ: [0, 1, 2, 3, 4, 5, 6] });
@@ -1044,13 +1142,13 @@ const LEVELS = [
       row({ ox: -9, oz: 6, n: 7, occ: [0, 1, 3, 4, 6], target: 5, dir: 'reverse', pillars: [0, 2, 4, 5, 6, 7] });
       row({ ox: 9, oz: -6, rot: PI, n: 7, occ: [0, 1, 3, 4, 5, 6], pillars: [1, 3, 5] });
     } },
-  { night: true, par: 40, b: [-6.6, 5, -18, 18], start: [0, -13, 0],
+  { night: true, rain: true, par: 40, b: [-6.6, 5, -18, 18], start: [0, -13, 0],
     build() {
       line(-4, 0, 36, 0);
       for (const z of [-14, -8.5, -3.2, 8.3, 13.8]) parked(-5.35, z, rand() < .5 ? 0 : PI, true);
       setSpot(-5.25, 2.55, 1.2, 3.3, 0);
     } },
-  { par: 50, b: [-10, 10, -22, 18], start: [0, -19, 0],
+  { rain: true, par: 50, b: [-10, 10, -22, 18], start: [0, -19, 0],
     build() {
       for (let z = -18; z <= 8; z += 2.5) { cone(-4, z); cone(4, z); }
       [-14, -9, -4, 1, 6].forEach((z, k) => cone(k % 2 ? 1.6 : -1.6, z));
@@ -1061,7 +1159,7 @@ const LEVELS = [
       cone(-3, 1); cone(3, 1);
       row({ ox: -7.25, oz: 11, n: 6, sp: 2.9, occ: [0, 1, 3, 4, 5], target: 2, dir: 'reverse', pillars: [2, 3] });
     } },
-  { par: 45, b: [-6.6, 4, -18, 18], start: [-2, -14, 0],
+  { rain: true, par: 45, b: [-6.6, 4, -18, 18], start: [-2, -14, 0],
     build() {
       line(-4, 0, 36, 0);
       for (const z of [-14, -8.5, -3, 8.5, 14]) parked(-5.35, z, rand() < .5 ? 0 : PI, true);
@@ -1080,7 +1178,7 @@ const LEVELS = [
     } },
   { night: true, par: 30, b: [-15, 15, -8, 14], start: [-12, -3, PI / 2],
     build() { row({ ox: -10, oz: 9, n: 7, sp: 3.4, skew: .55, occ: [0, 1, 2, 3, 4, 5], target: 6 }); } },
-  { par: 40, b: [-11, 11, -8, 14], start: [6, 0, -PI / 2],
+  { par: 40, b: [-11, 11, -8, 14], start: [6, 0, -PI / 2], traffic: [[-2, -5, -2, 4, 2.5]],
     build() { row({ ox: -9, oz: 10, n: 4, occ: [1, 2, 3], target: 0, dir: 'reverse' }); } },
   { par: 50, b: [-6.6, 4, -20, 20], start: [-1.5, -17, 0],
     build() {
@@ -1094,7 +1192,7 @@ const LEVELS = [
       row({ ox: -9, oz: 6, n: 7, occ: [0, 1, 2, 4, 5, 6], target: 3, dir: 'reverse', pillars: [0, 1, 2, 3, 4, 5, 6, 7] });
       row({ ox: 9, oz: -6, rot: PI, n: 7, occ: [0, 1, 2, 3, 4, 5, 6], pillars: [0, 1, 2, 3, 4, 5, 6, 7] });
     } },
-  { par: 18, b: [-18, 18, -8, 14], start: [-15, -3, PI / 2],
+  { par: 18, b: [-18, 18, -8, 14], start: [-15, -3, PI / 2], traffic: [[12, 1, -12, 1, 3]],
     build() { row({ ox: -15, oz: 9, n: 11, occ: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], target: 10 }); } },
   { night: true, par: 50, b: [-12, 12, -16, 17], start: [8, -13, 0],
     build() {
@@ -1113,13 +1211,13 @@ const LEVELS = [
 function clearLevel() {
   level.traverse(o => { if (o.geometry && !SHARED.has(o.geometry)) o.geometry.dispose(); });
   for (const ch of [...level.children]) level.remove(ch);
-  obstacles = []; spot = null; arrow = null; buckets = new Map();
+  obstacles = []; spot = null; arrow = null; buckets = new Map(); movers = []; moverBoxes = [];
 }
-function buildLevel(i) {
+function buildLevel(i, mods = {}) {
   clearLevel();
   rand = seeded(1000 + i * 77);
-  const L = LEVELS[i], [x0, x1, z0, z1] = L.b;
-  setTheme(!!L.night);
+  const L = curL = { ...LEVELS[i], ...mods }, [x0, x1, z0, z1] = L.b;
+  setTheme(!!L.night, !!L.rain && !L.indoor);
   bounds = L.b;
   const cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, w = x1 - x0, d = z1 - z0;
 
@@ -1155,6 +1253,7 @@ function buildLevel(i) {
   }
 
   L.build();
+  if (L.traffic) for (const t of L.traffic) mover(...t);
 
   for (let k = 0, n = 0; k < 600 && n < 55; k++) {
     const x = cx + (rand() - .5) * (w + 70), z = cz + (rand() - .5) * (d + 70);
@@ -1187,6 +1286,21 @@ function setPlayerModel(i) {
   HW = md.W / 2; HL = md.L / 2; WB = md.zf - md.zr; WR = md.wr; MAXF = md.maxF; ACC = md.acc; MAXSTEER = md.steer;
   P.paint.color.setHex(COLORS[save.color] ?? COLORS[0]);
   for (const l of P.heads) l.visible = NIGHT;
+  applyCustom();
+}
+// [id, colour, price]
+const CUSTOM = {
+  rim: [['chrome', 0xe3e7ec, 0], ['black', 0x1c1f24, 150], ['gold', 0xd4af37, 150], ['red', 0xd62828, 150], ['blue', 0x2563eb, 150], ['white', 0xf5f5f5, 150]],
+  tint: [['dark', 0x0b1118, 0], ['light', 0x6b8296, 100], ['black', 0x020203, 100], ['blue', 0x0d2f5c, 100], ['green', 0x0f3d2e, 100], ['bronze', 0x3d2a12, 100]],
+  neon: [['none', 0, 0], ['blue', 0x2b8cff, 300], ['green', 0x22e07a, 300], ['pink', 0xff3ea5, 300], ['purple', 0x9b5cff, 300], ['orange', 0xff8a1f, 300]],
+};
+const customOf = kind => CUSTOM[kind].find(c => c[0] === save.custom[kind]) || CUSTOM[kind][0];
+function applyCustom() {
+  if (!P) return;
+  const r = customOf('rim'), t = customOf('tint'), n = customOf('neon');
+  P.rim.color.setHex(r[1]); P.rim.metalness = r[0] === 'black' ? .6 : 1; P.rim.roughness = r[0] === 'black' ? .4 : .22;
+  P.glass.color.setHex(t[1]);
+  P.neon.visible = n[0] !== 'none'; if (n[1]) P.neon.material.color.setHex(n[1]);
 }
 const car = { x: 0, z: 0, th: 0, v: 0, steer: 0, pitch: 0, roll: 0 };
 const MAXR = 4, ACC_R = 3.5, BRAKE = 12, FRIC = 1.6, STEER_RATE = 2.6, MAX_HITS = 5;
@@ -1211,7 +1325,7 @@ function sensorDist(sign) {
   let best = Infinity;
   for (const t of [-1, -.5, 0, .5, 1]) {
     const px = car.x + A[0][0] * HW * .95 * t + A[1][0] * HL * sign, pz = car.z + A[0][1] * HW * .95 * t + A[1][1] * HL * sign;
-    for (const o of obstacles) {
+    for (const o of obstacles.concat(moverBoxes)) {
       const dx = px - o.x, dz = pz - o.z;
       if (Math.abs(dx) > 8 || Math.abs(dz) > 8) continue;
       const B = axes(o.rot);
@@ -1284,7 +1398,7 @@ addEventListener('keydown', e => {
   if (KEYMAP[e.code]) { keys[KEYMAP[e.code]] = true; e.preventDefault(); ensureAudio(); }
   if (state === 'play') {
     if (e.code === 'KeyC') toggleCam();
-    if (e.code === 'KeyR') startLevel(cur);
+    if (e.code === 'KeyR') startLevel(cur, curMods);
     if (e.code === 'KeyP' || e.code === 'Escape') pause();
   } else if (state === 'pause' && (e.code === 'KeyP' || e.code === 'Escape')) resume();
 });
@@ -1293,7 +1407,7 @@ addEventListener('blur', () => { for (const o of [touch, keys]) for (const k in 
 document.addEventListener('visibilitychange', () => { if (document.hidden && state === 'play') pause(); });
 
 /* ---------- Audio ---------- */
-let ac = null, engGain = null, eng1 = null, eng2 = null, noiseBuf = null;
+let ac = null, engGain = null, eng1 = null, eng2 = null, noiseBuf = null, rainGain = null;
 const muted = () => save.sound === 'off';
 function ensureAudio() {
   if (ac) { if (ac.state === 'suspended') ac.resume(); return; }
@@ -1309,6 +1423,13 @@ function ensureAudio() {
     noiseBuf = ac.createBuffer(1, ac.sampleRate * .4, ac.sampleRate);
     const d = noiseBuf.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+    // steady hiss for rainy levels
+    const rb = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate), rd = rb.getChannelData(0);
+    for (let i = 0; i < rd.length; i++) rd[i] = Math.random() * 2 - 1;
+    const rs = ac.createBufferSource(), rf = ac.createBiquadFilter();
+    rs.buffer = rb; rs.loop = true; rf.type = 'bandpass'; rf.frequency.value = 1400; rf.Q.value = .6;
+    rainGain = ac.createGain(); rainGain.gain.value = 0;
+    rs.connect(rf).connect(rainGain).connect(ac.destination); rs.start();
   } catch (_) { ac = null; }
 }
 function tone(freq, dur, type = 'sine', vol = .12, delay = 0) {
@@ -1454,20 +1575,22 @@ function placePlayer(i) {
   const [x, z, th] = LEVELS[i].start;
   Object.assign(car, { x, z, th, v: 0, steer: 0, pitch: 0, roll: 0 });
 }
-function startLevel(i) {
-  cur = i; state = 'play';
-  buildLevel(i); placePlayer(i);
+let challenge = false, curMods = {};
+function startLevel(i, mods = {}) {
+  cur = i; state = 'play'; curMods = mods; challenge = !!mods.challenge;
+  buildLevel(i, mods); placePlayer(i);
   time = 0; hits = 0; hold = 0; hitCd = 0; shake = 0; continued = false; camYaw = camPitch = 0; wheelAngle = 0;
   setGear('D');
-  $('#cLvl').textContent = `${i + 1}/${LEVELS.length}`;
+  $('#cLvl').textContent = challenge ? '📅' : `${i + 1}/${LEVELS.length}`;
   updateDamage();
   $('#hold').classList.add('hide');
   show(null);
   updateCam(0, true);
-  const L = LEVELS[i];
-  const t = tr();
-  $('#bnN').textContent = t.level(i + 1); $('#bnT').textContent = t.levels[i][0]; $('#bnH').textContent = t.levels[i][1];
-  $('#bnP').textContent = t.par(L.par);
+  const L = curL, t = tr();
+  const tags = [L.night && t.modNight, L.rain && !L.indoor && t.modRain, L.traffic && t.modTraffic].filter(Boolean).join(' · ');
+  $('#bnN').textContent = challenge ? t.challenge : t.level(i + 1); $('#bnT').textContent = t.levels[i][0];
+  $('#bnH').textContent = challenge ? tags : t.levels[i][1] + (tags ? ' · ' + tags : '');
+  $('#bnP').textContent = challenge ? (chDoneToday() ? t.chAgain : t.chReward(CH_REWARD)) : t.par(L.par);
   $('#banner').classList.add('show'); bannerT = 3.2;
 }
 function pause() { if (state !== 'play') return; state = 'pause'; backTo = 'sPause'; show('sPause'); }
@@ -1477,20 +1600,23 @@ function updateDamage() { $$('#dmg i').forEach((el, k) => el.classList.toggle('o
 function finish(won) {
   state = won ? 'win' : 'fail';
   $('#hold').classList.add('hide');
-  const L = LEVELS[cur], last = cur === LEVELS.length - 1;
+  const L = curL, last = cur === LEVELS.length - 1 || challenge;
   let stars = 0, reward = 0;
   lastReward = 0;
   if (won) {
     stars = 3 - (hits > 0 ? 1 : 0) - (hits > 2 || time > L.par * 1.5 ? 1 : 0);
     stars = Math.max(1, stars);
-    reward = 30 + stars * 20 + (save.stars[cur] ? 0 : 100); // first clear of a level pays a bonus
+    reward = challenge ? (chDoneToday() ? 0 : CH_REWARD) : 30 + stars * 20 + (save.stars[cur] ? 0 : 100); // first clear of a level pays a bonus
+    if (challenge && !chDoneToday()) { save.chDone = today(); save.st.ch++; }
     save.st.wins++;
     if (stars === 3) save.st.perfect++;
     if (spot.dir === 'reverse') save.st.rev++;
     if (L.night) save.st.night++;
     save.coins += reward; lastReward = reward;
-    save.stars[cur] = Math.max(save.stars[cur] || 0, stars);
-    save.unlocked = Math.max(save.unlocked, Math.min(cur + 2, LEVELS.length));
+    if (!challenge) {
+      save.stars[cur] = Math.max(save.stars[cur] || 0, stars);
+      save.unlocked = Math.max(save.unlocked, Math.min(cur + 2, LEVELS.length));
+    }
     persist();
     [523, 659, 784, 1046].forEach((f, i) => tone(f, .4, 'triangle', .14, i * .12));
     setTimeout(burst, 500);
@@ -1501,7 +1627,7 @@ function finish(won) {
   $('#resTitle').textContent = won ? (last ? t.winAll : t.win) : t.fail;
   $('#resTime').textContent = t.sec(time.toFixed(1));
   $('#resHits').textContent = hits;
-  $('#resNote').textContent = won ? (stars < 3 ? t.tip3(L.par) : t.perfect) : t.failNote(MAX_HITS - 1);
+  $('#resNote').textContent = won ? (challenge ? t.chDone : stars < 3 ? t.tip3(L.par) : t.perfect) : t.failNote(MAX_HITS - 1);
   $('#bNext').classList.toggle('hide', !won || last);
   $('#resCoins').classList.toggle('hide', !won);
   $('#bDouble').classList.toggle('hide', !won || !Ads.ok());
@@ -1526,6 +1652,26 @@ function toggleCam() { camMode = (camMode + 1) % 3; camYaw = camPitch = 0; updat
 $('#bPlay').onclick = () => goMenu('sLevels');
 $('#bMissions').onclick = () => { renderMissions(); goMenu('sMissions'); };
 $('#bDaily').onclick = openDaily;
+
+/* ---------- Daily challenge: one level a day with night, rain or both, for a bigger reward ---------- */
+const CH_REWARD = 300;
+const chDoneToday = () => save.chDone === today();
+function todaysChallenge() {
+  if (save.chDay && save.chDay.date === today()) return save.chDay;
+  let h = 0;
+  for (const c of today()) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  const r = seeded(h), maxI = clamp(save.unlocked + 2, 4, LEVELS.length - 1);
+  const i = 2 + Math.floor(r() * (maxI - 1)), L = LEVELS[i];
+  let night = L.night || r() < .4, wet = !L.indoor && r() < .5;
+  if (!night && !wet) { if (L.indoor) night = true; else wet = true; }
+  save.chDay = { date: today(), i, night, rain: wet }; persist();
+  return save.chDay;
+}
+function renderChallenge() {
+  $('#chLbl').textContent = tr().challenge + (chDoneToday() ? ' ✓' : '');
+  $('#dCh').classList.toggle('hide', chDoneToday());
+}
+$('#bChallenge').onclick = () => { const c = todaysChallenge(); startLevel(c.i, { challenge: true, night: c.night, rain: c.rain }); };
 
 /* ---------- Daily gift: a 7-day cycle; missing a day starts again from day 1 ---------- */
 const DAILY = [50, 75, 100, 150, 200, 300, 500];
@@ -1562,11 +1708,12 @@ const ACH = [
   ['wins', 1, 50], ['wins', 10, 150], ['wins', 50, 500], ['perfect', 5, 150], ['perfect', 20, 400],
   ['reverse', 5, 200], ['night', 5, 250], ['stars', 30, 300], ['stars', 60, 600], ['stars', 90, 1500],
   ['levels', 15, 300], ['levels', 30, 1000], ['cars', 3, 200], ['cars', 7, 1000], ['days', 3, 150], ['days', 7, 500],
+  ['challenges', 5, 400], ['custom', 3, 300],
 ];
 const achVal = k => ({
   wins: save.st.wins, perfect: save.st.perfect, reverse: save.st.rev, night: save.st.night,
   stars: save.stars.reduce((a, b) => a + (b || 0), 0), levels: save.stars.filter(Boolean).length,
-  cars: save.owned.length, days: save.st.bestRun || 0,
+  cars: save.owned.length, days: save.st.bestRun || 0, challenges: save.st.ch || 0, custom: save.items.length - 3,
 })[k];
 const achId = a => a[0] + a[1];
 const achReady = a => !save.ach[achId(a)] && achVal(a[0]) >= a[1];
@@ -1586,6 +1733,7 @@ function renderMissions() {
   });
 }
 function updateDots() {
+  renderChallenge();
   $('#dMis').classList.toggle('hide', !ACH.some(achReady));
   $('#dDaily').classList.toggle('hide', !dailyCan());
 }
@@ -1602,7 +1750,7 @@ function maybeReview() {
   return true;
 }
 $('#bLang').onclick = () => { save.lang = LANGS[(LANGS.indexOf(save.lang) + 1) % LANGS.length]; persist(); applyLang(); syncSettings(); };
-$('#bGarage').onclick = () => { garageIdx = save.car; renderGarage(); goMenu('sGarage'); };
+$('#bGarage').onclick = () => { garageIdx = save.car; renderGarage(); renderCustom(); goMenu('sGarage'); };
 $('#bSettings').onclick = () => { backTo = 'sMain'; show('sSettings'); syncSettings(); };
 $$('[data-back]').forEach(b => b.onclick = () => {
   const inSettings = !$('#sSettings').classList.contains('hide');
@@ -1612,13 +1760,13 @@ $$('[data-back]').forEach(b => b.onclick = () => {
 $('#bPause').onclick = pause;
 $('#bCam').onclick = toggleCam;
 $('#bResume').onclick = resume;
-$('#bPRestart').onclick = () => startLevel(cur);
+$('#bPRestart').onclick = () => startLevel(cur, curMods);
 $('#bPSettings').onclick = () => { backTo = 'sPause'; show('sSettings'); syncSettings(); };
 $('#bPLevels').onclick = () => goMenu('sLevels');
 // Leaving a result screen is the only moment an interstitial may appear
 const afterAd = fn => async () => { if (!maybeReview()) await Ads.interstitial(); fn(); };
 $('#bNext').onclick = afterAd(() => startLevel(Math.min(cur + 1, LEVELS.length - 1)));
-$('#bRetry').onclick = afterAd(() => startLevel(cur));
+$('#bRetry').onclick = afterAd(() => startLevel(cur, curMods));
 $('#bResLevels').onclick = afterAd(() => goMenu('sLevels'));
 $('#bDouble').onclick = async () => {
   if (!await Ads.rewarded()) return toast(tr().adFail);
@@ -1684,6 +1832,32 @@ $('#bBuy').onclick = () => {
   [660, 880, 1320].forEach((f, i) => tone(f, .2, 'triangle', .12, i * .1));
   burst(); updateCoins(); renderGarage();
 };
+$$('#custTabs button').forEach(b => b.onclick = () => {
+  $$('#custTabs button').forEach(x => x.classList.toggle('on', x === b));
+  for (const id of ['swatches', 'swRims', 'swTint', 'swNeon']) $('#' + id).classList.toggle('hide', id !== b.dataset.tab);
+});
+function renderCustom() {
+  for (const [kind, box] of [['rim', '#swRims'], ['tint', '#swTint'], ['neon', '#swNeon']]) {
+    $(box).innerHTML = '';
+    for (const [id, col, price] of CUSTOM[kind]) {
+      const b = document.createElement('button'), owned = save.items.includes(kind + ':' + id);
+      if (kind === 'neon' && id === 'none') { b.className = 'none'; b.textContent = '⦸'; }
+      else b.style.background = '#' + col.toString(16).padStart(6, '0');
+      if (kind === 'neon' && id !== 'none') b.style.boxShadow = `0 0 14px #${col.toString(16).padStart(6, '0')}`;
+      if (!owned) b.insertAdjacentHTML('beforeend', `<span class="pr">🪙${price}</span>`);
+      b.classList.toggle('on', save.custom[kind] === id);
+      b.onclick = () => {
+        if (!owned) {
+          if (save.coins < price) { toast(tr().notEnough(price - save.coins)); tone(180, .2, 'square', .08); return; }
+          save.coins -= price; save.items.push(kind + ':' + id); updateCoins(); toast(tr().bought);
+          [660, 990].forEach((f, i) => tone(f, .15, 'triangle', .1, i * .1));
+        }
+        save.custom[kind] = id; persist(); applyCustom(); renderCustom();
+      };
+      $(box).appendChild(b);
+    }
+  }
+}
 $('#cPrev').onclick = () => browseCar(-1);
 $('#cNext').onclick = () => browseCar(1);
 function applyColor() {
@@ -1693,12 +1867,12 @@ function applyColor() {
 
 // Settings
 function syncSettings() {
-  $$('.seg').forEach(s => {
+  $$('.seg[data-opt]').forEach(s => {
     const v = save[s.dataset.opt];
     s.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   });
 }
-$$('.seg').forEach(s => s.querySelectorAll('button').forEach(b => b.onclick = () => {
+$$('.seg[data-opt]').forEach(s => s.querySelectorAll('button').forEach(b => b.onclick = () => {
   save[s.dataset.opt] = b.dataset.v; persist(); syncSettings(); applySettings(); applyLang();
 }));
 function applySettings() {
@@ -1724,16 +1898,17 @@ function physics(dt) {
   if (fwd) { if (car.v < -.3) brake = true; else { setGear('D'); gas = true; } }
   if (back) { if (car.v > .3) brake = true; else { setGear('R'); gas = true; } }
 
-  const dir = gear === 'D' ? 1 : -1, v0 = car.v;
-  if (brake) { const f = BRAKE * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
+  const dir = gear === 'D' ? 1 : -1, v0 = car.v, grip = WET ? .55 : 1;
+  if (brake) { const f = BRAKE * grip * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
   else if (gas) car.v += dir * (car.v * dir < -.05 ? BRAKE : dir > 0 ? ACC : ACC_R) * dt;
-  else { const f = FRIC * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
+  else { const f = FRIC * (WET ? .6 : 1) * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
   car.v = clamp(car.v, -MAXR, MAXF);
   brakeLit = brake || (gas && v0 * dir < -.05);
   throttle += ((gas ? 1 : 0) - throttle) * Math.min(1, dt * 5);
 
   const maxSteer = MAXSTEER - Math.min(Math.abs(car.v) / MAXF, 1) * .25;
-  car.steer += clamp(steerT * maxSteer - car.steer, -STEER_RATE * dt, STEER_RATE * dt);
+  const sr = STEER_RATE * (WET ? .75 : 1);
+  car.steer += clamp(steerT * maxSteer - car.steer, -sr * dt, sr * dt);
   const thDot = car.v / WB * Math.tan(car.steer);
   car.th += thDot * dt;
   car.x += Math.sin(car.th) * car.v * dt;
@@ -1746,7 +1921,7 @@ function physics(dt) {
   let bumped = false;
   for (let it = 0; it < 4; it++) {
     let any = false;
-    for (const o of obstacles) { const p = sat(me, o); if (p) { me.x += p[0]; me.z += p[1]; any = true; } }
+    for (const o of obstacles.concat(moverBoxes)) { const p = sat(me, o); if (p) { me.x += p[0]; me.z += p[1]; any = true; } }
     if (!any) break;
     bumped = true;
   }
@@ -1893,6 +2068,7 @@ function loop(now) {
   prev = now; clock += dt;
   if (state === 'play') {
     // fixed small physics steps so slow phones drive the same as fast ones
+    updateMovers(dt);
     const n = Math.ceil(dt / .02);
     for (let k = 0; k < n && state === 'play'; k++) physics(dt / n);
     if (state === 'play') { time += dt; checkSpot(dt); sensors(dt); }
@@ -1918,7 +2094,9 @@ function loop(now) {
     const f = 42 + Math.abs(car.v) * 9 + throttle * 16;
     eng1.frequency.setTargetAtTime(f, ac.currentTime, .1);
     eng2.frequency.setTargetAtTime(f / 2, ac.currentTime, .1);
+    rainGain.gain.setTargetAtTime(WET && !muted() && state !== 'menu' ? .07 : 0, ac.currentTime, .3);
   }
+  updateRain(dt);
   drawConfetti(dt);
   renderer.render(scene, camera);
   if (firstFrame) {
@@ -1950,7 +2128,7 @@ if (NATIVE && NATIVE.App) NATIVE.App.addListener('backButton', () => {
   else if (open === 'sResult') goMenu('sLevels');
   else if (open) $(`#${open} [data-back]`).click();
 });
-window.game = { info: renderer.info, ads: Ads, save, MODELS, LEVELS, sat, get obstacles() { return obstacles; }, car, startLevel, finish, get state() { return state; }, get spot() { return spot; }, get hits() { return hits; } };
+window.game = { get movers() { return movers; }, get curL() { return curL; }, get WET() { return WET; }, info: renderer.info, ads: Ads, save, MODELS, LEVELS, sat, get obstacles() { return obstacles; }, car, startLevel, finish, get state() { return state; }, get spot() { return spot; }, get hits() { return hits; } };
 </script>
 </body>
 </html>

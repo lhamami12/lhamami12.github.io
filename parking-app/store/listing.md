@@ -24,19 +24,28 @@ Parking 3D: ركن السيارات
 🅿️ **30 مستوى من السهل إلى الصعب**
 ركن أمامي، ركن بالرجوع، ركن موازٍ بجانب الرصيف، أماكن مائلة، ممرات ضيقة، متاهات أقماع، ومرآب مليء بالأعمدة، ثم امتحان بطل الركن!
 
-🌙 **مستويات ليلية**
-المصابيح الأمامية تضيء طريقك في الظلام.
+🌙 **مستويات ليلية وممطرة**
+المصابيح الأمامية تضيء طريقك في الظلام، وفي المطر يصبح الطريق زلقاً وتطول مسافة الفرملة.
+
+🚗 **سيارات تتحرك في الموقف**
+سيارات تمرّ في الممر أثناء ركنك، فانتظر دورك!
+
+📅 **تحدي اليوم**
+مستوى جديد كل يوم مع الليل أو المطر، ومكافأة 300 عملة.
 
 🔊 **حساسات ركن**
 صفير يتسارع كلما اقتربت من سيارة أو عمود، تمامًا مثل السيارات الحديثة.
 
 🚙 **7 سيارات تجمع العملات لشرائها**
-سيدان، هاتشباك، دفع رباعي، فان، بيك أب، سيارة كلاسيكية وسيارة رياضية. لكل سيارة حجمها وسرعتها وطريقة دورانها، و10 ألوان تختار منها.
+سيدان، هاتشباك، دفع رباعي، فان، بيك أب، سيارة كلاسيكية وسيارة رياضية. لكل سيارة حجمها وسرعتها وطريقة دورانها.
+
+🎨 **زيّن سيارتك**
+10 ألوان، وجنوط ملوّنة، وزجاج داكن، وإضاءة نيون تحت السيارة.
 
 ⭐ **اجمع النجوم والعملات**
 اركن بدون اصطدام وبسرعة لتحصل على 3 نجوم. احذر: 5 اصطدامات وتخسر المستوى!
 
-🎁 **هدية يومية و16 مهمة**
+🎁 **هدية يومية و18 مهمة**
 عُد كل يوم لتكبر هديتك، وأنجز المهام لتربح عملات إضافية.
 
 🎥 **3 كاميرات**
@@ -63,19 +72,28 @@ A steering wheel you turn with your finger, gas and brake pedals, and a D / R ge
 🅿️ **30 levels from easy to expert**
 Nose-in bays, reverse parking, parallel parking by the kerb, angled bays, tight aisles, cone mazes and garages full of pillars, then the Parking Champion exam!
 
-🌙 **Night levels**
-Your headlights light the way in the dark.
+🌙 **Night and rain**
+Your headlights light the way in the dark, and in the rain the road gets slippery and braking takes longer.
+
+🚗 **Moving traffic**
+Cars drive through the aisle while you park, so wait your turn!
+
+📅 **Daily challenge**
+A new level every day with night or rain, worth 300 coins.
 
 🔊 **Parking sensors**
 A beep that speeds up as you get closer to a car or a pillar, just like a modern car.
 
 🚙 **7 cars to buy with coins**
-Sedan, hatchback, SUV, van, pickup, classic and a sports car. Each has its own size, speed and turning, with 10 colours to pick from.
+Sedan, hatchback, SUV, van, pickup, classic and a sports car. Each has its own size, speed and turning.
+
+🎨 **Customize your car**
+10 colours, coloured rims, tinted windows and underglow neon.
 
 ⭐ **Earn stars and coins**
 Park fast without a scratch for 3 stars. Careful: 5 hits and the level is over!
 
-🎁 **Daily gift and 16 missions**
+🎁 **Daily gift and 18 missions**
 Come back every day for a bigger gift, and complete missions for extra coins.
 
 🎥 **3 cameras**
@@ -102,19 +120,28 @@ Un volant que tu tournes avec le doigt, accélérateur et frein, et un levier D 
 🅿️ **30 niveaux du plus facile au plus difficile**
 Places en bataille, marche arrière, créneaux le long du trottoir, places en épi, allées étroites, labyrinthes de cônes et garages pleins de piliers, jusqu’à l’examen de Champion du parking !
 
-🌙 **Niveaux de nuit**
-Tes phares éclairent la route dans le noir.
+🌙 **Nuit et pluie**
+Tes phares éclairent la route dans le noir, et sous la pluie la route glisse et il faut plus de distance pour freiner.
+
+🚗 **Circulation**
+Des voitures roulent dans l’allée pendant que tu te gares : attends ton tour !
+
+📅 **Défi du jour**
+Un nouveau niveau chaque jour, de nuit ou sous la pluie, qui rapporte 300 pièces.
 
 🔊 **Radars de recul**
 Un bip qui s’accélère quand tu approches d’une voiture ou d’un pilier, comme dans une vraie voiture.
 
 🚙 **7 voitures à acheter avec des pièces**
-Berline, citadine, SUV, van, pick-up, classique et sportive. Chacune a sa taille, sa vitesse et son rayon de braquage, avec 10 couleurs au choix.
+Berline, citadine, SUV, van, pick-up, classique et sportive. Chacune a sa taille, sa vitesse et son rayon de braquage.
+
+🎨 **Personnalise ta voiture**
+10 couleurs, jantes colorées, vitres teintées et néons sous la voiture.
 
 ⭐ **Gagne des étoiles et des pièces**
 Gare-toi vite et sans choc pour 3 étoiles. Attention : 5 chocs et le niveau est perdu !
 
-🎁 **Cadeau du jour et 16 missions**
+🎁 **Cadeau du jour et 18 missions**
 Reviens chaque jour pour un cadeau plus gros, et accomplis des missions pour gagner des pièces.
 
 🎥 **3 caméras**
