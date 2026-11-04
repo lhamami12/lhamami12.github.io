@@ -15,7 +15,7 @@ Ads: **Yes**. Target audience: **13+**. Privacy policy: `https://lhamami12.githu
 City Driver 3D: قيادة بالمدينة
 
 **الوصف القصير** (80 حرفًا كحد أقصى):
-قُد في زحمة المدينة، احترم الإشارات، تجاوز السيارات واركن في 20 مهمة!
+قُد في زحمة المدينة، أوصل ركاب التاكسي، تجاوز واركن في 40 مهمة!
 
 **الوصف الكامل:**
 هل أنت سائق محترف؟ 🚗 أثبت ذلك في **City Driver 3D**، لعبة قيادة ثلاثية الأبعاد في شوارع مدينة مزدحمة!
@@ -26,8 +26,10 @@ City Driver 3D: قيادة بالمدينة
 🚦 **مدينة حيّة**
 إشارات مرور حقيقية، تقاطعات وسيارات تعبر، حافلات بطيئة، وسيارات قادمة في الاتجاه المعاكس… التجاوز ممكن لكنه خطير!
 
-🏁 **20 مهمة بخمسة أنواع**
-⏱ سباق مع الوقت • 🚗 تجاوز السيارات • 🚦 احترم القانون (السرعة والضوء الأحمر) • 🅿️ وصول وركن بجانب الرصيف • ⛽ وفّر الوقود
+🏁 **40 مهمة بستة أنواع**
+⏱ سباق مع الوقت • 🚗 تجاوز السيارات • 🚦 احترم القانون (السرعة والضوء الأحمر) • 🅿️ وصول وركن بجانب الرصيف • ⛽ وفّر الوقود • 🚕 تاكسي: أوصل الركاب بدون إزعاجهم
+
+🌧️ **المطر**: طريق زلق، فرامل أضعف ورؤية أقل
 
 🌇 **نهار، غروب وليل**
 القيادة ليلًا بالأضواء الأمامية بين نوافذ العمارات المضيئة.
@@ -51,7 +53,7 @@ City Driver 3D: قيادة بالمدينة
 City Driver 3D: Traffic Drive
 
 **Short description** (max 80):
-Drive through city traffic, obey the lights, overtake and park in 20 missions!
+Drive city traffic, carry taxi passengers, overtake and park in 40 missions!
 
 **Full description:**
 Think you're a great driver? 🚗 Prove it in **City Driver 3D**, a 3D driving game on busy city streets!
@@ -62,8 +64,10 @@ A steering wheel you turn with your finger, gas and brake pedals, a D / R gear s
 🚦 **A living city**
 Real traffic lights, crossroads with crossing cars, slow buses and oncoming traffic… overtaking is possible, but risky!
 
-🏁 **20 missions, 5 kinds**
-⏱ Beat the clock • 🚗 Overtake • 🚦 Follow the rules (speed limit and red lights) • 🅿️ Drive & park by the kerb • ⛽ Save fuel
+🏁 **40 missions, 6 kinds**
+⏱ Beat the clock • 🚗 Overtake • 🚦 Follow the rules (speed limit and red lights) • 🅿️ Drive & park by the kerb • ⛽ Save fuel • 🚕 Taxi: deliver passengers smoothly
+
+🌧️ **Rain**: slippery roads, weaker brakes and lower visibility
 
 🌇 **Day, sunset and night**
 Drive at night with your headlights between the lit-up buildings.
@@ -87,7 +91,7 @@ Download City Driver 3D and rule the road! 🏆
 City Driver 3D : Conduite
 
 **Description courte** (80 max) :
-Roule en ville, respecte les feux, double et gare-toi dans 20 missions !
+Roule en ville, conduis un taxi, double et gare-toi dans 40 missions !
 
 **Description complète :**
 Tu es un bon conducteur ? 🚗 Prouve-le dans **City Driver 3D**, un jeu de conduite en 3D dans les rues animées d'une grande ville !
@@ -98,8 +102,10 @@ Un volant à tourner du doigt, accélérateur et frein, levier D / R et un klaxo
 🚦 **Une ville vivante**
 De vrais feux tricolores, des carrefours avec des voitures qui traversent, des bus lents et des voitures en face… doubler est possible, mais risqué !
 
-🏁 **20 missions, 5 types**
-⏱ Contre la montre • 🚗 Dépassements • 🚦 Code de la route (limitation et feux rouges) • 🅿️ Rouler et se garer • ⛽ Économie de carburant
+🏁 **40 missions, 6 types**
+⏱ Contre la montre • 🚗 Dépassements • 🚦 Code de la route (limitation et feux rouges) • 🅿️ Rouler et se garer • ⛽ Économie de carburant • 🚕 Taxi : dépose tes passagers en douceur
+
+🌧️ **Pluie** : route glissante, freins moins efficaces, visibilité réduite
 
 🌇 **Jour, coucher de soleil et nuit**
 

@@ -129,6 +129,9 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 .lv:disabled{opacity:.4}
 @media (max-height:560px){.lv{padding:3px 2px}.lv small{display:inline;font-size:12px}.levels{gap:4px}}
 .total{color:var(--acc);font-weight:800;margin-bottom:6px}
+.pager{display:flex;align-items:center;justify-content:center;gap:14px;margin:-4px 0 6px;font-weight:900}
+.pager .ib{width:38px;height:34px;font-size:15px}.pager .ib:disabled{opacity:.3}
+.lv small i{font-style:normal;font-size:11px}
 .carsel{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 8px}
 .cname{font-size:22px;font-weight:900;line-height:1.2}
 .lock{font-size:13px;color:var(--acc);font-weight:800;min-height:18px}
@@ -248,6 +251,7 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 <div id="sLevels" class="screen dim hide">
   <div class="panel glass">
     <h2 data-i18n="chooseLevel"></h2>
+    <div class="pager" dir="ltr"><button class="ib glass" id="lvPrev">◀</button><span id="lvPage"></span><button class="ib glass" id="lvNext">▶</button></div>
     <div class="total" id="totalStars"></div>
     <div class="levels" id="levels"></div>
     <button class="btn" data-back data-i18n="back"></button>
@@ -347,7 +351,7 @@ const I18N = {
     paused: 'متوقف مؤقتاً', resume: '▶ متابعة', restart: '↻ إعادة المهمة', levelsBtn: '☰ المهام', time: 'الوقت', hits: 'الاصطدامات',
     next: 'المهمة التالية ←', retry: '↻ إعادة', brake: 'فرامل', gas: 'بنزين',
     level: n => `المهمة ${n}`, sec: t => `${t} ث`, m: d => `${d} م`,
-    types: { reach: 'سباق مع الوقت', overtake: 'تجاوز', rules: 'احترم القانون', park: 'وصول وركن', fuel: 'وفّر الوقود' , endless: 'قيادة بلا نهاية' },
+    types: { reach: 'سباق مع الوقت', overtake: 'تجاوز', rules: 'احترم القانون', park: 'وصول وركن', fuel: 'وفّر الوقود' , endless: 'قيادة بلا نهاية' , taxi: 'تاكسي' },
     goals: {
       reach: L => `اقطع ${L.dist} م في أقل من ${L.time} ثانية`,
       overtake: L => `تجاوز ${L.n} سيارة في ${L.time} ثانية`,
@@ -355,8 +359,9 @@ const I18N = {
       park: L => `اقطع ${L.dist} م ثم اركن في المكان الأخضر`,
       fuel: L => `اقطع ${L.dist} م قبل أن ينفد الوقود`,
       endless: L => 'قُد أبعد ما يمكن: 3 اصطدامات وتنتهي الجولة',
+      taxi: L => `أوصل ${L.n} ركاب في ${L.time} ثانية بدون إزعاجهم`,
     },
-    tips: { reach: 'تجاوز السيارات البطيئة بحذر', overtake: 'السيارات المعاكسة خطيرة!', rules: 'المخالفة الثالثة = خسارة', park: 'خفّف السرعة قبل الوصول', fuel: 'لا تضغط البنزين بقوة، واستعمل الاندفاع' , endless: 'كل تجاوز = +25 نقطة، والزحمة تزداد مع المسافة' },
+    tips: { reach: 'تجاوز السيارات البطيئة بحذر', overtake: 'السيارات المعاكسة خطيرة!', rules: 'المخالفة الثالثة = خسارة', park: 'خفّف السرعة قبل الوصول', fuel: 'لا تضغط البنزين بقوة، واستعمل الاندفاع' , endless: 'كل تجاوز = +25 نقطة، والزحمة تزداد مع المسافة' , taxi: 'توقف في المكان الأخضر لتأخذ الراكب، والأزرق لتنزله' },
     winAll: 'أكملت كل المهام! 🏆', win: 'مهمة ناجحة! 🎉', perfect: 'أداء مثالي!',
     failHits: 'تضررت السيارة! 💥', failTime: 'انتهى الوقت! ⏱', failFuel: 'نفد الوقود! ⛽', failRules: 'مخالفات كثيرة! 🚔',
     noteHits: 'قُد بهدوء وحافظ على المسافة.', noteTime: 'استعمل المسارين وتجاوز السيارات البطيئة.', noteFuel: 'اترك البنزين قبل الفرامل لتوفّر الوقود.', noteRules: 'انتبه للإشارات وحدود السرعة.',
@@ -368,6 +373,7 @@ const I18N = {
     buy: p => `شراء 🪙 ${p}`, notEnough: n => `تحتاج ${n} 🪙 إضافية. أكمل المهام لتجمعها!`, earned: n => `+${n} 🪙`,
     endless: '∞ بلا نهاية', score: 'النقاط', distance: 'المسافة', bestL: 'أفضل نتيجة', runOver: 'انتهت الجولة! 🏁', newBest: 'رقم قياسي جديد! 🏆', noteBest: n => `أفضل نتيجة لك: ${n}`,
     daily: '🎁 المكافأة اليومية', day: n => `اليوم ${n}`, claim: n => `استلم 🪙 ${n}`, claim2: n => `🎬 استلم 🪙 ${n} (×2)`, dailyNote: 'عد كل يوم لتكبر المكافأة!',
+    taxiWait: 'اثبت… 🧍', taxiIn: '🚕 صعد الراكب! أوصله إلى المكان الأزرق', delivered: n => `✅ وصل الراكب! ${n}`, ouch: '😣 بلطف! الراكب منزعج', comfort: 'راحة الراكب', failComfort: 'نزل الراكب غاضبًا! 😠', noteComfort: 'لا تفرمل بقوة ولا تنعطف بسرعة والراكب معك.', rainTip: '🌧️ مطر: الطريق زلق والفرامل أضعف', page: (a, b) => `${a}–${b}`,
     adDouble: '🎬 ضاعف العملات', adContinue: '🎬 أكمل المهمة', adRevive: '🎬 أكمل الجولة', adFree: '🎬 +100 🪙 مجاناً',
     adFail: 'لا يوجد إعلان الآن، حاول بعد قليل', privacy: 'سياسة الخصوصية', adPriv: 'خيارات الخصوصية للإعلانات',
   },
@@ -379,7 +385,7 @@ const I18N = {
     paused: 'Paused', resume: '▶ Resume', restart: '↻ Restart mission', levelsBtn: '☰ Missions', time: 'Time', hits: 'Hits',
     next: 'Next mission →', retry: '↻ Retry', brake: 'BRAKE', gas: 'GAS',
     level: n => `MISSION ${n}`, sec: t => `${t} s`, m: d => `${d} m`,
-    types: { reach: 'Beat the clock', overtake: 'Overtake', rules: 'Follow the rules', park: 'Drive & park', fuel: 'Save fuel' , endless: 'Endless drive' },
+    types: { reach: 'Beat the clock', overtake: 'Overtake', rules: 'Follow the rules', park: 'Drive & park', fuel: 'Save fuel' , endless: 'Endless drive' , taxi: 'Taxi' },
     goals: {
       reach: L => `Drive ${L.dist} m in under ${L.time} seconds`,
       overtake: L => `Overtake ${L.n} cars in ${L.time} seconds`,
@@ -387,8 +393,9 @@ const I18N = {
       park: L => `Drive ${L.dist} m, then park in the green bay`,
       fuel: L => `Drive ${L.dist} m before the fuel runs out`,
       endless: L => 'Drive as far as you can: 3 hits and the run is over',
+      taxi: L => `Deliver ${L.n} passengers in ${L.time} seconds, smoothly`,
     },
-    tips: { reach: 'Overtake the slow cars carefully', overtake: 'Oncoming cars are dangerous!', rules: 'Third offence = fail', park: 'Slow down before you arrive', fuel: 'Go easy on the gas and coast' , endless: 'Each overtake = +25 points, and traffic grows with distance' },
+    tips: { reach: 'Overtake the slow cars carefully', overtake: 'Oncoming cars are dangerous!', rules: 'Third offence = fail', park: 'Slow down before you arrive', fuel: 'Go easy on the gas and coast' , endless: 'Each overtake = +25 points, and traffic grows with distance' , taxi: 'Stop in the green zone to pick up, the blue one to drop off' },
     winAll: 'All missions complete! 🏆', win: 'Mission complete! 🎉', perfect: 'Flawless!',
     failHits: 'Car wrecked! 💥', failTime: 'Out of time! ⏱', failFuel: 'Out of fuel! ⛽', failRules: 'Too many offences! 🚔',
     noteHits: 'Drive calmly and keep your distance.', noteTime: 'Use both lanes and pass the slow cars.', noteFuel: 'Lift off the gas early instead of braking.', noteRules: 'Watch the lights and the speed limit.',
@@ -400,6 +407,7 @@ const I18N = {
     buy: p => `Buy 🪙 ${p}`, notEnough: n => `You need ${n} more 🪙. Finish missions to earn them!`, earned: n => `+${n} 🪙`,
     endless: '∞ Endless', score: 'Score', distance: 'Distance', bestL: 'Best', runOver: 'Run over! 🏁', newBest: 'New record! 🏆', noteBest: n => `Your best: ${n}`,
     daily: '🎁 Daily reward', day: n => `Day ${n}`, claim: n => `Claim 🪙 ${n}`, claim2: n => `🎬 Claim 🪙 ${n} (×2)`, dailyNote: 'Come back every day for bigger rewards!',
+    taxiWait: 'Hold still… 🧍', taxiIn: '🚕 Passenger aboard! Drive to the blue zone', delivered: n => `✅ Delivered! ${n}`, ouch: '😣 Easy! Your passenger is upset', comfort: 'Passenger comfort', failComfort: 'The passenger got out angry! 😠', noteComfort: 'No hard braking or fast turns with a passenger aboard.', rainTip: '🌧️ Rain: slippery road, weaker brakes', page: (a, b) => `${a}–${b}`,
     adDouble: '🎬 Double coins', adContinue: '🎬 Continue mission', adRevive: '🎬 Continue the run', adFree: '🎬 +100 🪙 free',
     adFail: 'No ad available right now, try again soon', privacy: 'Privacy policy', adPriv: 'Ad privacy options',
   },
@@ -411,7 +419,7 @@ const I18N = {
     paused: 'Pause', resume: '▶ Reprendre', restart: '↻ Recommencer', levelsBtn: '☰ Missions', time: 'Temps', hits: 'Chocs',
     next: 'Mission suivante →', retry: '↻ Rejouer', brake: 'FREIN', gas: 'GAZ',
     level: n => `MISSION ${n}`, sec: t => `${t} s`, m: d => `${d} m`,
-    types: { reach: 'Contre la montre', overtake: 'Dépassements', rules: 'Code de la route', park: 'Rouler et se garer', fuel: 'Économie de carburant' , endless: 'Route sans fin' },
+    types: { reach: 'Contre la montre', overtake: 'Dépassements', rules: 'Code de la route', park: 'Rouler et se garer', fuel: 'Économie de carburant' , endless: 'Route sans fin' , taxi: 'Taxi' },
     goals: {
       reach: L => `Parcours ${L.dist} m en moins de ${L.time} secondes`,
       overtake: L => `Double ${L.n} voitures en ${L.time} secondes`,
@@ -419,8 +427,9 @@ const I18N = {
       park: L => `Parcours ${L.dist} m puis gare-toi dans la place verte`,
       fuel: L => `Parcours ${L.dist} m avant la panne sèche`,
       endless: L => 'Va le plus loin possible : 3 chocs et c’est fini',
+      taxi: L => `Dépose ${L.n} passagers en ${L.time} secondes, en douceur`,
     },
-    tips: { reach: 'Double prudemment les voitures lentes', overtake: 'Attention aux voitures d’en face !', rules: '3e infraction = échec', park: 'Ralentis avant d’arriver', fuel: 'Doucement sur l’accélérateur, laisse rouler' , endless: 'Chaque dépassement = +25 points, et le trafic augmente' },
+    tips: { reach: 'Double prudemment les voitures lentes', overtake: 'Attention aux voitures d’en face !', rules: '3e infraction = échec', park: 'Ralentis avant d’arriver', fuel: 'Doucement sur l’accélérateur, laisse rouler' , endless: 'Chaque dépassement = +25 points, et le trafic augmente' , taxi: 'Arrête-toi dans la zone verte pour charger, la bleue pour déposer' },
     winAll: 'Toutes les missions réussies ! 🏆', win: 'Mission réussie ! 🎉', perfect: 'Parfait !',
     failHits: 'Voiture détruite ! 💥', failTime: 'Temps écoulé ! ⏱', failFuel: 'Panne sèche ! ⛽', failRules: 'Trop d’infractions ! 🚔',
     noteHits: 'Conduis calmement et garde tes distances.', noteTime: 'Utilise les deux voies et double les lents.', noteFuel: 'Lâche l’accélérateur tôt au lieu de freiner.', noteRules: 'Surveille les feux et la limitation.',
@@ -432,6 +441,7 @@ const I18N = {
     buy: p => `Acheter 🪙 ${p}`, notEnough: n => `Il te manque ${n} 🪙. Termine des missions !`, earned: n => `+${n} 🪙`,
     endless: '∞ Infini', score: 'Score', distance: 'Distance', bestL: 'Record', runOver: 'Fin de la course ! 🏁', newBest: 'Nouveau record ! 🏆', noteBest: n => `Ton record : ${n}`,
     daily: '🎁 Cadeau du jour', day: n => `Jour ${n}`, claim: n => `Récupérer 🪙 ${n}`, claim2: n => `🎬 Récupérer 🪙 ${n} (×2)`, dailyNote: 'Reviens chaque jour pour gagner plus !',
+    taxiWait: 'Ne bouge plus… 🧍', taxiIn: '🚕 Passager à bord ! Va à la zone bleue', delivered: n => `✅ Déposé ! ${n}`, ouch: '😣 Doucement ! Ton passager est mécontent', comfort: 'Confort du passager', failComfort: 'Le passager est descendu furieux ! 😠', noteComfort: 'Pas de freinage brusque ni de virage rapide avec un passager.', rainTip: '🌧️ Pluie : route glissante, freins moins efficaces', page: (a, b) => `${a}–${b}`,
     adDouble: '🎬 Doubler les pièces', adContinue: '🎬 Continuer la mission', adRevive: '🎬 Continuer la course', adFree: '🎬 +100 🪙 gratuites',
     adFail: 'Pas de pub disponible, réessaie bientôt', privacy: 'Politique de confidentialité', adPriv: 'Confidentialité des pubs',
   },
@@ -856,6 +866,42 @@ MODELS.push({ id: 'bus', L: 10.6, W: 2.5, wr: .5, zf: 3.7, zr: -3.2, bottom: .42
 const BUS = MODELS.length - 1;
 MODELS[BUS].geo = buildModel(MODELS[BUS]);
 
+/* ---------- Rain: falling streaks around the camera ---------- */
+const RAIN_N = 2200, rainPos = new Float32Array(RAIN_N * 6), rainDrop = [];
+const rainGeo = new THREE.BufferGeometry();
+rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPos, 3));
+const rainMesh = new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: 0xe2ebf5, transparent: true, opacity: .62 }));
+rainMesh.frustumCulled = false; rainMesh.visible = false;
+scene.add(rainMesh);
+for (let i = 0; i < RAIN_N; i++) rainDrop.push([(Math.random() - .5) * 60, Math.random() * 22, (Math.random() - .5) * 70]);
+let rainSnd = null;
+function updateRain(dt) {
+  const on = rainMesh.visible, cx = camera.position.x, cz = camera.position.z;
+  if (on) {
+    for (let i = 0; i < RAIN_N; i++) {
+      const d = rainDrop[i];
+      d[1] -= 24 * dt;
+      if (d[1] < 0) d[1] += 22;
+      // keep the drops in a box around the camera, anchored to the world
+      if (d[0] - cx > 30) d[0] -= 60; else if (d[0] - cx < -30) d[0] += 60;
+      if (d[2] - cz > 40) d[2] -= 70; else if (d[2] - cz < -30) d[2] += 70;
+      const k = i * 6;
+      rainPos[k] = d[0]; rainPos[k + 1] = d[1]; rainPos[k + 2] = d[2];
+      rainPos[k + 3] = d[0] + .05; rainPos[k + 4] = d[1] + .95; rainPos[k + 5] = d[2] + .12;
+    }
+    rainGeo.attributes.position.needsUpdate = true;
+  }
+  if (ac && !rainSnd && on) {
+    const b = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate), ch = b.getChannelData(0);
+    for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
+    const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    src.buffer = b; src.loop = true; f.type = 'bandpass'; f.frequency.value = 1800; f.Q.value = .6; g.gain.value = 0;
+    src.connect(f).connect(g).connect(ac.destination); src.start();
+    rainSnd = g;
+  }
+  if (rainSnd) rainSnd.gain.setTargetAtTime(on && !muted() && state !== 'pause' ? .05 : 0, ac.currentTime, .3);
+}
+
 /* ---------- Time of day ---------- */
 const TOD = {
   day: { top: 0x2c6cb6, hor: 0xd9eaf5, sun: 0xfff1dc, si: 2.6, dir: [.55, .7, .35], hemi: .55, hc: 0xe6f2ff, fog: 0xcfe2f0, fn: 90, ff: 330, exp: 1.05, win: 0, lamp: 1.2, head: 0 },
@@ -865,15 +911,20 @@ const TOD = {
 const headLight = new THREE.SpotLight(0xfff2d6, 0, 80, .5, .6, 1.4);
 headLight.position.set(0, .8, 1.8); headLight.target.position.set(0, 0, 24);
 let curTod = '';
-function setTOD(name) {
-  if (name === curTod) return;
-  curTod = name;
-  const T = TOD[name];
-  skyUniforms.top.value.setHex(T.top); skyUniforms.hor.value.setHex(T.hor);
+let rainOn = false;
+function setTOD(name, rain = false) {
+  if (name + rain === curTod) return;
+  curTod = name + rain;
+  rainOn = rain;
+  const T = TOD[name], wet = (h, g, k) => new THREE.Color(h).lerp(new THREE.Color(g), rain ? k : 0);
+  skyUniforms.top.value.copy(wet(T.top, 0x4a5563, name === 'night' ? .2 : .7)); skyUniforms.hor.value.copy(wet(T.hor, 0x8a949e, name === 'night' ? .15 : .7));
   SUN_DIR.set(...T.dir).normalize();
-  sun.color.setHex(T.sun); sun.intensity = T.si;
+  sun.color.setHex(T.sun); sun.intensity = T.si * (rain ? .3 : 1);
   hemi.intensity = T.hemi; hemi.color.setHex(T.hc);
-  scene.fog.color.setHex(T.fog); scene.fog.near = T.fn; scene.fog.far = T.ff;
+  scene.fog.color.copy(wet(T.fog, name === 'night' ? 0x141c2b : 0x7d8794, .65)); scene.fog.near = T.fn * (rain ? .45 : 1); scene.fog.far = T.ff * (rain ? .62 : 1);
+  // a wet road is darker and shinier
+  M.asphalt.roughness = rain ? .32 : .93; M.asphalt.envMapIntensity = rain ? 1.15 : .35; M.asphalt.color.setHex(rain ? 0xa7abb2 : 0xffffff);
+  rainMesh.visible = rain;
   renderer.toneMappingExposure = T.exp;
   M.facade.emissiveIntensity = T.win;
   M.lamp.emissiveIntensity = T.lamp;
@@ -1084,7 +1135,8 @@ function buildWorld(L, seed) {
   LV = L;
   rand = seeded(seed);
   FIN = L.type === 'overtake' || L.type === 'endless' ? Infinity : L.dist;
-  const len = L.type === 'overtake' ? L.time * 32 + 300 : L.dist;
+  if (L.type === 'taxi') FIN = Infinity;
+  const len = L.type === 'overtake' ? L.time * 32 + 300 : L.type === 'taxi' ? L.n * 420 + 200 : L.dist;
   Z1 = len + 160;
   const park = L.type === 'park';
   // crossroads every 120-180 m, none near the start or the finish
@@ -1114,12 +1166,112 @@ function buildWorld(L, seed) {
     for (const s of [-1, 1]) put(M.white, BOX, mat(s * 7.9, 3.2, FIN, 0, 0, 0, .4, 6.4, .4), { cast: true });
     put(M.check, BOX, mat(0, 6.5, FIN, 0, 0, 0, 16.2, 1.1, .2), { cast: true, uv: [2, 1] });
   }
+  if (L.type === 'taxi') buildTaxi(L);
   if (L.type === 'rules') for (let z = 30; z < len - 20; z += 170) {
     if (INTS.some(I => Math.abs(I.z - z) < 16)) z += 30;
     put(M.metal, CYL, mat(-8.1, 1.3, z, 0, 0, 0, .05, 2.6, .05));
     const m = new THREE.Mesh(CIRCLE, limitMat(L.limit)); m.position.set(-8.1, 2.9, z + .05); m.rotation.y = PI; world.add(m);
   }
   flush();
+}
+
+/* ---------- Taxi: pick-ups and drop-offs by the right kerb ---------- */
+let taxi = null;
+const skin = [0xf1c27d, 0xc68642, 0x8d5524, 0xe0ac69], shirts = [0x1d4ed8, 0xdc2626, 0x16a34a, 0x7c3aed, 0xf97316, 0x0891b2, 0xdb2777];
+const HEAD = new THREE.SphereGeometry(.15, 12, 8);
+SHARED.add(HEAD);
+function person(x, z) {
+  const g = new THREE.Group(), m = c => std({ color: c, roughness: .8 });
+  const body = new THREE.Mesh(CYL, m(shirts[Math.floor(rand() * shirts.length)])); body.scale.set(.21, .62, .21); body.position.y = 1.12;
+  const legs = new THREE.Mesh(BOX, m(0x1f2937)); legs.scale.set(.34, .82, .2); legs.position.y = .41;
+  const head = new THREE.Mesh(HEAD, m(skin[Math.floor(rand() * skin.length)])); head.position.y = 1.6;
+  const arm = new THREE.Group(), a = new THREE.Mesh(BOX, body.material); a.scale.set(.09, .55, .09); a.position.y = .27; arm.add(a);
+  arm.position.set(-.27, 1.36, 0); arm.rotation.z = .4;
+  for (const o of [body, legs, head, a]) o.castShadow = true;
+  g.add(body, legs, head, arm); g.position.set(x, .2, z); g.rotation.y = PI / 2; g.scale.setScalar(1.12);
+  g.userData.arm = arm;
+  world.add(g);
+  return g;
+}
+function buildTaxi(L) {
+  // a stop must stay clear of the crossroads
+  const free = z => { for (let k = 0; k < 6; k++) { const I = INTS.find(I => Math.abs(I.z - z) < 24); if (!I) break; z = I.z + 26; } return z; };
+  const stops = [];
+  let z = 70;
+  for (let i = 0; i < L.n; i++) {
+    const pick = free(z + 40 + rand() * 60), drop = free(pick + 230 + rand() * 80);
+    stops.push({ pick, drop, who: person(-8.9, pick) });
+    z = drop;
+  }
+  const zone = new THREE.Mesh(PLANE, new THREE.MeshBasicMaterial({ color: 0x2cf08a, transparent: true, opacity: .35, depthWrite: false }));
+  zone.scale.set(3.3, 1, 9); zone.position.set(-5.25, .03, stops[0].pick);
+  const pin = new THREE.Mesh(ARROW_G, std({ color: 0x22e07a, emissive: 0x13c060, emissiveIntensity: 1 }));
+  pin.rotation.x = PI; pin.position.set(-8.9, 3.4, stops[0].pick);
+  world.add(zone, pin);
+  taxi = { stops, idx: 0, stage: 'pick', hold: 0, comfort: 100, minComfort: 100, fare: 0, delivered: 0, zone, pin, brakeT: 0, ouchT: 0 };
+}
+function taxiZoneZ() { const S = taxi.stops[taxi.idx]; return taxi.stage === 'pick' ? S.pick : S.drop; }
+function setTaxiZone() {
+  const z = taxiZoneZ(), drop = taxi.stage === 'drop';
+  taxi.zone.position.z = z; taxi.pin.position.set(drop ? -5.25 : -8.9, drop ? 3.2 : 3.4, z);
+  taxi.zone.material.color.setHex(drop ? 0x38bdf8 : 0x2cf08a);
+  taxi.pin.material.color.setHex(drop ? 0x38bdf8 : 0x22e07a); taxi.pin.material.emissive.setHex(drop ? 0x0b7fbf : 0x13c060);
+}
+function checkTaxi(dt) {
+  const t = tr(), z = taxiZoneZ();
+  const inside = Math.abs(car.z - z) < 4.6 && car.x < -3.4 && Math.abs(wrap(car.th)) < .4;
+  const ok = inside && Math.abs(car.v) < .5;
+  taxi.hold = ok ? taxi.hold + dt : 0;
+  $('#hold').classList.toggle('hide', !inside);
+  if (inside) { $('#holdLbl').textContent = ok ? t.taxiWait : t.holdStop; $('#ring').style.strokeDashoffset = 100.5 * (1 - Math.min(1, taxi.hold)); }
+  taxi.zone.material.opacity = .28 + Math.sin(clock * 4) * .08;
+  taxi.pin.position.y = (taxi.stage === 'drop' ? 3.2 : 3.4) + Math.sin(clock * 3) * .25; taxi.pin.rotation.y += .03;
+  const S = taxi.stops[taxi.idx];
+  if (taxi.stage === 'pick' && S.who.visible) S.who.userData.arm.rotation.z = .45 + Math.sin(clock * 7) * .35;
+  if (taxi.hold < 1) return;
+  taxi.hold = 0;
+  if (taxi.stage === 'pick') {
+    S.who.visible = false; taxi.stage = 'drop'; taxi.comfort = 100;
+    toast(t.taxiIn); [660, 990].forEach((f, i) => tone(f, .15, 'triangle', .1, i * .1));
+  } else {
+    taxi.delivered++;
+    taxi.fare += 40 + Math.round(taxi.comfort * .6);
+    taxi.minComfort = Math.min(taxi.minComfort, taxi.comfort);
+    toast(t.delivered(`${taxi.delivered}/${taxi.stops.length}`)); [880, 1320].forEach((f, i) => tone(f, .15, 'triangle', .1, i * .1));
+    const who = person(-8.9, car.z); who.userData.arm.rotation.z = PI; // the passenger steps out
+    if (taxi.delivered >= taxi.stops.length) { $('#hold').classList.add('hide'); return finish(true); }
+    taxi.idx++; taxi.stage = 'pick';
+  }
+  setTaxiZone();
+}
+// A passenger aboard dislikes long hard braking, fast turns and crashes
+function taxiComfort(dt, brake, lat) {
+  if (!taxi || taxi.stage !== 'drop') return;
+  taxi.brakeT = brake && Math.abs(car.v) > 5 ? taxi.brakeT + dt : 0;
+  let loss = 0;
+  if (taxi.brakeT > .35) loss += 30;
+  if (Math.abs(lat) > 5.5) loss += 22;
+  taxi.ouchT -= dt;
+  if (loss) {
+    taxi.comfort -= loss * dt;
+    if (taxi.ouchT <= 0) { taxi.ouchT = 2.5; toast(tr().ouch, true); }
+  }
+  if (taxi.comfort <= 0 && state === 'play') { taxi.comfort = 0; finish(false, 'comfort'); }
+}
+const taxiSign = (() => {
+  const t = canvasTex(128, 48, (g, w, h) => {
+    g.fillStyle = '#ffd400'; g.fillRect(0, 0, w, h); g.fillStyle = '#111'; g.font = '900 34px Arial'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('TAXI', w / 2, h / 2 + 2);
+  }, false);
+  return new THREE.Mesh(BOX, std({ map: t, emissive: 0xffd400, emissiveIntensity: .25, emissiveMap: t }));
+})();
+function setTaxiLook(on) {
+  if (P.chassis.children.includes(taxiSign)) P.chassis.remove(taxiSign);
+  if (on) {
+    const r = MD.roof, z = r.reduce((a, p) => a + p[0], 0) / r.length;
+    taxiSign.scale.set(.6, .2, .28); taxiSign.position.set(0, Math.max(...r.map(p => p[1])) + .1, z);
+    P.chassis.add(taxiSign);
+    P.paint.color.setHex(0xf6c600);
+  } else paintCar();
 }
 
 /* ---------- Traffic ---------- */
@@ -1157,7 +1309,7 @@ function spawn(ax, lane, d, s, cross) {
   const hex = mi === BUS ? [0xf2b705, 0xf3f4f6, 0x1d4ed8][Math.floor(Math.random() * 3)] : TPAINT[Math.floor(Math.random() * TPAINT.length)];
   // our side: slow outer lane, quicker inner lane, so there is always something to overtake
   const base = mi === BUS ? 6.5 : ax === 'x' ? 9 : d > 0 ? (outer ? 7 : 10.5) : 10;
-  const vt = Math.min(base + Math.random() * 3, LV && LV.limit ? LV.limit / 3.6 - .8 : 99);
+  const vt = Math.min((base + Math.random() * 3) * (rainOn ? .85 : 1), LV && LV.limit ? LV.limit / 3.6 - .8 : 99);
   const c = { ax, lane, d, s, v: vt * .8, vt, mi, hw: md.W / 2, hl: md.L / 2, g: tMesh(mi, hex), lc: null, stun: 0, cross, seen: false, counted: false, lat: 0 };
   traffic.push(c);
   return c;
@@ -1237,7 +1389,7 @@ function updateTraffic(dt, playing) {
       if (ph === 'G' || (ph === 'Y' && (c.ax === 'z' ? dist < c.v * c.v / 10 - 1 : dist < 1))) continue;
       lim = Math.min(lim, Math.sqrt(Math.max(0, 8 * (dist - .8))));
     }
-    c.v = c.v < lim ? Math.min(lim, c.v + 2.6 * dt) : Math.max(lim, c.v - 9 * dt);
+    c.v = c.v < lim ? Math.min(lim, c.v + 2.6 * dt) : Math.max(lim, c.v - (rainOn ? 7 : 9) * dt);
     c.s += c.d * c.v * dt;
     // lane changes (honked at, or stuck behind a slow car)
     if (c.lc !== null) {
@@ -1298,13 +1450,34 @@ const LEVELS = [
   { type: 'rules', dist: 1500, limit: 60, traffic: 34, tod: 'day' },
   { type: 'park', dist: 1000, gap: 7.4, traffic: 34, tod: 'night' },
   { type: 'reach', dist: 2000, time: 200, traffic: 28, tod: 'night' },
+  // missions 21-40: taxi and rain
+  { type: 'taxi', n: 2, time: 120, traffic: 60, tod: 'day' },
+  { type: 'reach', dist: 1300, time: 145, traffic: 48, tod: 'day', rain: true },
+  { type: 'overtake', n: 10, time: 140, traffic: 44, tod: 'sunset' },
+  { type: 'park', dist: 700, gap: 8.4, traffic: 46, tod: 'night', rain: true },
+  { type: 'rules', dist: 1300, limit: 50, traffic: 44, tod: 'sunset', rain: true },
+  { type: 'taxi', n: 3, time: 175, traffic: 50, tod: 'day', rain: true },
+  { type: 'fuel', dist: 1500, fuel: 78, traffic: 40, tod: 'night' },
+  { type: 'reach', dist: 1600, time: 175, traffic: 38, tod: 'night', rain: true },
+  { type: 'overtake', n: 12, time: 160, traffic: 36, tod: 'day' },
+  { type: 'taxi', n: 3, time: 165, traffic: 44, tod: 'sunset' },
+  { type: 'park', dist: 900, gap: 7.6, traffic: 38, tod: 'day', rain: true },
+  { type: 'rules', dist: 1600, limit: 60, traffic: 36, tod: 'night' },
+  { type: 'fuel', dist: 1700, fuel: 88, traffic: 36, tod: 'sunset', rain: true },
+  { type: 'taxi', n: 4, time: 240, traffic: 42, tod: 'night', rain: true },
+  { type: 'reach', dist: 1800, time: 180, traffic: 32, tod: 'sunset' },
+  { type: 'overtake', n: 14, time: 180, traffic: 32, tod: 'day', rain: true },
+  { type: 'park', dist: 1100, gap: 7.2, traffic: 32, tod: 'sunset' },
+  { type: 'taxi', n: 4, time: 220, traffic: 34, tod: 'day' },
+  { type: 'rules', dist: 1800, limit: 50, traffic: 32, tod: 'night', rain: true },
+  { type: 'reach', dist: 2400, time: 250, traffic: 26, tod: 'night', rain: true },
 ];
-const ICON = { reach: '⏱', overtake: '🚗', rules: '🚦', park: '🅿️', fuel: '⛽', endless: '📏' };
+const ICON = { reach: '⏱', overtake: '🚗', rules: '🚦', park: '🅿️', fuel: '⛽', endless: '📏', taxi: '🚕' };
 const ENDLESS = { type: 'endless', dist: 900, traffic: 70, tod: 'day' };
 const lv = () => cur < 0 ? ENDLESS : LEVELS[cur];
 const scoreNow = () => Math.max(0, Math.floor(car.z)) + overtakes * 25;
 const MENU_LEVEL = { type: 'reach', dist: 900, traffic: 55, tod: 'day' };
-const timed = L => L.type === 'reach' || L.type === 'overtake';
+const timed = L => L.type === 'reach' || L.type === 'overtake' || L.type === 'taxi';
 const parOf = L => timed(L) ? L.time * .8 : L.dist / 10 + (L.type === 'park' ? 20 : 0);
 
 /* ---------- Player car & physics ---------- */
@@ -1563,6 +1736,7 @@ function show(id) {
 }
 function enterMenuWorld() {
   state = 'menu';
+  taxi = null; setTaxiLook(false);
   setTOD(MENU_LEVEL.tod);
   buildWorld(MENU_LEVEL, 7);
   Object.assign(car, { x: -4.6, z: 6, th: .12, v: 0, steer: 0, pitch: 0, roll: 0 });
@@ -1572,20 +1746,27 @@ function enterMenuWorld() {
 function goMenu(id) {
   if (state !== 'menu') enterMenuWorld();
   menuView = id === 'sGarage' ? 'garage' : 'main';
-  if (id === 'sLevels') renderLevels();
+  if (id === 'sLevels') { lvPage = Math.min(PAGES - 1, Math.floor((save.unlocked - 1) / 20)); renderLevels(); }
   show(id);
 }
+let lvPage = 0;
+const PAGES = Math.ceil(LEVELS.length / 20);
+$('#lvPrev').onclick = () => { lvPage = Math.max(0, lvPage - 1); renderLevels(); };
+$('#lvNext').onclick = () => { lvPage = Math.min(PAGES - 1, lvPage + 1); renderLevels(); };
 function renderLevels() {
   const g = $('#levels'); g.innerHTML = '';
   let total = 0;
+  LEVELS.forEach((_, i) => { total += save.stars[i] || 0; });
+  $('#lvPage').textContent = tr().page(lvPage * 20 + 1, Math.min(LEVELS.length, lvPage * 20 + 20));
+  $('#lvPrev').disabled = lvPage === 0; $('#lvNext').disabled = lvPage === PAGES - 1;
   LEVELS.forEach((L, i) => {
+    if (Math.floor(i / 20) !== lvPage) return;
     const st = save.stars[i] || 0, locked = i >= save.unlocked;
-    total += st;
     const b = document.createElement('button');
     b.className = 'lv' + (i === save.unlocked - 1 ? ' cur' : '');
     b.disabled = locked;
     b.title = tr().types[L.type];
-    b.innerHTML = `${locked ? '🔒' : i + 1}<small>${ICON[L.type]}</small><span class="st">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</span>`;
+    b.innerHTML = `${locked ? '🔒' : i + 1}<small>${ICON[L.type]}${L.rain ? '<i>💧</i>' : ''}</small><span class="st">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</span>`;
     b.onclick = () => startLevel(i);
     g.appendChild(b);
   });
@@ -1594,9 +1775,10 @@ function renderLevels() {
 function startLevel(i) {
   cur = i; state = 'play';
   const L = lv();
+  taxi = null;
   if (i < 0) ENDLESS.tod = ['day', 'sunset', 'night'][Math.floor(Math.random() * 3)];
   paid = 0;
-  setTOD(L.tod);
+  setTOD(L.tod, !!L.rain);
   buildWorld(L, i < 0 ? Math.floor(Math.random() * 1e6) : 1000 + i * 77);
   Object.assign(car, { x: -1.75, z: 0, th: 0, v: 0, steer: 0, pitch: 0, roll: 0 });
   clearTraffic(); simT = 0; fillTraffic(true);
@@ -1607,7 +1789,8 @@ function startLevel(i) {
   $('#prog').classList.toggle('hide', i < 0 && !save.best);
   $('#prog b').textContent = i < 0 ? '🏆' : '🏁';
   $('#goalIco').textContent = ICON[L.type];
-  $('#fuelBar').classList.toggle('hide', L.type !== 'fuel');
+  $('#fuelBar').classList.toggle('hide', L.type !== 'fuel' && L.type !== 'taxi');
+  setTaxiLook(L.type === 'taxi');
   $('#limit').classList.toggle('hide', L.type !== 'rules');
   $('#limit').textContent = L.limit || '';
   $('#sensor').classList.add('hide');
@@ -1617,7 +1800,7 @@ function startLevel(i) {
   updateCam(0, true);
   const t = tr();
   $('#bnN').textContent = i < 0 ? '∞' : t.level(i + 1); $('#bnT').textContent = t.types[L.type]; $('#bnH').textContent = t.goals[L.type](L);
-  $('#bnP').textContent = t.tips[L.type];
+  $('#bnP').textContent = t.tips[L.type] + (L.rain ? ' · ' + t.rainTip : '');
   $('#banner').classList.add('show'); bannerT = 3.4;
   lastCount = -1;
 }
@@ -1634,9 +1817,9 @@ function finish(won, why = '') {
   lastReward = 0;
   if (L.type === 'endless') return endRun(t);
   if (won) {
-    let minus = (hits > 0 ? 1 : 0) + (viol > 0 ? 1 : 0) + (time > parOf(L) ? 1 : 0) + (L.type === 'fuel' && fuel < 8 ? 1 : 0);
+    let minus = (hits > 0 ? 1 : 0) + (viol > 0 ? 1 : 0) + (time > parOf(L) ? 1 : 0) + (L.type === 'fuel' && fuel < 8 ? 1 : 0) + (taxi && taxi.minComfort < 70 ? 1 : 0);
     stars = Math.max(1, 3 - minus);
-    reward = 40 + stars * 20 + overtakes * 2 + (save.stars[cur] ? 0 : 100); // first clear of a mission pays a bonus
+    reward = 40 + stars * 20 + overtakes * 2 + (taxi ? taxi.fare : 0) + (save.stars[cur] ? 0 : 100); // first clear of a mission pays a bonus
     save.coins += reward; lastReward = reward;
     save.stars[cur] = Math.max(save.stars[cur] || 0, stars);
     save.unlocked = Math.max(save.unlocked, Math.min(cur + 2, LEVELS.length));
@@ -1646,12 +1829,13 @@ function finish(won, why = '') {
   } else {
     tone(300, .3, 'sawtooth', .1); tone(200, .5, 'sawtooth', .1, .25);
   }
-  const FAIL = { hits: [t.failHits, t.noteHits], time: [t.failTime, t.noteTime], fuel: [t.failFuel, t.noteFuel], rules: [t.failRules, t.noteRules] };
+  const FAIL = { hits: [t.failHits, t.noteHits], time: [t.failTime, t.noteTime], fuel: [t.failFuel, t.noteFuel], rules: [t.failRules, t.noteRules], comfort: [t.failComfort, t.noteComfort] };
   $('#resTitle').textContent = won ? (last ? t.winAll : t.win) : FAIL[why][0];
   const st = [[t.time, t.sec(time.toFixed(1))], [t.hits, hits]];
   if (L.type === 'overtake' || overtakes) st.push([t.overtaken, overtakes]);
   if (viol || L.type === 'rules') st.push([t.viol, viol]);
   if (L.type === 'fuel') st.push([t.fuelLeft, Math.max(0, Math.round(fuel)) + '%']);
+  if (taxi) st.push([t.comfort, Math.round(won ? taxi.minComfort : taxi.comfort) + '%']);
   $('#resStats').innerHTML = st.map(([a, b]) => `<div><small>${a}</small><span>${b}</span></div>`).join('');
   $('#resNote').textContent = won ? (stars < 3 ? t.tip3 : t.perfect) : FAIL[why][1];
   $('#bNext').classList.toggle('hide', !won || last);
@@ -1762,6 +1946,7 @@ $('#bContinue').onclick = async () => {
   if (failWhy === 'time') extra += 25;
   if (failWhy === 'fuel') fuel = 30;
   if (failWhy === 'rules') viol = 1;
+  if (failWhy === 'comfort') taxi.comfort = 60;
   updateDamage(); state = 'play'; show(null);
 };
 // After a crash continue: move the car to a free spot in its lane
@@ -1883,9 +2068,10 @@ function physics(dt) {
   if (fuel <= 0) gas = false;
 
   const dir = gear === 'D' ? 1 : -1, v0 = car.v;
-  if (brake) { const f = BRAKE * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
+  const grip = rainOn ? .64 : 1;
+  if (brake) { const f = BRAKE * grip * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
   else if (gas && car.v * dir < -.05) car.v += dir * BRAKE * dt;
-  else if (gas && dir > 0) car.v += ACCF * Math.max(0, 1 - (car.v / VMAX) ** 2) * dt;
+  else if (gas && dir > 0) car.v += ACCF * (rainOn ? .85 : 1) * Math.max(0, 1 - (car.v / VMAX) ** 2) * dt;
   else if (gas) car.v -= ACC_R * dt;
   else { const f = (.35 + .0009 * car.v * car.v) * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
   car.v = clamp(car.v, -MAXR, VMAX);
@@ -1894,13 +2080,14 @@ function physics(dt) {
   if (lv().type === 'fuel' && startT <= 0) fuel -= (.15 + (gas ? 1 : 0) * (.7 + Math.abs(car.v) * .024)) * dt;
 
   // steering gets gentler with speed so lane changes stay smooth
-  const maxSteer = MAXSTEER * Math.min(1, 3.6 / (Math.abs(car.v) + .01));
+  const maxSteer = MAXSTEER * Math.min(1, 3.6 / (Math.abs(car.v) + .01)) * (rainOn ? .82 : 1);
   car.steer += clamp(steerT * maxSteer - car.steer, -STEER_RATE * dt, STEER_RATE * dt);
   const thDot = car.v / WB * Math.tan(car.steer);
   car.th += thDot * dt;
   car.x += Math.sin(car.th) * car.v * dt;
   car.z += Math.cos(car.th) * car.v * dt;
   const acc = (car.v - v0) / dt, k = Math.min(1, dt * 6);
+  taxiComfort(dt, brake, car.v * thDot);
   car.pitch += (clamp(-acc * .006, -.05, .05) - car.pitch) * k;
   car.roll += (clamp(car.v * thDot * .01, -.06, .06) - car.roll) * k;
 
@@ -1949,6 +2136,7 @@ function bump(why) {
   if (hitCd > 0) return;
   hitLog.push([why, Math.round(car.z), +car.x.toFixed(1)]);
   hits++; hitCd = .9; shake = .4;
+  if (taxi && taxi.stage === 'drop') taxi.comfort -= 25;
   updateDamage(); crash();
   const f = $('#flash'); f.style.opacity = 1; setTimeout(() => f.style.opacity = 0, 120);
   try { navigator.vibrate && navigator.vibrate(80); } catch (_) {}
@@ -1956,6 +2144,7 @@ function bump(why) {
 }
 function offence(msg) {
   viol++; violCd = 3;
+  if (taxi && taxi.stage === 'drop') taxi.comfort -= 15;
   toast(msg, true); tone(660, .15, 'square', .08); tone(520, .2, 'square', .08, .16);
   if (lv().type === 'rules' && viol >= 3) finish(false, 'rules');
 }
@@ -2028,7 +2217,8 @@ function mission(dt) {
     if (fuel < 15 && !warned.fuel) { warned.fuel = 1; toast(t.lowFuel, true); }
     if (fuel <= 0 && Math.abs(car.v) < .3) return finish(false, 'fuel');
   }
-  if (L.type === 'park') {
+  if (L.type === 'taxi') checkTaxi(dt);
+  else if (L.type === 'park') {
     if (car.z > FIN - 60 && !warned.park) { warned.park = 1; toast(t.goParking); }
     checkSpot(dt);
   } else if (isFinite(FIN) && car.z + HL >= FIN) finish(true);
@@ -2103,21 +2293,23 @@ function hud() {
   const left = timed(L) ? Math.max(0, L.time + extra - time) : time;
   let goal, prog;
   if (L.type === 'overtake') { goal = `${overtakes}/${L.n}`; prog = overtakes / L.n; }
+  else if (L.type === 'taxi') { goal = `${taxi.delivered}/${L.n}`; prog = (taxi.delivered + (taxi.stage === 'drop' ? .5 : 0)) / L.n; }
   else if (L.type === 'endless') { const sc = scoreNow(); goal = `${sc}`; prog = save.best ? clamp(sc / save.best, 0, 1) : 0; }
   else {
     const rem = Math.max(0, Math.round(FIN - car.z - HL));
     goal = L.type === 'rules' ? `${viol}/3 · ${t.m(rem)}` : L.type === 'fuel' ? t.m(rem) : t.m(rem);
     prog = clamp(car.z / FIN, 0, 1);
   }
-  const s = [kmh, Math.ceil(left), goal, gear, Math.round(fuel), Math.round(prog * 200)].join('|');
+  const s = [kmh, Math.ceil(left), goal, gear, Math.round(fuel), Math.round(prog * 200), taxi ? Math.round(taxi.comfort) : 0].join('|');
   if (s === lastHud) return;
   lastHud = s;
   $('#kmh').textContent = kmh; $('#gearLbl').textContent = gear;
   $('#time').textContent = timed(L) ? Math.ceil(left) : Math.floor(left);
   $('#cTime').classList.toggle('warn', timed(L) && left < 10);
   $('#goal').textContent = goal;
-  $('#fuelFill').style.width = clamp(fuel, 0, 100) + '%';
-  $('#cGoal').classList.toggle('warn', L.type === 'fuel' && fuel < 15);
+  const bar = L.type === 'taxi' ? (taxi.stage === 'drop' ? taxi.comfort : 100) : fuel;
+  $('#fuelFill').style.width = clamp(bar, 0, 100) + '%';
+  $('#cGoal').classList.toggle('warn', (L.type === 'fuel' && fuel < 15) || (L.type === 'taxi' && bar < 35));
   $('#progFill').style.width = (prog * 100).toFixed(1) + '%';
 }
 // The next traffic light ahead, shown in the corner so it is readable on a small screen
@@ -2176,6 +2368,7 @@ function tick(dt) {
   clock += dt; frameDt = dt;
   const live = state !== 'pause';
   if (LV && LV.type === 'endless' && state !== 'menu' && car.z > Z1 - 450) extendWorld();
+  updateRain(dt);
   if (live) { simT += dt; fillTraffic(false); updateTraffic(dt, state === 'play'); updateSignals(); }
   if (state === 'play') {
     // fixed small physics steps so slow phones drive the same as fast ones
@@ -2246,7 +2439,7 @@ if (NATIVE && NATIVE.App) NATIVE.App.addListener('backButton', () => {
   else if (open === 'sResult') goMenu('sLevels');
   else if (open) $(`#${open} [data-back]`).click();
 });
-window.game = { info: renderer.info, ads: Ads, car, startLevel, claimDaily, get Z1() { return Z1; }, get worldSize() { return world.children.length; }, get obstacles() { return obstacles.length; }, finish, LEVELS, get state() { return state; }, get traffic() { return traffic; }, get hits() { return hits; }, get fuel() { return fuel; }, get time() { return time; }, get overtakes() { return overtakes; }, get viol() { return viol; }, get INTS() { return INTS; }, setCam: m => { camMode = m; }, touch, keys,
+window.game = { info: renderer.info, ads: Ads, car, startLevel, claimDaily, get Z1() { return Z1; }, get worldSize() { return world.children.length; }, get taxi() { return taxi; }, get rain() { return rainOn; }, get obstacles() { return obstacles.length; }, finish, LEVELS, get state() { return state; }, get traffic() { return traffic; }, get hits() { return hits; }, get fuel() { return fuel; }, get time() { return time; }, get overtakes() { return overtakes; }, get viol() { return viol; }, get INTS() { return INTS; }, setCam: m => { camMode = m; }, touch, keys,
   // test hooks: run the game faster than real time, with a callback before each step
   step(sec, fn) { for (let t = 0; t < sec; t += 1 / 30) { fn && fn(); tick(1 / 30); } }, phase: I => mainPhase(I), setWheel: a => { wheelAngle = a; }, get HL() { return HL; }, hitLog,
   // used by the scripts that draw the icon and store images
