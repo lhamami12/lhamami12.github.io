@@ -5,9 +5,9 @@ const { join } = require('path');
 const fs = require('fs');
 
 const CAP = {
-  ar: ['اركن بدقة واجمع النجوم', 'مقود ودواسات وناقل حركة', '7 سيارات تشتريها بالعملات', '30 مستوى نهاراً وليلاً', 'حساسات ركن بصوت حقيقي', 'مستويات ليلية بالمصابيح'],
-  fr: ['Gare-toi parfaitement', 'Volant, pédales et levier', '7 voitures à acheter', '30 niveaux, de jour et de nuit', 'Radars de recul', 'Niveaux de nuit avec phares'],
-  en: ['Park perfectly, earn stars', 'Wheel, pedals and gears', '7 cars to buy with coins', '30 levels, by day and night', 'Beeping parking sensors', 'Night levels with headlights'],
+  ar: ['اركن بدقة واجمع النجوم', 'مقود ودواسات وناقل حركة', '7 سيارات وزينة ونيون', '30 مستوى نهاراً وليلاً', 'المطر والسيارات المتحركة', 'مستويات ليلية بالمصابيح'],
+  fr: ['Gare-toi parfaitement', 'Volant, pédales et levier', '7 voitures, jantes et néons', '30 niveaux, de jour et de nuit', 'Pluie et circulation', 'Niveaux de nuit avec phares'],
+  en: ['Park perfectly, earn stars', 'Wheel, pedals and gears', '7 cars, rims and neon', '30 levels, by day and night', 'Rain and moving traffic', 'Night levels with headlights'],
 };
 (async () => {
   const b = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
@@ -16,7 +16,7 @@ const CAP = {
     fs.mkdirSync(dir, { recursive: true });
     const p = await b.newPage({ viewport: { width: 360, height: 640 }, deviceScaleFactor: 3 });
     await p.goto('http://localhost:8765/parking/');
-    await p.evaluate(l => localStorage.setItem('parking3d-v2', JSON.stringify({ unlocked: 16, stars: [3, 3, 2, 3, 1, 2, 3, 3, 2, 3, 3, 2, 3, 3, 2], car: 0, color: 0, coins: 1450, owned: [0, 1, 2, 3], lang: l, daily: { last: new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0'), day: 1, run: 1 } })), lang);
+    await p.evaluate(l => localStorage.setItem('parking3d-v2', JSON.stringify({ unlocked: 16, stars: [3, 3, 2, 3, 1, 2, 3, 3, 2, 3, 3, 2, 3, 3, 2], car: 0, color: 0, coins: 1450, owned: [0, 1, 2, 3], lang: l, custom: { rim: 'gold', tint: 'dark', neon: 'blue' }, items: ['rim:chrome', 'tint:dark', 'neon:none', 'rim:gold', 'neon:blue'], chDone: 'x', daily: { last: new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0'), day: 1, run: 1 } })), lang);
     await p.reload(); await p.waitForTimeout(2500);
     const caption = async (i) => p.evaluate(([t]) => {
       let c = document.getElementById('shotcap');
@@ -37,14 +37,16 @@ const CAP = {
     await p.evaluate(() => document.querySelector('#bPause').click()); await p.evaluate(() => document.querySelector('#bPLevels').click());
     await p.evaluate(() => document.querySelector('#sLevels [data-back]').click()); await p.evaluate(() => document.querySelector('#bGarage').click());
     for (let k = 0; k < 2; k++) await p.evaluate(() => document.querySelector('#cNext').click());
+    await p.evaluate(() => { document.getElementById('cStats').style.display = 'none'; document.querySelector('#custTabs [data-tab="swNeon"]').click(); });
     await p.waitForTimeout(1800); await shot(2);
+    await p.evaluate(() => { document.getElementById('cStats').style.display = ''; document.querySelector('#custTabs [data-tab="swatches"]').click(); });
     // 4: level select
     await p.evaluate(() => document.querySelector('#sGarage [data-back]').click()); await p.evaluate(() => { document.querySelector('#bPlay').click(); document.getElementById('sLevels').style.paddingTop = '76px'; });
     await p.waitForTimeout(800); await shot(3);
-    // 5: sensors close to a car, level 7 (tight lot)
-    await p.evaluate(() => { game.startLevel(6); const s = game.spot; Object.assign(game.car, { x: s.x, z: s.z - 3.4, th: s.rot + Math.PI, v: 0 }); document.getElementById('banner').classList.remove('show'); });
-    await p.waitForTimeout(400); await p.evaluate(() => document.querySelector('#gR').dispatchEvent(new PointerEvent('pointerdown')));
-    await p.waitForTimeout(1500); await hud(true); await shot(4);
+    // 5: rain with a moving car in the aisle (long row level, rain switched on)
+    await p.evaluate(() => { game.startLevel(10, { rain: true }); const m = game.movers[0]; m.wait = 99; m.box.x = -3; m.g.position.x = -3;
+      Object.assign(game.car, { x: -11, z: -2.5, th: Math.PI / 2 - .15, v: 0 }); document.getElementById('banner').classList.remove('show'); });
+    await p.waitForTimeout(1800); await hud(true); await shot(4);
     // 6: a night level with the headlights on
     await p.evaluate(() => { game.startLevel(14); Object.assign(game.car, { x: -5, z: 1.5, th: 0.35, v: 0 }); document.getElementById('banner').classList.remove('show'); });
     await p.waitForTimeout(2000); await shot(5);
