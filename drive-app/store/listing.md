@@ -35,7 +35,7 @@ City Driver 3D: قيادة بالمدينة
 القيادة ليلًا بالأضواء الأمامية بين نوافذ العمارات المضيئة.
 
 🚙 **8 سيارات و10 ألوان**
-سيدان، هاتشباك، دفع رباعي، بيك أب، رياضية، فان، كلاسيكية، و**سوبركار** بجناح خلفي و5 ألوان سباق. اجمع العملات لتشتريها.
+سيدان، هاتشباك، دفع رباعي، بيك أب، رياضية، فان، كلاسيكية، و**سوبركار** بجناح خلفي و5 ألوان سباق. اجمع العملات لتشتريها، ثم **رقِّ المحرك والفرامل والمقود** على 5 مستويات.
 
 ∞ **وضع بلا نهاية**: قُد أبعد ما يمكن والزحمة تزداد، وحطّم رقمك القياسي.
 
@@ -73,7 +73,7 @@ Real traffic lights, crossroads with crossing cars, slow buses and oncoming traf
 Drive at night with your headlights between the lit-up buildings.
 
 🚙 **8 cars and 10 colours**
-Sedan, hatchback, SUV, pickup, sports car, van, classic and a **supercar** with a rear wing and 5 racing liveries. Earn coins to buy them.
+Sedan, hatchback, SUV, pickup, sports car, van, classic and a **supercar** with a rear wing and 5 racing liveries. Earn coins to buy them, then **upgrade the engine, brakes and steering** over 5 levels.
 
 ∞ **Endless mode**: drive as far as you can while the traffic grows, and beat your record.
 
@@ -109,7 +109,7 @@ De vrais feux tricolores, des carrefours avec des voitures qui traversent, des b
 
 🌇 **Jour, coucher de soleil et nuit**
 
-🚙 **8 voitures et 10 couleurs** à débloquer avec tes pièces, dont une **supercar** avec aileron et 5 livrées de course.
+🚙 **8 voitures et 10 couleurs** à débloquer avec tes pièces, dont une **supercar** avec aileron et 5 livrées de course, puis **améliore moteur, freins et direction** sur 5 niveaux.
 
 ∞ **Mode infini** : va le plus loin possible pendant que le trafic augmente, et bats ton record.
 

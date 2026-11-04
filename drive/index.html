@@ -144,6 +144,15 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
 #coinChip{position:fixed;top:calc(12px + env(safe-area-inset-top));inset-inline-start:calc(12px + env(safe-area-inset-left));z-index:21;font-size:16px;color:#ffd36b}
 .earn{font-size:24px;font-weight:900;color:#ffd36b;margin:2px 0 4px;direction:ltr}
 #bBuy{margin:0 0 8px;padding:9px}
+.ups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 8px}
+.ups button{border-radius:12px;padding:5px 2px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-weight:800;font-size:12px;line-height:1.35}
+.ups button b{display:block;font-size:11px;letter-spacing:2px;color:var(--acc);direction:ltr}
+.ups button span{display:block;font-size:12px;color:#ffd36b}
+.ups button.poor{opacity:.55}.ups button.max span{color:var(--ok)}
+.ups button.flash{animation:upf .5s}
+@keyframes upf{40%{transform:scale(1.08);background:rgba(34,197,94,.35)}}
+.bar i.up{background:linear-gradient(90deg,#22c55e,#86efac)}
+@media (max-height:500px){.ups{margin:0 0 4px}.ups button{padding:2px}}
 .btn.ad{background:linear-gradient(180deg,#34d399,#059669);border:0;box-shadow:0 4px 0 #04603f;padding:10px}
 #bFreeCoins{margin:0 0 8px}
 #bEndless{background:linear-gradient(180deg,#38bdf8,#1d4ed8);border:0;box-shadow:0 4px 0 #1e3a8a}
@@ -263,6 +272,7 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <h2 data-i18n="garage"></h2>
     <div class="carsel" dir="ltr"><button class="ib glass" id="cPrev">◀</button><div><div class="cname" id="cName"></div><div class="lock" id="cLock"></div></div><button class="ib glass" id="cNext">▶</button></div>
     <div class="cstats" id="cStats"></div>
+    <div class="ups" id="ups"></div>
     <button class="btn pri hide" id="bBuy"></button>
     <button class="btn ad hide" id="bFreeCoins" data-i18n="adFree"></button>
     <div class="mut" data-i18n="pickColor"></div>
@@ -278,6 +288,7 @@ h2{margin:0 0 12px;font-size:24px;font-weight:900}
     <div class="set"><span data-i18n="controls"></span><div class="seg" data-opt="controls"><button data-v="wheel" data-i18n="wheel"></button><button data-v="arrows" data-i18n="arrows"></button></div></div>
     <div class="set"><span data-i18n="graphics"></span><div class="seg" data-opt="quality"><button data-v="high" data-i18n="high"></button><button data-v="low" data-i18n="low"></button></div></div>
     <div class="set"><span data-i18n="sound"></span><div class="seg" data-opt="sound"><button data-v="on" data-i18n="on"></button><button data-v="off" data-i18n="off"></button></div></div>
+    <div class="set"><span data-i18n="music"></span><div class="seg" data-opt="music"><button data-v="on" data-i18n="on"></button><button data-v="off" data-i18n="off"></button></div></div>
     <div class="how" data-i18n-html="how"></div>
     <a class="btn" id="lPrivacy" href="https://lhamami12.github.io/drive/privacy.html" target="_blank" rel="noopener" style="font-size:14px;padding:8px;text-decoration:none" data-i18n="privacy"></a>
     <button class="btn hide" id="bAdPriv" style="font-size:14px;padding:8px" data-i18n="adPriv"></button>
@@ -335,11 +346,12 @@ const PI = Math.PI;
 
 /* ---------- Save data (the game works without storage) ---------- */
 const SKEY = 'citydriver3d-v1';
-const save = { unlocked: 1, stars: [], car: 0, color: 0, controls: 'wheel', quality: 'high', sound: 'on', coins: 0, owned: [0, 1] };
+const save = { unlocked: 1, stars: [], car: 0, color: 0, controls: 'wheel', quality: 'high', sound: 'on', music: 'on', coins: 0, owned: [0, 1], up: {} };
 try { const s = JSON.parse(localStorage.getItem(SKEY)); if (s) Object.assign(save, s); } catch (_) {}
 const persist = () => { try { localStorage.setItem(SKEY, JSON.stringify(save)); } catch (_) {} };
 if (typeof save.coins !== 'number') save.coins = 0;
 if (!Array.isArray(save.owned)) save.owned = [0, 1];
+if (!save.up || typeof save.up !== 'object') save.up = {};
 
 /* ---------- Translations ---------- */
 const I18N = {
@@ -374,6 +386,7 @@ const I18N = {
     endless: '∞ بلا نهاية', score: 'النقاط', distance: 'المسافة', bestL: 'أفضل نتيجة', runOver: 'انتهت الجولة! 🏁', newBest: 'رقم قياسي جديد! 🏆', noteBest: n => `أفضل نتيجة لك: ${n}`,
     daily: '🎁 المكافأة اليومية', day: n => `اليوم ${n}`, claim: n => `استلم 🪙 ${n}`, claim2: n => `🎬 استلم 🪙 ${n} (×2)`, dailyNote: 'عد كل يوم لتكبر المكافأة!',
     taxiWait: 'اثبت… 🧍', taxiIn: '🚕 صعد الراكب! أوصله إلى المكان الأزرق', delivered: n => `✅ وصل الراكب! ${n}`, ouch: '😣 بلطف! الراكب منزعج', comfort: 'راحة الراكب', failComfort: 'نزل الراكب غاضبًا! 😠', noteComfort: 'لا تفرمل بقوة ولا تنعطف بسرعة والراكب معك.', rainTip: '🌧️ مطر: الطريق زلق والفرامل أضعف', page: (a, b) => `${a}–${b}`,
+    music: 'الموسيقى', upEngine: '⚙️ المحرك', upBrakes: '🛑 الفرامل', upSteer: '🎡 المقود', upMax: 'الحد الأقصى', upDone: '⬆️ تمت الترقية!',
     adDouble: '🎬 ضاعف العملات', adContinue: '🎬 أكمل المهمة', adRevive: '🎬 أكمل الجولة', adFree: '🎬 +100 🪙 مجاناً',
     adFail: 'لا يوجد إعلان الآن، حاول بعد قليل', privacy: 'سياسة الخصوصية', adPriv: 'خيارات الخصوصية للإعلانات',
   },
@@ -408,6 +421,7 @@ const I18N = {
     endless: '∞ Endless', score: 'Score', distance: 'Distance', bestL: 'Best', runOver: 'Run over! 🏁', newBest: 'New record! 🏆', noteBest: n => `Your best: ${n}`,
     daily: '🎁 Daily reward', day: n => `Day ${n}`, claim: n => `Claim 🪙 ${n}`, claim2: n => `🎬 Claim 🪙 ${n} (×2)`, dailyNote: 'Come back every day for bigger rewards!',
     taxiWait: 'Hold still… 🧍', taxiIn: '🚕 Passenger aboard! Drive to the blue zone', delivered: n => `✅ Delivered! ${n}`, ouch: '😣 Easy! Your passenger is upset', comfort: 'Passenger comfort', failComfort: 'The passenger got out angry! 😠', noteComfort: 'No hard braking or fast turns with a passenger aboard.', rainTip: '🌧️ Rain: slippery road, weaker brakes', page: (a, b) => `${a}–${b}`,
+    music: 'Music', upEngine: '⚙️ Engine', upBrakes: '🛑 Brakes', upSteer: '🎡 Steering', upMax: 'Maxed', upDone: '⬆️ Upgraded!',
     adDouble: '🎬 Double coins', adContinue: '🎬 Continue mission', adRevive: '🎬 Continue the run', adFree: '🎬 +100 🪙 free',
     adFail: 'No ad available right now, try again soon', privacy: 'Privacy policy', adPriv: 'Ad privacy options',
   },
@@ -442,6 +456,7 @@ const I18N = {
     endless: '∞ Infini', score: 'Score', distance: 'Distance', bestL: 'Record', runOver: 'Fin de la course ! 🏁', newBest: 'Nouveau record ! 🏆', noteBest: n => `Ton record : ${n}`,
     daily: '🎁 Cadeau du jour', day: n => `Jour ${n}`, claim: n => `Récupérer 🪙 ${n}`, claim2: n => `🎬 Récupérer 🪙 ${n} (×2)`, dailyNote: 'Reviens chaque jour pour gagner plus !',
     taxiWait: 'Ne bouge plus… 🧍', taxiIn: '🚕 Passager à bord ! Va à la zone bleue', delivered: n => `✅ Déposé ! ${n}`, ouch: '😣 Doucement ! Ton passager est mécontent', comfort: 'Confort du passager', failComfort: 'Le passager est descendu furieux ! 😠', noteComfort: 'Pas de freinage brusque ni de virage rapide avec un passager.', rainTip: '🌧️ Pluie : route glissante, freins moins efficaces', page: (a, b) => `${a}–${b}`,
+    music: 'Musique', upEngine: '⚙️ Moteur', upBrakes: '🛑 Freins', upSteer: '🎡 Direction', upMax: 'Maximum', upDone: '⬆️ Amélioré !',
     adDouble: '🎬 Doubler les pièces', adContinue: '🎬 Continuer la mission', adRevive: '🎬 Continuer la course', adFree: '🎬 +100 🪙 gratuites',
     adFail: 'Pas de pub disponible, réessaie bientôt', privacy: 'Politique de confidentialité', adPriv: 'Confidentialité des pubs',
   },
@@ -1489,11 +1504,18 @@ function setPlayerModel(i) {
   P = makePlayer(md);
   P.root.add(headLight, headLight.target);
   scene.add(P.root);
-  HW = md.W / 2; HL = md.L / 2; WB = md.zf - md.zr; WR = md.wr; VMAX = md.maxF * 3.1; ACCF = md.acc * 1.25; MAXSTEER = md.steer;
+  const [ue, ub, us] = ups(i);
+  HW = md.W / 2; HL = md.L / 2; WB = md.zf - md.zr; WR = md.wr;
+  VMAX = md.maxF * 3.1 * (1 + UP_K.speed * ue); ACCF = md.acc * 1.25 * (1 + UP_K.acc * ue);
+  BRK = BRAKE * (1 + UP_K.brake * ub); MAXSTEER = md.steer * (1 + UP_K.steer * us);
   paintCar();
 }
 const car = { x: -1.75, z: 0, th: 0, v: 0, steer: 0, pitch: 0, roll: 0 };
 const MAXR = 5, ACC_R = 3.5, BRAKE = 11, STEER_RATE = 2.6, MAX_HITS = 3;
+let BRK = BRAKE;
+// Upgrades: 5 levels each for the engine (top speed and acceleration), the brakes and the steering
+const UP_COST = [150, 300, 500, 800, 1200], UP_K = { speed: .04, acc: .07, brake: .08, steer: .04 };
+const ups = i => { const u = save.up[i]; return Array.isArray(u) ? u : [0, 0, 0]; };
 
 function axes(rot) { const c = Math.cos(rot), s = Math.sin(rot); return [[c, -s], [s, c]]; }
 /* Separating axis test between two oriented boxes: the push that moves a out of b, or null */
@@ -1621,6 +1643,74 @@ function tone(freq, dur, type = 'sine', vol = .12, delay = 0) {
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur);
   o.connect(g).connect(ac.destination); o.start(t); o.stop(t + dur);
 }
+/* Background music, made on the fly: an A minor groove (Am F C G), calm in the menus, with drums while driving */
+const Music = {
+  gain: null, next: 0, step: 0, noise: null,
+  note: m => 440 * Math.pow(2, (m - 69) / 12),
+  CH: [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]],
+  voice(type, f, t, dur, vol, cut = 2400) {
+    const o = ac.createOscillator(), g = ac.createGain(), fl = ac.createBiquadFilter();
+    o.type = type; o.frequency.value = f; fl.type = 'lowpass'; fl.frequency.value = cut;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0008, t + dur);
+    o.connect(fl).connect(g).connect(this.gain); o.start(t); o.stop(t + dur + .05);
+  },
+  hit(t, dur, vol, type, freq) {
+    const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    s.buffer = this.noise; f.type = type; f.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0008, t + dur);
+    s.connect(f).connect(g).connect(this.gain); s.start(t); s.stop(t + dur + .02);
+  },
+  kick(t) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t + .14);
+    g.gain.setValueAtTime(.55, t); g.gain.exponentialRampToValueAtTime(.001, t + .22);
+    o.connect(g).connect(this.gain); o.start(t); o.stop(t + .25);
+  },
+  update() {
+    if (!ac) return;
+    if (!this.gain) {
+      this.gain = ac.createGain(); this.gain.gain.value = 0; this.gain.connect(ac.destination);
+      this.noise = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
+      const d = this.noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      this.next = ac.currentTime + .1;
+    }
+    const on = save.music !== 'off' && ac.state === 'running';
+    this.gain.gain.setTargetAtTime(on ? (state === 'play' ? .085 : .11) : 0, ac.currentTime, .4);
+    if (!on) { this.next = ac.currentTime + .1; return; }
+    const drive = state === 'play' || state === 'pause', sx = 60 / 112 / 4;
+    if (this.next < ac.currentTime) this.next = ac.currentTime + .05;
+    while (this.next < ac.currentTime + .3) {
+      const t = this.next, st = this.step % 16, bar = Math.floor(this.step / 16) % 8, ch = this.CH[bar % 4];
+      // arpeggio: up and down the chord, an octave higher in the second half of the loop
+      const arp = [0, 1, 2, 1, 2, 0, 1, 2], up = bar >= 4 ? 12 : 0;
+      if (st % 2 === 0 || drive) this.voice('square', this.note(ch[arp[st % 8]] + up), t, sx * 1.8, drive ? .035 : .045, drive ? 2600 : 1500);
+      // a soft pad holds the chord for the whole bar
+      if (st === 0) for (const m of ch) this.voice('triangle', this.note(m), t, sx * 16, .035, 1200);
+      // bass, syncopated
+      if ([0, 3, 6, 8, 11, 14].includes(st)) this.voice('triangle', this.note(ch[0] - 24), t, sx * 2.2, .2, 600);
+      if (drive) {
+        if (st % 4 === 0) this.kick(t);
+        if (st === 4 || st === 12) this.hit(t, .16, .22, 'bandpass', 1800);
+        if (st % 2 === 1) this.hit(t, .04, st % 4 === 3 ? .12 : .06, 'highpass', 7000);
+      }
+      this.next += sx; this.step++;
+    }
+  },
+};
+// Tyre screech when braking hard or turning hard at speed
+let skidGain = null;
+function skid(level) {
+  if (!ac) return;
+  if (!skidGain) {
+    const b = ac.createBuffer(1, ac.sampleRate, ac.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const s = ac.createBufferSource(), f = ac.createBiquadFilter(); skidGain = ac.createGain();
+    s.buffer = b; s.loop = true; f.type = 'bandpass'; f.frequency.value = 2300; f.Q.value = 9; skidGain.gain.value = 0;
+    s.connect(f).connect(skidGain).connect(ac.destination); s.start();
+  }
+  skidGain.gain.setTargetAtTime(muted() ? 0 : level * .22, ac.currentTime, .05);
+}
+let skidLvl = 0;
 function crash() {
   if (!ac || muted()) return;
   const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
@@ -1965,7 +2055,7 @@ $('#bFreeCoins').onclick = async () => {
 $('#bAdPriv').onclick = () => { if (Ads.native) Ads.native.showPrivacyOptionsForm().catch(() => {}); };
 $('#bReset').onclick = () => {
   if (!confirm(tr().confirmReset)) return;
-  save.unlocked = 1; save.stars = []; save.coins = 0; save.owned = [0, 1]; save.car = 0; persist(); setPlayerModel(0);
+  save.unlocked = 1; save.stars = []; save.coins = 0; save.owned = [0, 1]; save.car = 0; save.up = {}; persist(); setPlayerModel(0);
 };
 // Garage colours: plain colours, or the liveries of the supercar
 const hexs = c => '#' + c.toString(16).padStart(6, '0');
@@ -1999,8 +2089,18 @@ function renderGarage() {
   $('#bBuy').classList.toggle('hide', !locked);
   $('#bBuy').classList.toggle('poor', locked && save.coins < md.price);
   $('#bBuy').textContent = t.buy(md.price);
-  const rows = [[t.speed, md.maxF / 12], [t.accel, md.acc / 6.8], [t.handling, md.steer / .74], [t.size, md.L / 5.2]];
-  $('#cStats').innerHTML = rows.map(([n, v]) => `<span>${n}</span><div class="bar"><i style="width:${Math.round(v * 100)}%"></i></div>`).join('');
+  // bars scaled to the best fully upgraded car; the green part is what the upgrades add
+  const [ue, ub, us] = ups(garageIdx);
+  const rows = [[t.speed, md.maxF / 14.4, md.maxF * (1 + UP_K.speed * ue) / 14.4], [t.accel, md.acc / 9.2, md.acc * (1 + UP_K.acc * ue) / 9.2],
+    [t.handling, md.steer / .89, md.steer * (1 + UP_K.steer * us) / .89], [t.size, md.L / 5.2, md.L / 5.2]];
+  $('#cStats').innerHTML = rows.map(([n, v, w]) => `<span>${n}</span><div class="bar" style="position:relative"><i class="up" style="position:absolute;width:${Math.round(w * 100)}%"></i><i style="position:relative;width:${Math.round(v * 100)}%"></i></div>`).join('');
+  const box = $('#ups');
+  box.classList.toggle('hide', locked);
+  box.innerHTML = [t.upEngine, t.upBrakes, t.upSteer].map((n, k) => {
+    const lvl = ups(garageIdx)[k], max = lvl >= UP_COST.length, cost = UP_COST[lvl];
+    return `<button data-k="${k}" class="${max ? 'max' : save.coins < cost ? 'poor' : ''}">${n}<b>${'●'.repeat(lvl)}${'○'.repeat(UP_COST.length - lvl)}</b><span>${max ? t.upMax : '🪙 ' + cost}</span></button>`;
+  }).join('');
+  box.querySelectorAll('button').forEach(b => b.onclick = () => buyUpgrade(+b.dataset.k));
 }
 function browseCar(d) {
   garageIdx = (garageIdx + d + NCARS) % NCARS;
@@ -2010,6 +2110,21 @@ function leaveGarage() {
   if (!carLocked(garageIdx)) { save.car = garageIdx; persist(); }
   else setPlayerModel(save.car);
   applyColor();
+}
+function buyUpgrade(k) {
+  const t = tr(), u = [...ups(garageIdx)], cost = UP_COST[u[k]];
+  if (cost === undefined) return;
+  if (save.coins < cost) {
+    $('#cLock').textContent = t.notEnough(cost - save.coins);
+    $('#cLock').classList.remove('shake'); void $('#cLock').offsetWidth; $('#cLock').classList.add('shake');
+    tone(180, .2, 'square', .08);
+    return;
+  }
+  save.coins -= cost; u[k]++; save.up[garageIdx] = u; persist();
+  setPlayerModel(garageIdx); applyColor();
+  [523, 784, 1046].forEach((f, i) => tone(f, .14, 'triangle', .1, i * .07));
+  toast(t.upDone); updateCoins(); renderGarage();
+  const b = $(`#ups button[data-k="${k}"]`); if (b) b.classList.add('flash');
 }
 $('#bBuy').onclick = () => {
   const md = MODELS[garageIdx], t = tr();
@@ -2069,8 +2184,8 @@ function physics(dt) {
 
   const dir = gear === 'D' ? 1 : -1, v0 = car.v;
   const grip = rainOn ? .64 : 1;
-  if (brake) { const f = BRAKE * grip * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
-  else if (gas && car.v * dir < -.05) car.v += dir * BRAKE * dt;
+  if (brake) { const f = BRK * grip * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
+  else if (gas && car.v * dir < -.05) car.v += dir * BRK * dt;
   else if (gas && dir > 0) car.v += ACCF * (rainOn ? .85 : 1) * Math.max(0, 1 - (car.v / VMAX) ** 2) * dt;
   else if (gas) car.v -= ACC_R * dt;
   else { const f = (.35 + .0009 * car.v * car.v) * dt; car.v = Math.abs(car.v) <= f ? 0 : car.v - Math.sign(car.v) * f; }
@@ -2087,6 +2202,7 @@ function physics(dt) {
   car.x += Math.sin(car.th) * car.v * dt;
   car.z += Math.cos(car.th) * car.v * dt;
   const acc = (car.v - v0) / dt, k = Math.min(1, dt * 6);
+  skidLvl = (brake && Math.abs(car.v) > 7 ? (rainOn ? .55 : 1) : 0) + (Math.abs(car.v * thDot) > 6.5 ? .6 : 0);
   taxiComfort(dt, brake, car.v * thDot);
   car.pitch += (clamp(-acc * .006, -.05, .05) - car.pitch) * k;
   car.roll += (clamp(car.v * thDot * .01, -.06, .06) - car.roll) * k;
@@ -2393,6 +2509,8 @@ function tick(dt) {
   if (arrow) { arrow.position.y = 3 + Math.sin(clock * 3) * .3; arrow.rotation.y += dt * 1.5; }
   syncCar(dt);
   updateCam(dt, false);
+  Music.update();
+  skid(state === 'play' ? Math.min(1, skidLvl) : 0);
   if (ac && engGain) {
     const on = state === 'play' && !muted();
     engGain.gain.setTargetAtTime(on ? .03 + Math.abs(car.v) * .0015 + throttle * .02 : 0, ac.currentTime, .1);
