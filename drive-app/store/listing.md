@@ -43,6 +43,8 @@ City Driver 3D: قيادة بالمدينة
 
 🎥 3 كاميرات منها القيادة من داخل السيارة.
 
+🎵 موسيقى حماسية أثناء القيادة.
+
 🌍 بالعربية والإنجليزية والفرنسية، وتعمل على الهواتف الضعيفة (رسومات منخفضة).
 
 حمّل City Driver 3D الآن وأصبح ملك الطريق! 🏆
@@ -81,6 +83,8 @@ Sedan, hatchback, SUV, pickup, sports car, van, classic and a supercar with a re
 
 🎥 3 cameras, including a driver's seat view.
 
+🎵 Upbeat music while you drive.
+
 🌍 In English, Arabic and French, and runs on low-end phones too (low graphics option).
 
 Download City Driver 3D and rule the road! 🏆
@@ -116,6 +120,8 @@ De vrais feux tricolores, des carrefours avec des voitures qui traversent, des b
 🎁 Cadeau du jour qui grandit chaque jour où tu reviens.
 
 🎥 3 caméras, dont la vue conducteur.
+
+🎵 Une musique entraînante pendant la conduite.
 
 🌍 En français, arabe et anglais, et fonctionne même sur les petits téléphones.
 
