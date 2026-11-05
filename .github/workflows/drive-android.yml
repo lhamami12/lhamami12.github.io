@@ -1,0 +1,90 @@
+# Builds the City Driver 3D Android app in the cloud, so no computer is needed.
+# Every run produces:
+#   - city-driver-3d-test-apk : debug APK to install directly on a phone for testing
+#   - city-driver-3d-release  : signed AAB (upload to Google Play) + signed APK
+# Signing uses the same 4 upload-key secrets as Bonbon Pop and Arrow Escape (ANDROID_KEYSTORE_BASE64,
+# ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD). To give City Driver 3D
+# its own key instead, add the same four secrets prefixed with DRIVE_ (DRIVE_KEYSTORE_BASE64, ...).
+name: City Driver 3D build
+
+on:
+  push:
+    paths:
+      - 'drive/**'
+      - 'drive-app/**'
+      - '.github/workflows/drive-android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: drive-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      KEYSTORE_BASE64: ${{ secrets.DRIVE_KEYSTORE_BASE64 || secrets.ANDROID_KEYSTORE_BASE64 }}
+      KEYSTORE_PASSWORD: ${{ secrets.DRIVE_KEYSTORE_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.DRIVE_KEY_ALIAS || secrets.ANDROID_KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.DRIVE_KEY_PASSWORD || secrets.ANDROID_KEY_PASSWORD }}
+      VERSION_NAME: '1.0'
+    defaults:
+      run:
+        working-directory: drive-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: drive-app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Install and copy the game into the app
+        run: |
+          npm ci
+          npm run sync
+
+      - name: Build test APK
+        working-directory: drive-app/android
+        run: ./gradlew assembleDebug -PversionCode=${{ github.run_number }} -PversionName=$VERSION_NAME --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: city-driver-3d-test-apk
+          path: drive-app/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Prepare upload key
+        if: env.KEYSTORE_BASE64 != ''
+        run: echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+
+      - name: Build signed AAB and APK
+        if: env.KEYSTORE_BASE64 != ''
+        working-directory: drive-app/android
+        run: |
+          ./gradlew bundleRelease assembleRelease -PversionCode=${{ github.run_number }} -PversionName=$VERSION_NAME --no-daemon \
+            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/upload.jks" \
+            -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+
+      - name: Remove signing files
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload.jks"
+
+      - uses: actions/upload-artifact@v4
+        if: env.KEYSTORE_BASE64 != ''
+        with:
+          name: city-driver-3d-release
+          path: |
+            drive-app/android/app/build/outputs/bundle/release/app-release.aab
+            drive-app/android/app/build/outputs/apk/release/app-release.apk
